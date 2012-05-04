@@ -53,10 +53,17 @@
 (*     changes you have made !                                            *)
 (*                                                                        *)
 (**************************************************************************)
+
+(**************************************************************************)
+(*     Changes made by O.Gituliar <gituliar@gmail.com>:                   *)
+(*                                                                        *)
+(*       * switch from Tracer` to Axiloop`Tracer` context;                *)
+(*                                                                        *)
+(**************************************************************************)
  
 (*------------------------ BEGIN CONTEXT TRACER --------------------------*)
  
-BeginPackage[ "Tracer`" ];
+BeginPackage[ "Axiloop`Tracer`" ];
  
  
 (*---------------------- UNPROTECT SPECICAL SYMBOLS ----------------------*)
@@ -67,7 +74,7 @@ Unprotect[ AntiCommute, ContractEpsGamma, Eps, G, GammaTrace, G5, H,
            RemoveNCM, S, Sigma, SortLine, Spur, T, ToDiracBasis,
            ToHatTilde, ToOtimes, ToUG5, U, VectorDimension, Version ];
  
-Remove[ "Tracer`*", "Tracer`Private`*" ];
+Remove[ "Axiloop`Tracer`*", "Axiloop`Tracer`Private`*" ];
  
  
 (*-------------------------- STATUS OF TRACER -----------------------------*)

@@ -6,10 +6,10 @@
  * Copyright (c) 2012 Oleksandr Gituliar
  *)
 
-Needs["Tracer`"]
+Needs["Axiloop`"]
 
 Test[
-	Tracer`TracerVersion,
+	Axiloop`Tracer`TracerVersion,
 	"1.1.1",
 	TestID->"TracerVersion"
 ]

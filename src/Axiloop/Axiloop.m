@@ -1,15 +1,18 @@
-(* Mathematica Package *)
+(* Axiloop Package for Wolfram Mathematica
+ *
+ * Author:   Oleksandr Gituliar <gituliar@gmail.com>
+ * Created:  04 May 2012
+ *
+ * Copyright (c) 2012 Oleksandr Gituliar
+ *)
 
-(* Created by the Wolfram Workbench May 4, 2012 *)
 
-BeginPackage["Axiloop`"]
-(* Exported symbols added here with SymbolName::usage *) 
+BeginPackage["Axiloop`", {"Axiloop`Tracer`"}]
+
 
 Begin["`Private`"]
-(* Implementation of the package *)
-
-
 
 End[]
+
 
 EndPackage[]
