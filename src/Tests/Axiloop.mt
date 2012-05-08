@@ -9,7 +9,7 @@
 Needs["Axiloop`"]
 
 (* EquivalenceFunction for Test. It turns out that Equal doesn't do the job. *)
-EqualSimplify[x_, y_] := Equal[0, Simplify[x-y]];
+EqualSimplify[x_, y_] := SameQ[0, Simplify[x-y]];
 
 Test[
 	Axiloop`Tracer`TracerVersion,
@@ -49,9 +49,25 @@ Test[
 	EquivalenceFunction->EqualSimplify
 ]
 
+LOKernel = Kernel[FP[k] ** FV[mu], {FPx[p], GPx[mu, nu, q]}, FV[nu] ** FP[k]];
+
 Test[
-	Kernel[FP[k] ** FV[mu], { FPx[p], GPx[mu, nu, p-k]}, FV[nu] ** FP[k]],
-	2 g^2 (k.k (1 - epsilon) - 2 x k.p (1 - epsilon) + 2 x (k.k - x p.p)/(1 - x)) / (k.k)^2,
+	LOKernel,
+	2 g^2 (k.k (1 - epsilon) - x (p.p + k.k) (1 - epsilon) + 2 x (k.k - x p.p)/(1 - x)) / (k.k)^2,
 	TestID->"LO-Kernel",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	IntegrateFinal[1/k.k],
+	1/(4 Pi)^2 (1-x)^(-epsilon) (k.k)^(-epsilon) / (-epsilon),
+	TestID->"IntegrateKernel",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	IntegrateFinal[LOKernel],
+	2 g^2/(4 Pi)^2 (1-x)^(-1-epsilon) (1 + x^2 - epsilon (1-x)^2) (k.k)^(-epsilon) / (-epsilon),
+	TestID->"IntegrateLOKernel",
 	EquivalenceFunction->EqualSimplify
 ]

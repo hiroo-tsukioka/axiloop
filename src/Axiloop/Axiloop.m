@@ -24,6 +24,8 @@ n::usage =
 p::usage =
 	"Incoming particle momentum; p.n = 1."
 
+q::usage = "Final state particle momentum; q.q = 0."
+
 x::usage =
 	"x = k.n"
 
@@ -45,17 +47,25 @@ GP::usage =
 GV::usage =
 	"Gluon vertex in light-cone gauge."
 
+IntegrateFinal::usage =
+	"Integrate kernel over final particle momenta."
+
 Kernel::usage =
-	"Defines new DGLAP evolution kernel."
+	"The definition of DGLAP evolution kernel."
 
 Begin["`Private`"]
 
+(* Kinematics definition and some transformations. *)
+
 Unprotect[S];
   S[n,n] = 0;
-  S[n,p] = 1;
-  S[p,n] = 1;
-  S[n,k] = x;
-  S[k,n] = x;
+  S[n,p] = S[p,n]; S[p,n] = 1;
+  S[n,k] = S[k,n]; S[k,n] = x;
+  S[n,q] = S[q,n]; S[q,n] = 1 - x;
+  S[k,p] = S[p,k]; S[p,k] = (p.p + k.k - q.q) / 2;
+  S[k,q] = S[q,k]; S[q,k] = (p.p - k.k - q.q) / 2;
+  S[p,q] = S[q,p]; S[q,p] = (p.p - k.k + q.q) / 2;
+  S[q,q] = 0;
 Protect[S];
 
 Spur[f0];
@@ -96,6 +106,10 @@ GV[i1_,p1_, i2_,p2_, i3_,p3_] :=
 
 Kernel[L_, M__, R_] := Module[{spurRules = (#->f0)& /@ fermionLines},
     x ExpandNumerator[(G[f1,n]/(4 k.n))**L**NonCommutativeMultiply@@M**R //. spurRules]
+];
+
+IntegrateFinal[kernel_] := Module[{},
+	1/(4 Pi)^2 (1-x)^(-epsilon) Integrate[(k.k)^(-epsilon) kernel, k.k] //. {p.p->0}
 ];
 
 End[]
