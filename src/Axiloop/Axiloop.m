@@ -55,6 +55,13 @@ Kernel::usage =
 
 Begin["`Private`"]
 
+(* Useful modifications to standard functions *)
+
+Unprotect[ReplaceRepeated];
+	ReplaceRepeated[expr_,{{}}] := expr;
+	ReplaceRepeated[expr_,{rules__List}] := ReplaceRepeated[expr //. First[{rules}], Rest[{rules}]];
+Protect[ReplaceRepeated];
+
 (* Kinematics definition and some transformations. *)
 
 Unprotect[S];
