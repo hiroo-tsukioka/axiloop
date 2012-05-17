@@ -53,6 +53,9 @@ GV::usage =
 IntegrateFinal::usage =
 	"Integrate kernel over final particle momenta."
 
+IntegrateLoop::usage =
+	"Integrate kernel over internal loop momenta."
+
 Kernel::usage =
 	"The definition of DGLAP evolution kernel."
 
@@ -120,6 +123,86 @@ Kernel[L_, M__, R_] := Module[{spurRules = (#->f0)& /@ fermionLines},
 
 IntegrateFinal[kernel_] := Module[{},
 	1/(4 Pi)^2 (1-x)^(-epsilon) Integrate[(k.k)^(-epsilon) kernel, k.k] //. {p.p->0}
+];
+
+(* IntegrateLoop and its helpers *)
+
+CollectIntegralRules[l_] := {
+	KK[l, {x___},{y___},{z___}] S[l,p_] :>
+		KK[l, {p,x},{y},{z}],
+	KK[l, {x___},{y___},{z___}] Power[S[l,p_], n_] :>
+		KK[l, {p,x},{y},{z}] Power[S[l,p], n-1] /; n>0,
+
+	KK[l, {x___},{y___},{z___}] / S[l,l] :>
+		KK[l, {x},{0,y},{z}],
+	KK[l, {x___},{y___},{z___}] / S[l-l1_,l-l1_] :>
+		KK[l, {x},{l1,y},{z}],
+	KK[l, {x___},{y___},{z___}] / S[l+l1_,l+l1_] :>
+		KK[l, {x},{-l1,y},{z}],
+
+	KK[l, {x___},{y___},{z___}] /  S[l,n] :>
+		KK[l, {x},{y},{0,z}],
+	KK[l, {x___},{y___},{z___}] / (S[l,n]-S[ln_,n]) :>
+		KK[l, {x},{y},{ln,z}],
+	KK[l, {x___},{y___},{z___}] / (S[ln_,n]-S[l,n]) :>
+		- KK[l, {x},{y},{ln,z}],
+	KK[l, {x___},{y___},{z___}] /  S[l+ln_,n] :>
+		KK[l, {x},{y},{-ln,z}]
+};
+
+CollectIntegral[expr_, l_] := Expand[expr * KK[l, {},{},{}], l] //. CollectIntegralRules[l] ;
+
+ReduceIntegralRules[l_] := {
+	{
+		KK[l, {x1___,l,x2___},{y1___,0,y2___},{z___}] :>
+            KK[l, {x1,x2},{y1,y2},{z}],
+
+		KK[l,{x1___,p_,x2___},{y1___,p_,y2___},{z___}] :>
+			(KK[l, {x1,x2},{y1,p,y2},{z}] p.p + KK[l, {x1,l,x2},{y1,p,y2},{z}] - KK[l, {x1,x2},{y1,y2},{z}]) / 2,
+
+		KK[l, {x___},{y___},{z1___,p_,k_,z2___}] :>
+			(KK[l, {x},{y},{z1,p,z2}] - KK[l, {x},{y},{z1,k,z2}]) / (p.n-k.n),
+
+		KK[l, {x1___,n,x2___},{y___},{z1___,p_,z2___}] :>
+			KK[l, {x1,x2},{y},{z1,z2}] + KK[l, {x1,x2},{y},{z1,p,z2}] p.n
+	}, {
+		KK[l, {l},{y1___,p_,y2___},{z___}] :>
+			KK[l, {},{y1,y2},{z}] + 2 KK[l, {p},{y1,p,y2},{z}] - p.p KK[l, {},{y1,p,y2},{z}],
+
+		KK[l, {},{y___},{p_Symbol}] :>
+			KK[l, {},(#-p)&/@{y},{0}],
+
+		KK[l, {x_},{y___},{p_Symbol}] :>
+			KK[l, {x},(#-p)&/@{y},{0}] + x.p KK[l, {},(#-p)&/@{y},{0}]
+	}, {
+		KK[l, {},{y_Symbol},{0}] :>
+			KK[l, {},{0},{0}] + 2 KK[l, {y},{y,0},{0}] - y.y KK[l, {},{y,0},{0}]
+	}
+};
+
+ReduceIntegral[expr_, l_] := Module[{},
+	expr //. ReduceIntegralRules[l]
+]
+
+IntegrateLoopRules[l_] := {
+						K[{},{p},{}] -> K[{},{0},{}],
+						K[{},{k},{}] -> K[{},{0},{}],
+
+(* K1(0; 0)       *)	K[{},{0},{0}] -> 0,
+
+(* K2(k,0; 0)     *)	K[{},{k,0},{0}] -> Q (k.k)^(-eta) P0[k]/x,
+
+(*                *)	K[{xx_},{0,y_},{0}] :> K[{xx},{y,0},{0}],
+(* K2x(k,0; 0)    *)	K[{xx_},{k,0},{0}] :> Q (k.k)^(-eta) / k.n (xx.k T0 + xx.n k.k/(2 k.n) P3[k] ),
+
+(* I2(y,0)        *)	K[{},{y_,0},{}] :> Q (y.y)^(-eta) T0,
+
+(*                *)	K[{xx_},{0,y_},{}] :> K[{xx},{y,0},{}],
+(* I2x(y,0)       *)	K[{xx_},{y_,0},{}] :> Q (y.y)^(-eta) xx.y T0/2
+}
+
+IntegrateLoop[kernel_, l_] := Module[{},
+	Simplify[ReduceIntegral[CollectIntegral[kernel, l], l] //. {{KK[l, xyz___] -> K[xyz]}, {IntegrateLoopRules[l]}, {p.p -> 0}}]
 ];
 
 End[]

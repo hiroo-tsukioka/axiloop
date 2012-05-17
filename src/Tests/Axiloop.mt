@@ -71,3 +71,64 @@ Test[
 	TestID->"IntegrateLOKernel",
 	EquivalenceFunction->EqualSimplify
 ]
+
+Test[
+	Axiloop`Private`CollectIntegral[l.k1 l.k2 / (l.l (l-p1).(l-p1) (l-p2).(l-p2)) 1/(l.n (l-q1).n (l-q2).n), l],
+	Axiloop`Private`KK[l, {k2,k1}, {p2,p1,0}, {q2,q1,0}],
+	TestID->"CollectIntegral",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`ReduceIntegral[Axiloop`Private`KK[l, {l}, {0}, {k1}], l],
+	Axiloop`Private`KK[l, {},{},{0}],
+	TestID->"ReduceIntegral-1"
+]
+
+Test[
+	Axiloop`Private`ReduceIntegral[Axiloop`Private`KK[l, {k1}, {0}, {k1}], l],
+	Axiloop`Private`KK[l, {k1}, {-k1}, {0}] + Axiloop`Private`KK[l, {}, {-k1}, {0}] k1.k1,
+	TestID->"ReduceIntegral-2"
+]
+
+Test[
+	Axiloop`Private`ReduceIntegral[Axiloop`Private`KK[l, {}, {0}, {k1, k2}], l],
+	(Axiloop`Private`KK[l, {}, {-k1}, {0}] - Axiloop`Private`KK[l, {}, {-k2}, {0}]) / (k1.n - k2.n),
+	TestID->"ReduceIntegral-2"
+]
+
+Test[
+	IntegrateLoop[1/(l.l l.n), l] + IntegrateLoop[1/(l-p).(l-p), l] - IntegrateLoop[1/(l-k).(l-k), l],
+	0,
+	TestID->"IntegrateLoop K1(0;0)+I1(p)-I1(k) ",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	IntegrateLoop[1/(l.l (l-k).(l-k) l.n), l],
+	Axiloop`Private`Q Axiloop`Private`P0[k] / (x (k.k)^eta),
+	TestID->"IntegrateLoop K2(k,0;0) ",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	IntegrateLoop[l.xx/(l.l (l-k).(l-k) l.n), l],
+	Axiloop`Private`Q (2 x Axiloop`Private`T0 k.xx + Axiloop`Private`P3[k] k.k n.xx) / (2 x^2  (k.k)^eta),
+	TestID->"IntegrateLoop K2x(k,0;0) ",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	IntegrateLoop[1/(l.l (l-k).(l-k)), l],
+	Axiloop`Private`Q Axiloop`Private`T0 / (k.k)^eta,
+	TestID->"IntegrateLoop I2(y,0) ",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	IntegrateLoop[l.xx/(l.l (l-k).(l-k)), l],
+	Axiloop`Private`Q Axiloop`Private`T0 k.xx / (2 (k.k)^eta),
+	TestID->"IntegrateLoop I2x(y,0) ",
+	EquivalenceFunction->EqualSimplify
+]
+
