@@ -12,6 +12,9 @@ BeginPackage["Axiloop`", {"Axiloop`Tracer`"}]
 epsilon::usage =
 	"Dimensional regulator; comes from trace operations."
 
+eta::usage =
+	"Dimensional regulator; comes from loop interals."
+
 g::usage =
 	"Quark-gluon coupling constant."
 
