@@ -32,6 +32,9 @@ q::usage = "Final state particle momentum; q.q = 0."
 x::usage =
 	"x = k.n"
 
+DefineKernel::usage =
+	"The definition of DGLAP evolution kernel."
+
 ExtractPole::usage =
 	"ExtractPole[expr, x] extract coefficient in front of 1/x in expr."
 
@@ -64,9 +67,6 @@ IntegrateFinal::usage =
 
 IntegrateLoop::usage =
 	"Integrate kernel over internal loop momenta."
-
-Kernel::usage =
-	"The definition of DGLAP evolution kernel."
 
 Li2::usage =
 	"Dilogarythm function; Li2[x] = - Integrate[Log[1-t]/t, {t, 0, z}]."
@@ -129,7 +129,7 @@ GV[i1_,p1_, i2_,p2_, i3_,p3_] :=
 
 (* The definition of DGLAP evolution kernel according to CFP *)
 
-Kernel[L_, M__, R_] := Module[{spurRules = (#->f0)& /@ fermionLines},
+DefineKernel[L_, M__, R_] := Module[{spurRules = (#->f0)& /@ fermionLines},
     x ExpandNumerator[(G[f1,n]/(4 k.n))**L**NonCommutativeMultiply@@M**R //. spurRules]
 ];
 

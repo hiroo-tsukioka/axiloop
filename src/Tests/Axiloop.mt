@@ -49,7 +49,7 @@ Test[
 	EquivalenceFunction->EqualSimplify
 ]
 
-LOKernel = Kernel[FP[k] ** FV[mu], {FPx[p], GPx[mu, nu, q]}, FV[nu] ** FP[k]];
+LOKernel = DefineKernel[FP[k] ** FV[mu], {FPx[p], GPx[mu, nu, q]}, FV[nu] ** FP[k]];
 
 Test[
 	LOKernel,
