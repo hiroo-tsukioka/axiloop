@@ -159,7 +159,9 @@ CollectIntegralRules[l_] := {
 	KK[l, {x___},{y___},{z___}] / (S[ln_,n]-S[l,n]) :>
 		- KK[l, {x},{y},{ln,z}],
 	KK[l, {x___},{y___},{z___}] /  S[l+ln_,n] :>
-		KK[l, {x},{y},{-ln,z}]
+		KK[l, {x},{y},{-ln,z}],
+
+	KK[l, {},{},{}] -> 1
 };
 
 CollectIntegral[expr_, l_] := Expand[expr * KK[l, {},{},{}], l] //. CollectIntegralRules[l] ;

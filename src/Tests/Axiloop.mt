@@ -75,7 +75,14 @@ Test[
 Test[
 	Axiloop`Private`CollectIntegral[l.k1 l.k2 / (l.l (l-p1).(l-p1) (l-p2).(l-p2)) 1/(l.n (l-q1).n (l-q2).n), l],
 	Axiloop`Private`KK[l, {k2,k1}, {p2,p1,0}, {q2,q1,0}],
-	TestID->"CollectIntegral",
+	TestID->"CollectIntegral-1",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`CollectIntegral[x, l],
+	x,
+	TestID->"CollectIntegral-2",
 	EquivalenceFunction->EqualSimplify
 ]
 
