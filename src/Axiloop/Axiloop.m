@@ -50,6 +50,12 @@ GP::usage =
 GV::usage =
 	"Gluon vertex in light-cone gauge."
 
+I0::usage =
+	"Principal Value regulated integral; I0 = - Log[delta] + O[delta]."
+
+I1::usage =
+	"Principal Value regulated integral; I1 = - (Log[delta]^2)/2 - Li2[1]/4 + O[delta]."
+
 IntegrateFinal::usage =
 	"Integrate kernel over final particle momenta."
 
@@ -58,6 +64,9 @@ IntegrateLoop::usage =
 
 Kernel::usage =
 	"The definition of DGLAP evolution kernel."
+
+Li2::usage =
+	"Dilogarythm function; Li2[x] = - Integrate[Log[1-t]/t, {t, 0, z}]."
 
 Begin["`Private`"]
 
@@ -201,8 +210,17 @@ IntegrateLoopRules[l_] := {
 (* I2x(y,0)       *)	K[{xx_},{y_,0},{}] :> Q (y.y)^(-eta) xx.y T0/2
 }
 
-IntegrateLoop[kernel_, l_] := Module[{},
-	Simplify[ReduceIntegral[CollectIntegral[kernel, l], l] //. {{KK[l, xyz___] -> K[xyz]}, {IntegrateLoopRules[l]}, {p.p -> 0}}]
+IntegrateLoopExpandRules = {
+	T0 -> 1/eta Beta[1-eta, 1-eta],
+	P0[k] -> (Log[x] + I0) / eta - I1 + I0 Log[x] + (Log[x]^2)/2 + Li2[1],
+	P3[k] -> (2 - Log[x] - I0) / eta + 4 + I1 - I0 Log[x] - (Log[x]^2)/2 - Li2[1]
+}
+
+IntegrateLoop[kernel_, l_, expand_:True] := Module[{step01, step02, step03},
+	step01 = ReduceIntegral[CollectIntegral[kernel, l], l] //. KK[l, xyz___] -> K[xyz];
+	step02 = step01 //. {{IntegrateLoopRules[l]}, {p.p -> 0}};
+	step03 = If[expand == True, step02 //. IntegrateLoopExpandRules, step02];
+	Simplify[ step03 ]
 ];
 
 End[]

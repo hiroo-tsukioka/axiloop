@@ -100,35 +100,62 @@ Test[
 Test[
 	IntegrateLoop[1/(l.l l.n), l] + IntegrateLoop[1/(l-p).(l-p), l] - IntegrateLoop[1/(l-k).(l-k), l],
 	0,
-	TestID->"IntegrateLoop K1(0;0)+I1(p)-I1(k) ",
+	TestID->"IntegrateLoop K1(0;0)+I1(p)-I1(k)",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
 	IntegrateLoop[1/(l.l (l-k).(l-k) l.n), l],
+	Axiloop`Private`Q ((I0 + Log[x]) / eta - I1 + Li2[1] + I0 Log[x] + (Log[x]^2)/2) / (x (k.k)^eta),
+	TestID->"IntegrateLoop K2(k,0;0) Expand",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	IntegrateLoop[1/(l.l (l-k).(l-k) l.n), l, False],
 	Axiloop`Private`Q Axiloop`Private`P0[k] / (x (k.k)^eta),
-	TestID->"IntegrateLoop K2(k,0;0) ",
+	TestID->"IntegrateLoop K2(k,0;0)",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
 	IntegrateLoop[l.xx/(l.l (l-k).(l-k) l.n), l],
+	Axiloop`Private`Q (2 x Beta[1-eta, 1-eta] k.xx + (2 - I0 - Log[x] + eta (4 + I1 - Li2[1] - I0 Log[x] - (Log[x]^2)/2)) k.k n.xx) / (2 eta x^2  (k.k)^eta),
+	TestID->"IntegrateLoop K2x(k,0;0) Expand",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	IntegrateLoop[l.xx/(l.l (l-k).(l-k) l.n), l, False],
 	Axiloop`Private`Q (2 x Axiloop`Private`T0 k.xx + Axiloop`Private`P3[k] k.k n.xx) / (2 x^2  (k.k)^eta),
-	TestID->"IntegrateLoop K2x(k,0;0) ",
+	TestID->"IntegrateLoop K2x(k,0;0)",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	IntegrateLoop[1/(l.l (l-k).(l-k)), l, False],
+	Axiloop`Private`Q Axiloop`Private`T0 / (k.k)^eta,
+	TestID->"IntegrateLoop I2(y,0)",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
 	IntegrateLoop[1/(l.l (l-k).(l-k)), l],
-	Axiloop`Private`Q Axiloop`Private`T0 / (k.k)^eta,
-	TestID->"IntegrateLoop I2(y,0) ",
+	Axiloop`Private`Q Beta[1-eta, 1-eta] / (eta (k.k)^eta),
+	TestID->"IntegrateLoop I2(y,0) Expand",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	IntegrateLoop[l.xx/(l.l (l-k).(l-k)), l, False],
+	Axiloop`Private`Q Axiloop`Private`T0 k.xx / (2 (k.k)^eta),
+	TestID->"IntegrateLoop I2x(y,0)",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
 	IntegrateLoop[l.xx/(l.l (l-k).(l-k)), l],
-	Axiloop`Private`Q Axiloop`Private`T0 k.xx / (2 (k.k)^eta),
-	TestID->"IntegrateLoop I2x(y,0) ",
+	Axiloop`Private`Q Beta[1-eta, 1-eta] k.xx / (2 eta (k.k)^eta),
+	TestID->"IntegrateLoop I2x(y,0) Expand",
 	EquivalenceFunction->EqualSimplify
 ]
-
