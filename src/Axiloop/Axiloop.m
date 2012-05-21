@@ -32,6 +32,9 @@ q::usage = "Final state particle momentum; q.q = 0."
 x::usage =
 	"x = k.n"
 
+ExtractPole::usage =
+	"ExtractPole[expr, x] extract coefficient in front of 1/x in expr."
+
 FPx::usage =
 	"Crossed fermion propagator in light-cone gauge."
 	
@@ -222,6 +225,10 @@ IntegrateLoop[kernel_, l_, expand_:True] := Module[{step01, step02, step03},
 	step03 = If[expand == True, step02 //. IntegrateLoopExpandRules, step02];
 	Simplify[ step03 ]
 ];
+
+(* Renormalization routines and helpers *)
+
+ExtractPole[kernel_, eta_] := Simplify[Coefficient[Series[kernel, {eta, 0, 0}], eta, -1]];
 
 End[]
 

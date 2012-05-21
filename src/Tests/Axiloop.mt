@@ -94,7 +94,7 @@ Test[
 Test[
 	Axiloop`Private`ReduceIntegral[Axiloop`Private`KK[l, {}, {0}, {k1, k2}], l],
 	(Axiloop`Private`KK[l, {}, {-k1}, {0}] - Axiloop`Private`KK[l, {}, {-k2}, {0}]) / (k1.n - k2.n),
-	TestID->"ReduceIntegral-2"
+	TestID->"ReduceIntegral-3"
 ]
 
 Test[
@@ -158,4 +158,16 @@ Test[
 	Axiloop`Private`Q Beta[1-eta, 1-eta] k.xx / (2 eta (k.k)^eta),
 	TestID->"IntegrateLoop I2x(y,0) Expand",
 	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	ExtractPole[Beta[1+eta, eta], eta],
+	1,
+	TestID->"ExtractPole-1"
+]
+
+Test[
+	ExtractPole[Beta[1+eta, 1+eta] / eta^2, eta],
+	-2,
+	TestID->"ExtractPole-2"
 ]
