@@ -178,3 +178,25 @@ Test[
 	-2,
 	TestID->"ExtractPole-2"
 ]
+
+kernel = Kernel[FP[k] ** FV[mu], {FPx[p], GPx[mu, nu, p - k]}, FV[nu] ** FP[k]];
+ 
+Test[
+	KernelGet[kernel, "exclusive"],
+	2 g^2 (((1 - x) (1 - epsilon) + 2 x / (1 - x)) k.k - ((1 - epsilon) + 2 x / (1 - x)) x p.p) / (k.k)^2,
+	TestID->"Kernel LO exclusive",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	KernelGet[kernel, "inclusive"],
+	- g^2 (1 + x^2) / (8 Pi^2 (1 - x) ),
+	TestID->"Kernel LO inclusive",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	KernelGet[kernel, "Z"],
+	0,
+	TestID->"Kernel LO Z"
+]

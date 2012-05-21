@@ -21,6 +21,9 @@ g::usage =
 k::usage =
 	"Outgoing particle momentum; k.n = x."
 
+l::usage =
+	"Loop momentum."
+
 n::usage =
 	"Light-cone gauge vector; n.n = 0."
 
@@ -67,6 +70,12 @@ IntegrateFinal::usage =
 
 IntegrateLoop::usage =
 	"Integrate kernel over internal loop momenta."
+
+Kernel::usage =
+	"Kernel constructor; define and integrate a kernel."
+
+KernelGet::usage =
+	"KernelGet[kernel_, key_] get value from kernel associated with key."
 
 Li2::usage =
 	"Dilogarythm function; Li2[x] = - Integrate[Log[1-t]/t, {t, 0, z}]."
@@ -127,11 +136,26 @@ GP[mu_, nu_, p_] :=
 GV[i1_,p1_, i2_,p2_, i3_,p3_] :=
 	g ( {i1}.{i2} (p1.{i3}-p2.{i3}) + {i2}.{i3} (p2.{i1}-p3.{i1}) + {i3}.{i1} (p3.{i2}-p1.{i2}) );
 
-(* The definition of DGLAP evolution kernel according to CFP *)
+(* DGLAP evolution kernel according to CFP *)
 
 DefineKernel[L_, M__, R_] := Module[{spurRules = (#->f0)& /@ fermionLines},
     x ExpandNumerator[(G[f1,n]/(4 k.n))**L**NonCommutativeMultiply@@M**R //. spurRules]
 ];
+
+Kernel[L_, M__, R_] := Module[{exclusive, inclusive, step01, step02, Z},
+	exclusive = DefineKernel[L, M, R];
+	step01 = IntegrateLoop[exclusive, l];
+	Z = ExtractPole[step01, eta];
+	step02 = IntegrateFinal[step01 - Z/eta] //. eta -> epsilon;
+	inclusive = ExtractPole[step02, epsilon];
+	{
+		{"exclusive", exclusive},
+		{"inclusive", inclusive},
+		{"Z", Z}
+	}
+];
+
+KernelGet[kernel_, key_] := Last[First[Select[kernel, First[#] == key &]]];
 
 IntegrateFinal[kernel_] := Module[{},
 	1/(4 Pi)^2 (1-x)^(-epsilon) Integrate[(k.k)^(-epsilon) kernel, k.k] //. {p.p->0}
