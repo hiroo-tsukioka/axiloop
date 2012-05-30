@@ -254,7 +254,7 @@ IntegrateLoop[kernel_, l_, expand_:True] := Module[{step01, step02, step03},
 
 (* Renormalization routines and helpers *)
 
-ExtractPole[kernel_, eta_] := Simplify[Coefficient[Series[kernel, {eta, 0, 0}], eta, -1]];
+ExtractPole[kernel_, eta_] := Simplify[Coefficient[Series[kernel, {eta, 0, 1}], eta, -1]];
 
 End[]
 
