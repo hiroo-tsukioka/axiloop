@@ -201,3 +201,24 @@ Test[
 	0,
 	TestID->"Kernel LO Z"
 ]
+
+
+NLOe = Kernel[
+	FP[k] ** FV[i1] ** FP[k-l] ** GP[i1, i2, l] ** FV[i2] ** FP[k] ** FV[mu],
+	{FPx[p], GPx[mu, nu, p-k]},
+	FV[nu] ** FP[k],
+	LO
+]
+
+Test[
+	KernelGet[NLOe, "inclusive"],
+	I g^4/(16 Pi^2) Axiloop`Private`Q ( (1+x^2)/(1-x) (7 - 2 Log[x]^2 - 4 Log[x] Log[1-x] + 3 Log[1-x] - 4 Li2[1] + 4 I1 - 4 I0 Log[x] - 4 I0 Log[1-x]) + (1-x) (3 - 4 Log[x] - 4 I0) ),
+	TestID->"Kernel NLOe inclusive",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	KernelGet[NLOe, "Z"],
+	-I g^2 Axiloop`Private`Q (3 - 4 I0 - 4 Log[x]),
+	TestID->"Kernel NLOe Z"
+]
