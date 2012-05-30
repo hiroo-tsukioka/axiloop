@@ -49,10 +49,10 @@ Test[
 	EquivalenceFunction->EqualSimplify
 ]
 
-LOKernel = DefineKernel[FP[k] ** FV[mu], {FPx[p], GPx[mu, nu, q]}, FV[nu] ** FP[k]];
+LOdefinition = DefineKernel[FP[k] ** FV[mu], {FPx[p], GPx[mu, nu, q]}, FV[nu] ** FP[k]];
 
 Test[
-	LOKernel,
+	LOdefinition,
 	2 g^2 (k.k (1 - epsilon) - x (p.p + k.k) (1 - epsilon) + 2 x (k.k - x p.p)/(1 - x)) / (k.k)^2,
 	TestID->"LO-Kernel",
 	EquivalenceFunction->EqualSimplify
@@ -66,7 +66,7 @@ Test[
 ]
 
 Test[
-	IntegrateFinal[LOKernel],
+	IntegrateFinal[LOdefinition] //. p.p -> 0,
 	2 g^2/(4 Pi)^2 (1-x)^(-1-epsilon) (1 + x^2 - epsilon (1-x)^2) (k.k)^(-epsilon) / (-epsilon),
 	TestID->"IntegrateLOKernel",
 	EquivalenceFunction->EqualSimplify
@@ -179,24 +179,25 @@ Test[
 	TestID->"ExtractPole-2"
 ]
 
-kernel = Kernel[FP[k] ** FV[mu], {FPx[p], GPx[mu, nu, p - k]}, FV[nu] ** FP[k]];
+
+LO = Kernel[FP[k] ** FV[mu], {FPx[p], GPx[mu, nu, p - k]}, FV[nu] ** FP[k]];
  
 Test[
-	KernelGet[kernel, "exclusive"],
-	2 g^2 (((1 - x) (1 - epsilon) + 2 x / (1 - x)) k.k - ((1 - epsilon) + 2 x / (1 - x)) x p.p) / (k.k)^2,
+	KernelGet[LO, "exclusive"],
+	2 g^2 ((1 - x) (1 - epsilon) + 2 x / (1 - x)) (k.k)^(-1),
 	TestID->"Kernel LO exclusive",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
-	KernelGet[kernel, "inclusive"],
+	KernelGet[LO, "inclusive"],
 	- g^2 (1 + x^2) / (8 Pi^2 (1 - x) ),
 	TestID->"Kernel LO inclusive",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
-	KernelGet[kernel, "Z"],
+	KernelGet[LO, "Z"],
 	0,
 	TestID->"Kernel LO Z"
 ]

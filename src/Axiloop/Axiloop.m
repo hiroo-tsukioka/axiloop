@@ -142,13 +142,21 @@ DefineKernel[L_, M__, R_] := Module[{spurRules = (#->f0)& /@ fermionLines},
     x ExpandNumerator[(G[f1,n]/(4 k.n))**L**NonCommutativeMultiply@@M**R //. spurRules]
 ];
 
-Kernel[L_, M__, R_] := Module[{exclusive, inclusive, step01, step02, Z},
-	exclusive = DefineKernel[L, M, R];
-	step01 = IntegrateLoop[exclusive, l];
-	Z = ExtractPole[step01, eta];
-	step02 = IntegrateFinal[step01 - Z/eta] //. eta -> epsilon;
-	inclusive = ExtractPole[step02, epsilon];
+Kernel[L_, M__, R_, kernel_:0] := Module[{definition, exclusive, inclusive, Z},
+	definition = DefineKernel[L, M, R];
+
+	exclusive = IntegrateLoop[definition, l];
+
+	PeZ = ExtractPole[exclusive, eta]  //. epsilon -> 0;
+	Pe = KernelGet[kernel, "exclusive"];
+	Z = PeZ / Pe //. epsilon -> 0;
+
+	var01 = IntegrateFinal[exclusive - Pe Z / eta] //. eta -> epsilon;
+	var02 = ExtractPole[var01, epsilon];
+	inclusive = Collect[Expand[var02], {(Log[x])^2, Log[x] Log[1-x], x Log[x], I0 Log[x], I0 Log[1-x], Log[x], Log[1-x], I0, I1, Li2[1]}, Simplify];
+ 
 	{
+		{"definition", definition},
 		{"exclusive", exclusive},
 		{"inclusive", inclusive},
 		{"Z", Z}
