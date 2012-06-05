@@ -236,28 +236,55 @@ IntegrateLoopRules[l_] := {
 
 (* K1(0; 0)       *)	K[{},{0},{0}] -> 0,
 
-(* K2(k,0; 0)     *)	K[{},{k,0},{0}] -> Q (k.k)^(-eta) P0[k]/x,
+(* K2(k,0; 0)     *)	K[{},{k,0},{0}]   -> Q (k.k)^(-eta) P0/x,
+(* K2(p,0; 0)     *)	K[{},{p,0},{0}]   -> Q (p.p)^(-eta) B0,
+(* K2(p,k; 0)     *)	K[{},{p,k},{0}]   -> 0,
+(* K3(p,k,0; 0)   *)	K[{},{p,k,0},{0}] -> Q (k.k)^(-1-eta) S0,
 
-(*                *)	K[{xx_},{0,y_},{0}] :> K[{xx},{y,0},{0}],
-(* K2x(k,0; 0)    *)	K[{xx_},{k,0},{0}] :> Q (k.k)^(-eta) / k.n (xx.k T0 + xx.n k.k/(2 k.n) P3[k] ),
+(*                *)	K[{xx_},{0,y_},{0}]  :> K[{xx},{y,0},{0}],
+(* K2x(k,0; 0)    *)	K[{xx_},{k,0},{0}]   :> Q (k.k)^(-eta) / k.n (xx.k P1 + xx.n k.k/(2 k.n) P3 ),
+(* K2x(p,0; 0)    *)	K[{xx_},{p,0},{0}]   :> Q (p.p)^(-eta) / p.n (xx.p B1 + xx.n p.p/(2 p.n) B3 ),
+(* K3x(p,k,0; 0)  *)	K[{xx_},{p,k,0},{0}] :> Q (k.k)^(-1-eta) (xx.p S1 + xx.k S2 + xx.n k.k/(2 k.n) S3),
 
-(* I2(y,0)        *)	K[{},{y_,0},{}] :> Q (y.y)^(-eta) T0,
+(* I2(y,0)        *)	K[{},{y_,0},{}]   :> Q (y.y)^(-eta) T0,
+(* I2(p,k)        *)	K[{},{p,k},{}]    :> Q (q.q)^(-eta) T0,
+(* I3(p,k,0)      *)	K[{},{p,k,0},{}]  :> Q (k.k)^(-1-eta) R0,
 
-(*                *)	K[{xx_},{0,y_},{}] :> K[{xx},{y,0},{}],
-(* I2x(y,0)       *)	K[{xx_},{y_,0},{}] :> Q (y.y)^(-eta) xx.y T0/2
+(*                *)	K[{xx_},{0,y_},{}]   :> K[{xx},{y,0},{}],
+(* I2x(y,0)       *)	K[{xx_},{y_,0},{}]   :> Q (y.y)^(-eta) xx.y T0/2,
+(* I2x(p,k)       *)	K[{xx_},{p,k},{}]    :> Q (q.q)^(-eta) (xx.p - xx.k) T0/2 + xx.k K[{},{p,k},{}],
+(* I3x(p,k,0)     *)	K[{xx_},{p,k,0},{}]  :> Q (k.k)^(-1-eta) (xx.p R1 + xx.k R2),
+
+(* I3xy(p,k,0)    *)	K[{xx_, yy_},{p,k,0},{}]  :> Q (k.k)^(-1-eta) (xx.p yy.p R3 + xx.k yy.k R4 + (xx.k yy.p + xx.p yy.k) R5 + k.k xx.yy R6 )
+(*                    	Q -> 1 I Pi^(-2)  Pi^(-2-eta) Gamma[1 + eta] *)
 }
 
 IntegrateLoopExpandRules = {
-	T0 -> 1/eta Beta[1-eta, 1-eta],
-	P0[k] -> (Log[x] + I0) / eta - I1 + I0 Log[x] + (Log[x]^2)/2 + Li2[1],
-	P3[k] -> (2 - Log[x] - I0) / eta + 4 + I1 - I0 Log[x] - (Log[x]^2)/2 - Li2[1]
+	B0 -> I0 / eta - I1 + Li2[1],
+	B1 -> 1/eta Beta[1-eta, 1-eta],
+	B3 -> (2 - I0) / eta + 4 + I1 - Li2[1],
+	P0 -> (Log[x] + I0) / eta - I1 + I0 Log[x] + (Log[x]^2)/2 + Li2[1],
+	P1 -> T0,
+	P3 -> (2 - Log[x] - I0) / eta + 4 + I1 - I0 Log[x] - (Log[x]^2)/2 - Li2[1],
+	R0 -> 1/eta^2 - Li2[1],
+	R1 -> 1/eta^2 + 2/eta + 4 - Li2[1],
+	R2 -> -1/eta - 2,
+	R3 -> R1 + 1/eta + 3,
+	R4 -> -1/(2 eta) - 1,
+	R5 -> -1/(2 eta) - 3/2,
+	R6 -> 1/(4 eta) + 3/4,
+	S0 -> 1/eta^2 + (Log[x] - I0)/eta + I1 - I0 Log[x] - 2 Li2[1] - 2 Li2[1-x] - (Log[x]^2)/2,
+	S1 -> 1/eta^2 - 1/eta Log[x] x/(1-x)  + x/(1-x) Li2[1-x] - Li2[1],
+	S2 -> 1/eta Log[x]/(1-x) - Li2[1-x]/(1-x),
+	S3 -> 1/eta (I0 + Log[x]/(1-x)) - I1 + I0 Log[x]/(1-x) - Li2[1] - x/(1-x) Li2[1-x] + (Log[x]^2)/2,
+	T0 -> 1/eta Beta[1-eta, 1-eta]
 }
 
 IntegrateLoop[kernel_, l_, expand_:True] := Module[{step01, step02, step03},
 	step01 = ReduceIntegral[CollectIntegral[kernel, l], l] //. KK[l, xyz___] -> K[xyz];
 	step02 = step01 //. {{IntegrateLoopRules[l]}, {p.p -> 0}};
 	step03 = If[expand == True, step02 //. IntegrateLoopExpandRules, step02];
-	Simplify[ step03 ]
+	Simplify[ step03 //. {0^-eta -> 0, 0^(1-eta) -> 0, 0^(2-eta) -> 0} ]
 ];
 
 (* Renormalization routines and helpers *)
