@@ -138,6 +138,28 @@ Test[
 ]
 
 
+NLOc = Kernel[
+	FP[k] ** FV[i1] ** FP[l - k] ** FV[mu] ** FP[l - p] ** FV[i2] ** GP[i1, i2, l],
+	{ FPx[p], GPx[mu, nu, p - k]},
+	FV[nu] ** FP[k],
+	LO
+]
+
+Test[
+	KernelGet[NLOc, "inclusive"],
+	I g^4/(16 Pi^2) Axiloop`Private`Q ( (1+x^2)/(1-x) (-7 + 2 Log[x]^2 + 2 Log[x] Log[1-x] - 3 Log[1-x] + 2 Li2[1-x] + 4 Li2[1] - 4 I1 + 4 I0 Log[x] + 4 I0 Log[1-x]) - (1-x) (3 - 2 Log[x] - 4 I0) + x ),
+	TestID->"Kernel NLOc inclusive",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	KernelGet[NLOc, "Z"],
+	I g^2 Axiloop`Private`Q (3 - 4 I0 - 2 Log[x]),
+	TestID->"Kernel NLOc Z",
+	EquivalenceFunction->EqualSimplify
+]
+
+
 NLOe = Kernel[
 	FP[k] ** FV[i1] ** FP[k-l] ** GP[i1, i2, l] ** FV[i2] ** FP[k] ** FV[mu],
 	{FPx[p], GPx[mu, nu, p-k]},
