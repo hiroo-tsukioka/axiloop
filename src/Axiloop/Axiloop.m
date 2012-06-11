@@ -49,7 +49,10 @@ FP::usage =
 
 FV::usage =
 	"Fermion vertex in light-cone gauge."
-	
+
+GetValue::usage =
+	"GetValue[kernel_, key_] get value from kernel associated with key."
+
 GPx::usage =
 	"Crossed gluon propagator in light-cone gauge."
 	
@@ -73,9 +76,6 @@ IntegrateLoop::usage =
 
 Kernel::usage =
 	"Kernel constructor; define and integrate a kernel."
-
-KernelGet::usage =
-	"KernelGet[kernel_, key_] get value from kernel associated with key."
 
 Li2::usage =
 	"Dilogarythm function; Li2[x] = - Integrate[Log[1-t]/t, {t, 0, z}]."
@@ -142,14 +142,14 @@ DefineKernel[L_, M__, R_] := Module[{spurRules = (#->f0)& /@ fermionLines},
     x ExpandNumerator[(G[f1,n]/(4 k.n))**L**NonCommutativeMultiply@@M**R //. spurRules]
 ];
 
-Kernel[L_, M__, R_, kernel_:0] := Module[{definition, exclusive, inclusive, Z},
+Kernel[L_, M__, R_, kernel_:{}] := Module[{definition, exclusive, inclusive, Pe, PeZ, Z},
 	definition = DefineKernel[L, M, R];
 
 	exclusive = IntegrateLoop[definition, l];
 
 	PeZ = ExtractPole[exclusive, eta]  //. epsilon -> 0;
-	Pe = KernelGet[kernel, "exclusive"];
-	Z = PeZ / Pe //. epsilon -> 0;
+	Pe = GetValue[kernel, "exclusive"];
+	Z = If[Equal[kernel, {}], 0, PeZ / Pe //. epsilon -> 0];
 
 	var01 = IntegrateFinal[exclusive - Pe Z / eta] //. eta -> epsilon;
 	var02 = ExtractPole[var01, epsilon];
@@ -163,7 +163,16 @@ Kernel[L_, M__, R_, kernel_:0] := Module[{definition, exclusive, inclusive, Z},
 	}
 ];
 
-KernelGet[kernel_, key_] := Last[First[Select[kernel, First[#] == key &]]];
+GetValue[kernel_, key_, default_:0] := Module[{items, value},
+	items = Select[kernel, First[#] == key &];
+
+	value = If[
+		Equal[items, {}],
+		default,
+		Last[First[items]]
+	];
+	Return[value];
+];
 
 IntegrateFinal[kernel_] := Module[{},
 	(4 Pi)^(-2+epsilon) / Gamma[1-epsilon] (1-x)^(-epsilon) Integrate[(k.k)^(-epsilon) kernel, k.k]

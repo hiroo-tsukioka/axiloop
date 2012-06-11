@@ -118,21 +118,21 @@ Test[
 LO = Kernel[FP[k] ** FV[mu], {FPx[p], GPx[mu, nu, p - k]}, FV[nu] ** FP[k]];
  
 Test[
-	KernelGet[LO, "exclusive"],
+	GetValue[LO, "exclusive"],
 	2 g^2 ((1 - x) (1 - epsilon) + 2 x / (1 - x)) (k.k)^(-1),
 	TestID->"Kernel LO exclusive",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
-	KernelGet[LO, "inclusive"],
+	GetValue[LO, "inclusive"],
 	- g^2 (1 + x^2) / (8 Pi^2 (1 - x) ),
 	TestID->"Kernel LO inclusive",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
-	KernelGet[LO, "Z"],
+	GetValue[LO, "Z"],
 	0,
 	TestID->"Kernel LO Z"
 ]
@@ -146,14 +146,14 @@ NLOc = Kernel[
 ]
 
 Test[
-	KernelGet[NLOc, "inclusive"],
+	GetValue[NLOc, "inclusive"],
 	- (g/(4 Pi))^4 ( (1+x^2)/(1-x) (-7 + 2 Log[x]^2 + 2 Log[x] Log[1-x] - 3 Log[1-x] + 2 Li2[1-x] + 4 Li2[1] - 4 I1 + 4 I0 Log[x] + 4 I0 Log[1-x]) - (1-x) (3 - 2 Log[x] - 4 I0) + x ),
 	TestID->"Kernel NLOc inclusive",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
-	KernelGet[NLOc, "Z"],
+	GetValue[NLOc, "Z"],
 	- (g/(4 Pi))^2 (3 - 4 I0 - 2 Log[x]),
 	TestID->"Kernel NLOc Z",
 	EquivalenceFunction->EqualSimplify
@@ -168,14 +168,14 @@ NLOe = Kernel[
 ]
 
 Test[
-	KernelGet[NLOe, "inclusive"],
+	GetValue[NLOe, "inclusive"],
 	- (g/(4 Pi))^4 ( (1+x^2)/(1-x) (7 - 2 Log[x]^2 - 4 Log[x] Log[1-x] + 3 Log[1-x] - 4 Li2[1] + 4 I1 - 4 I0 Log[x] - 4 I0 Log[1-x]) + (1-x) (3 - 4 Log[x] - 4 I0) ),
 	TestID->"Kernel NLOe inclusive",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
-	KernelGet[NLOe, "Z"],
+	GetValue[NLOe, "Z"],
 	(g/(4 Pi))^2 (3 - 4 I0 - 4 Log[x]),
 	TestID->"Kernel NLOe Z",
 	EquivalenceFunction->EqualSimplify
