@@ -166,7 +166,7 @@ Kernel[L_, M__, R_, kernel_:0] := Module[{definition, exclusive, inclusive, Z},
 KernelGet[kernel_, key_] := Last[First[Select[kernel, First[#] == key &]]];
 
 IntegrateFinal[kernel_] := Module[{},
-	1/(4 Pi)^2 (1-x)^(-epsilon) Integrate[(k.k)^(-epsilon) kernel, k.k] //. {p.p->0}
+	(4 Pi)^(-2+epsilon) / Gamma[1-epsilon] (1-x)^(-epsilon) Integrate[(k.k)^(-epsilon) kernel, k.k]
 ];
 
 (* IntegrateLoop and its helpers *)
@@ -255,8 +255,8 @@ IntegrateLoopRules[l_] := {
 (* I2x(p,k)       *)	K[{xx_},{p,k},{}]    :> Q (q.q)^(-eta) (xx.p - xx.k) T0/2 + xx.k K[{},{p,k},{}],
 (* I3x(p,k,0)     *)	K[{xx_},{p,k,0},{}]  :> Q (k.k)^(-1-eta) (xx.p R1 + xx.k R2),
 
-(* I3xy(p,k,0)    *)	K[{xx_, yy_},{p,k,0},{}]  :> Q (k.k)^(-1-eta) (xx.p yy.p R3 + xx.k yy.k R4 + (xx.k yy.p + xx.p yy.k) R5 + k.k xx.yy R6 )
-(*                    	Q -> 1 I Pi^(-2)  Pi^(-2-eta) Gamma[1 + eta] *)
+(* I3xy(p,k,0)    *)	K[{xx_, yy_},{p,k,0},{}]  :> Q (k.k)^(-1-eta) (xx.p yy.p R3 + xx.k yy.k R4 + (xx.k yy.p + xx.p yy.k) R5 + k.k xx.yy R6 ),
+                        Q -> I (4 Pi)^(-2+eta) Gamma[1+eta]
 }
 
 IntegrateLoopExpandRules = {

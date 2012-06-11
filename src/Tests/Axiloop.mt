@@ -57,14 +57,14 @@ Test[
 
 Test[
 	IntegrateFinal[1/k.k],
-	1/(4 Pi)^2 (1-x)^(-epsilon) (k.k)^(-epsilon) / (-epsilon),
+	1/Gamma[1-epsilon] (4 Pi)^(-2+epsilon) (1-x)^(-epsilon) (k.k)^(-epsilon) / (-epsilon),
 	TestID->"IntegrateKernel",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
 	IntegrateFinal[LOdefinition] //. p.p -> 0,
-	2 g^2/(4 Pi)^2 (1-x)^(-1-epsilon) (1 + x^2 - epsilon (1-x)^2) (k.k)^(-epsilon) / (-epsilon),
+	1/Gamma[1-epsilon] 2 g^2 (4 Pi)^(-2+epsilon) (1-x)^(-1-epsilon) (1 + x^2 - epsilon (1-x)^2) (k.k)^(-epsilon) / (-epsilon),
 	TestID->"IntegrateLOKernel",
 	EquivalenceFunction->EqualSimplify
 ]
@@ -147,14 +147,14 @@ NLOc = Kernel[
 
 Test[
 	KernelGet[NLOc, "inclusive"],
-	I g^4/(16 Pi^2) Axiloop`Private`Q ( (1+x^2)/(1-x) (-7 + 2 Log[x]^2 + 2 Log[x] Log[1-x] - 3 Log[1-x] + 2 Li2[1-x] + 4 Li2[1] - 4 I1 + 4 I0 Log[x] + 4 I0 Log[1-x]) - (1-x) (3 - 2 Log[x] - 4 I0) + x ),
+	- (g/(4 Pi))^4 ( (1+x^2)/(1-x) (-7 + 2 Log[x]^2 + 2 Log[x] Log[1-x] - 3 Log[1-x] + 2 Li2[1-x] + 4 Li2[1] - 4 I1 + 4 I0 Log[x] + 4 I0 Log[1-x]) - (1-x) (3 - 2 Log[x] - 4 I0) + x ),
 	TestID->"Kernel NLOc inclusive",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
 	KernelGet[NLOc, "Z"],
-	I g^2 Axiloop`Private`Q (3 - 4 I0 - 2 Log[x]),
+	- (g/(4 Pi))^2 (3 - 4 I0 - 2 Log[x]),
 	TestID->"Kernel NLOc Z",
 	EquivalenceFunction->EqualSimplify
 ]
@@ -169,13 +169,14 @@ NLOe = Kernel[
 
 Test[
 	KernelGet[NLOe, "inclusive"],
-	I g^4/(16 Pi^2) Axiloop`Private`Q ( (1+x^2)/(1-x) (7 - 2 Log[x]^2 - 4 Log[x] Log[1-x] + 3 Log[1-x] - 4 Li2[1] + 4 I1 - 4 I0 Log[x] - 4 I0 Log[1-x]) + (1-x) (3 - 4 Log[x] - 4 I0) ),
+	- (g/(4 Pi))^4 ( (1+x^2)/(1-x) (7 - 2 Log[x]^2 - 4 Log[x] Log[1-x] + 3 Log[1-x] - 4 Li2[1] + 4 I1 - 4 I0 Log[x] - 4 I0 Log[1-x]) + (1-x) (3 - 4 Log[x] - 4 I0) ),
 	TestID->"Kernel NLOe inclusive",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
 	KernelGet[NLOe, "Z"],
-	-I g^2 Axiloop`Private`Q (3 - 4 I0 - 4 Log[x]),
-	TestID->"Kernel NLOe Z"
+	(g/(4 Pi))^2 (3 - 4 I0 - 4 Log[x]),
+	TestID->"Kernel NLOe Z",
+	EquivalenceFunction->EqualSimplify
 ]

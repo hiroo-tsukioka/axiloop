@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     70194,       1702]
-NotebookOptionsPosition[     69240,       1662]
-NotebookOutlinePosition[     69616,       1679]
-CellTagsIndexPosition[     69573,       1676]
+NotebookDataLength[     83863,       2100]
+NotebookOptionsPosition[     82085,       2035]
+NotebookOutlinePosition[     82461,       2052]
+CellTagsIndexPosition[     82418,       2049]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -26,12 +26,142 @@ Cell["Next-to-leading order kernels", "Title",
 Cell["Virtual contributions", "Subtitle",
  CellChangeTimes->{{3.5431265718665047`*^9, 3.543126609010207*^9}}],
 
+Cell[CellGroupData[{
+
 Cell[BoxData[
  RowBox[{
   RowBox[{
    RowBox[{"Needs", "[", "\"\<Axiloop`\>\"", "]"}], ";"}], 
   "\[IndentingNewLine]"}]], "Input",
  EmphasizeSyntaxErrors->True],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Remove", "::", "rmnsm"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"There are no symbols matching \
+\\\"\[NoBreak]\\!\\(\\\"Axiloop`Tracer`Private`*\\\"\\)\[NoBreak]\\\". \\!\\(\
+\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/Remove/rmnsm\\\", \
+ButtonNote -> \\\"Remove::rmnsm\\\"]\\)\"\>"}]], "Message", "MSG"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\" \\n                               T R A C E R\"\>"], \
+"Print"],
+
+Cell[BoxData["\<\"                              =============\\n \\n\"\>"], \
+"Print"],
+
+Cell[BoxData["\<\"     A MATHEMATICA PACKAGE FOR GAMMA-ALGEBRA IN ARBITRARY \
+DIMENSIONS\"\>"], "Print"],
+
+Cell[BoxData["\<\"                     by M. Jamin and M.E. \
+Lautenbacher\"\>"], "Print"],
+
+Cell[BoxData["\<\"              Physics Dept. T31, Technical University \
+Munich\\n \\n\"\>"], "Print"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"             Version \"\>", 
+   "\[InvisibleSpace]", "\<\"1.1.1\"\>", 
+   "\[InvisibleSpace]", "\<\" from \"\>", 
+   "\[InvisibleSpace]", "\<\"Mon Dec 30 15:36:00 MET 1991\"\>"}],
+  SequenceForm[
+  "             Version ", "1.1.1", " from ", "Mon Dec 30 15:36:00 MET 1991"],
+  
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"                    (based on MATHEMATICA Version \"\>", 
+   "\[InvisibleSpace]", "\<\"1.2\"\>", 
+   "\[InvisibleSpace]", "\<\")\\n \\n\"\>"}],
+  SequenceForm[
+  "                    (based on MATHEMATICA Version ", "1.2", ")\n \n"],
+  Editable->False]], "Print"],
+
+Cell[BoxData["\<\"The package defines the following \
+commands:\\n\\n\\\"AntiCommute\\\", \\\"ContractEpsGamma\\\", \\\"Eps\\\", \\\
+\"G\\\",\\n\\\"GammaTrace\\\", \\\"G5\\\", \\\"H\\\",\\n\\\"ListCommands\\\", \
+\\\"NoSpur\\\",\\n\\\"OnShell\\\", \\\"OutputFormat\\\", \\\"RemoveHatMomenta\
+\\\",\\n\\n\\\"RemoveNCM\\\", \\\"S\\\", \\\"Sigma\\\", \\\"SortLine\\\", \
+\\\"Spur\\\", \\\"T\\\",\\n\\\"ToDiracBasis\\\",\\n\\\"ToHatTilde\\\", \
+\\\"ToOtimes\\\", \\\"ToUG5\\\", \\\"U\\\",\\n\\\"VectorDimension\\\", \
+\\\"Version\\\".\\n\\n                                    Help on usage as \
+usual per ?Name.\\n\"\>"], "Print"],
+
+Cell[BoxData["\<\"DEFAULT SETTINGS ON \
+STARTUP:\\n\\n----------------------------\"\>"], "Print"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"NonCommutativeMultiply will be \"\>", 
+   "\[InvisibleSpace]", "\<\"kept.\"\>"}],
+  SequenceForm["NonCommutativeMultiply will be ", "kept."],
+  Editable->False]], "Print"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Current OutputFormat is set to \"\>", 
+   "\[InvisibleSpace]", "\<\"\\\"texlike\\\"\"\>", 
+   "\[InvisibleSpace]", "\<\".\"\>"}],
+  SequenceForm["Current OutputFormat is set to ", "\"texlike\"", "."],
+  Editable->False]], "Print"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Remove", "::", "rmnsm"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"There are no symbols matching \
+\\\"\[NoBreak]\\!\\(\\\"Axiloop`*\\\"\\)\[NoBreak]\\\". \\!\\(\\*ButtonBox[\\\
+\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/Remove/rmnsm\\\", ButtonNote -> \
+\\\"Remove::rmnsm\\\"]\\)\"\>"}]], "Message", "MSG"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Remove", "::", "rmnsm"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"There are no symbols matching \
+\\\"\[NoBreak]\\!\\(\\\"Axiloop`Private`*\\\"\\)\[NoBreak]\\\". \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/Remove/rmnsm\\\", \
+ButtonNote -> \\\"Remove::rmnsm\\\"]\\)\"\>"}]], "Message", "MSG"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"General", "::", "stop"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Further output of \[NoBreak]\\!\\(\\*StyleBox[\\(Remove :: \
+rmnsm\\), \\\"MessageName\\\"]\\)\[NoBreak] will be suppressed during this \
+calculation. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/stop\\\", ButtonNote -> \
+\\\"General::stop\\\"]\\)\"\>"}]], "Message", "MSG"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["\<\"The gamma matrix line(s) \\\"f0\\\" will be traced.\"\>"], \
+"Print"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Dimension set to \\\"\"\>", 
+   "\[InvisibleSpace]", "\<\"4 - 2 epsilon\"\>", 
+   "\[InvisibleSpace]", "\<\"\\\". Used type of G5 left unchanged.\"\>"}],
+  SequenceForm[
+  "Dimension set to \"", "4 - 2 epsilon", 
+   "\". Used type of G5 left unchanged."],
+  Editable->False]], "Print"]
+}, Open  ]]
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -57,6 +187,30 @@ Cell[BoxData[
      RowBox[{"FP", "[", "k", "]"}]}]}], "]"}]}]], "Input",
  CellChangeTimes->{{3.546588282287858*^9, 3.5465882866725492`*^9}, {
   3.546669441083063*^9, 3.5466694449186583`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Select", "::", "normal"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Nonatomic expression expected at position \
+\[NoBreak]\\!\\(1\\)\[NoBreak] in \[NoBreak]\\!\\(Select[\\(\\(0, \
+\\(\\(\\(\\(\\(\\(First[#1]\\)\\) \[Equal] \\\"exclusive\\\"\\)\\) &\\)\\)\\)\
+\\)]\\)\[NoBreak]. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\
+\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/normal\\\", ButtonNote -> \
+\\\"Select::normal\\\"]\\)\"\>"}]], "Message", "MSG"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Last", "::", "normal"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Nonatomic expression expected at position \
+\[NoBreak]\\!\\(1\\)\[NoBreak] in \[NoBreak]\\!\\(Last[0]\\)\[NoBreak]. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/General/normal\\\", \
+ButtonNote -> \\\"Last::normal\\\"]\\)\"\>"}]], "Message", "MSG"],
 
 Cell[BoxData[
  RowBox[{"{", 
@@ -458,8 +612,15 @@ Cell[BoxData[
    RowBox[{"{", 
     RowBox[{"\<\"exclusive\"\>", ",", 
      FractionBox[
-      RowBox[{"2", " ", "\[ImaginaryI]", " ", 
-       SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+      RowBox[{
+       SuperscriptBox["2", 
+        RowBox[{
+         RowBox[{"-", "3"}], "+", 
+         RowBox[{"2", " ", "eta"}]}]], " ", 
+       SuperscriptBox["g", "4"], " ", 
+       SuperscriptBox["\[Pi]", 
+        RowBox[{
+         RowBox[{"-", "2"}], "+", "eta"}]], " ", 
        RowBox[{"(", 
         RowBox[{
          RowBox[{"-", "1"}], "+", 
@@ -469,30 +630,34 @@ Cell[BoxData[
             RowBox[{
              RowBox[{"-", "1"}], "+", "x"}], ")"}], "2"]}], "-", 
          SuperscriptBox["x", "2"]}], ")"}], " ", 
+       RowBox[{"Gamma", "[", 
+        RowBox[{"1", "+", "eta"}], "]"}], " ", 
        RowBox[{"(", 
         RowBox[{
          RowBox[{
-          RowBox[{"-", 
-           RowBox[{"(", 
-            RowBox[{"3", "+", "epsilon"}], ")"}]}], " ", 
+          RowBox[{"(", 
+           RowBox[{"3", "+", "epsilon"}], ")"}], " ", 
           RowBox[{"Beta", "[", 
            RowBox[{
             RowBox[{"1", "-", "eta"}], ",", 
-            RowBox[{"1", "-", "eta"}]}], "]"}]}], "+", 
-         RowBox[{"4", " ", 
+            RowBox[{"1", "-", "eta"}]}], "]"}]}], "-", 
+         RowBox[{"2", " ", 
           RowBox[{"(", 
-           RowBox[{"I0", "-", 
-            RowBox[{"eta", " ", "I1"}], "+", 
+           RowBox[{
+            RowBox[{"2", " ", 
+             RowBox[{"(", 
+              RowBox[{"I0", "-", 
+               RowBox[{"eta", " ", "I1"}], "+", 
+               RowBox[{"eta", " ", 
+                RowBox[{"Li2", "[", "1", "]"}]}]}], ")"}]}], "+", 
+            RowBox[{"2", " ", 
+             RowBox[{"(", 
+              RowBox[{"1", "+", 
+               RowBox[{"eta", " ", "I0"}]}], ")"}], " ", 
+             RowBox[{"Log", "[", "x", "]"}]}], "+", 
             RowBox[{"eta", " ", 
-             RowBox[{"Li2", "[", "1", "]"}]}]}], ")"}]}], "+", 
-         RowBox[{"4", " ", 
-          RowBox[{"(", 
-           RowBox[{"1", "+", 
-            RowBox[{"eta", " ", "I0"}]}], ")"}], " ", 
-          RowBox[{"Log", "[", "x", "]"}]}], "+", 
-         RowBox[{"2", " ", "eta", " ", 
-          SuperscriptBox[
-           RowBox[{"Log", "[", "x", "]"}], "2"]}]}], ")"}], " ", 
+             SuperscriptBox[
+              RowBox[{"Log", "[", "x", "]"}], "2"]}]}], ")"}]}]}], ")"}], " ", 
        SuperscriptBox["\<\"k.k\"\>", 
         RowBox[{
          RowBox[{"-", "1"}], "-", "eta"}]]}], 
@@ -503,147 +668,150 @@ Cell[BoxData[
    RowBox[{"{", 
     RowBox[{"\<\"inclusive\"\>", ",", 
      RowBox[{
+      RowBox[{"-", 
+       FractionBox[
+        RowBox[{
+         SuperscriptBox["g", "4"], " ", "I0", " ", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"-", "1"}], "+", "x"}], ")"}]}], 
+        RowBox[{"64", " ", 
+         SuperscriptBox["\[Pi]", "4"]}]]}], "+", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "I0", " ", "Axiloop`Private`Q", " ", 
-        RowBox[{"(", 
-         RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}], 
-       RowBox[{"4", " ", 
-        SuperscriptBox["\[Pi]", "2"]}]], "-", 
-      FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "I1", " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", "I1", " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}]}], 
-       RowBox[{"4", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"64", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", 
         RowBox[{"(", 
          RowBox[{"5", "-", 
           RowBox[{"3", " ", "x"}], "+", 
           RowBox[{"5", " ", 
            SuperscriptBox["x", "2"]}]}], ")"}]}], 
-       RowBox[{"8", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"128", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         RowBox[{"Li2", "[", "1", "]"}]}], 
-       RowBox[{"4", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"64", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
       FractionBox[
-       RowBox[{"3", " ", "\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+       RowBox[{"3", " ", 
+        SuperscriptBox["g", "4"], " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         RowBox[{"Log", "[", 
          RowBox[{"1", "-", "x"}], "]"}]}], 
-       RowBox[{"16", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"256", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "I0", " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", "I0", " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         RowBox[{"Log", "[", 
          RowBox[{"1", "-", "x"}], "]"}]}], 
-       RowBox[{"4", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"64", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
+      FractionBox[
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", "x", " ", 
+        RowBox[{"Log", "[", "x", "]"}]}], 
+       RowBox[{"32", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
           RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", "x", " ", 
-        RowBox[{"Log", "[", "x", "]"}]}], 
-       RowBox[{"2", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
-        RowBox[{"(", 
-         RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
-      FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         RowBox[{"Log", "[", "x", "]"}]}], 
-       RowBox[{"4", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"64", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "I0", " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", "I0", " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         RowBox[{"Log", "[", "x", "]"}]}], 
-       RowBox[{"4", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"64", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         RowBox[{"Log", "[", 
          RowBox[{"1", "-", "x"}], "]"}], " ", 
         RowBox[{"Log", "[", "x", "]"}]}], 
-       RowBox[{"4", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"64", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         SuperscriptBox[
          RowBox[{"Log", "[", "x", "]"}], "2"]}], 
-       RowBox[{"8", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"128", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
           RowBox[{"-", "1"}], "+", "x"}], ")"}]}]]}]}], "}"}], ",", 
    RowBox[{"{", 
     RowBox[{"\<\"Z\"\>", ",", 
-     RowBox[{
-      RowBox[{"-", "\[ImaginaryI]"}], " ", 
-      SuperscriptBox["g", "2"], " ", "Axiloop`Private`Q", " ", 
-      RowBox[{"(", 
-       RowBox[{"3", "-", 
-        RowBox[{"4", " ", "I0"}], "-", 
-        RowBox[{"4", " ", 
-         RowBox[{"Log", "[", "x", "]"}]}]}], ")"}]}]}], "}"}]}], 
-  "}"}]], "Output"]
+     FractionBox[
+      RowBox[{
+       SuperscriptBox["g", "2"], " ", 
+       RowBox[{"(", 
+        RowBox[{"3", "-", 
+         RowBox[{"4", " ", 
+          RowBox[{"(", 
+           RowBox[{"I0", "+", 
+            RowBox[{"Log", "[", "x", "]"}]}], ")"}]}]}], ")"}]}], 
+      RowBox[{"16", " ", 
+       SuperscriptBox["\[Pi]", "2"]}]]}], "}"}]}], "}"}]], "Output"]
 }, Open  ]]
 }, Open  ]],
 
@@ -1354,181 +1522,382 @@ Cell[BoxData[
          RowBox[{"1", "-", "x"}]]}], ")"}]}]}], "}"}], ",", 
    RowBox[{"{", 
     RowBox[{"\<\"exclusive\"\>", ",", 
-     RowBox[{
-      FractionBox["1", 
-       RowBox[{"eta", " ", 
+     RowBox[{"-", 
+      RowBox[{
+       FractionBox["1", 
+        RowBox[{"16", " ", "eta", " ", 
+         SuperscriptBox["\[Pi]", "2"], " ", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", 
+        RowBox[{"Gamma", "[", 
+         RowBox[{"1", "+", "eta"}], "]"}], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], 
-      RowBox[{"\[ImaginaryI]", " ", 
-       SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
-       RowBox[{"(", 
-        RowBox[{
-         RowBox[{"-", "6"}], "+", 
-         RowBox[{"2", " ", "epsilon"}], "+", 
-         RowBox[{"4", " ", 
-          SuperscriptBox["epsilon", "2"]}], "-", 
-         RowBox[{"10", " ", "eta"}], "+", 
-         RowBox[{"2", " ", "epsilon", " ", "eta"}], "+", 
-         RowBox[{"8", " ", 
-          SuperscriptBox["epsilon", "2"], " ", "eta"}], "+", 
-         RowBox[{"8", " ", "I0"}], "-", 
-         RowBox[{"8", " ", "epsilon", " ", "I0"}], "-", 
-         RowBox[{"8", " ", "eta", " ", "I1"}], "+", 
-         RowBox[{"8", " ", "epsilon", " ", "eta", " ", "I1"}], "+", 
-         RowBox[{"4", " ", "x"}], "-", 
-         RowBox[{"6", " ", "epsilon", " ", "x"}], "-", 
-         RowBox[{"6", " ", 
-          SuperscriptBox["epsilon", "2"], " ", "x"}], "+", 
-         RowBox[{"6", " ", "eta", " ", "x"}], "-", 
-         RowBox[{"10", " ", "epsilon", " ", "eta", " ", "x"}], "-", 
-         RowBox[{"12", " ", 
-          SuperscriptBox["epsilon", "2"], " ", "eta", " ", "x"}], "+", 
-         RowBox[{"16", " ", "epsilon", " ", "I0", " ", "x"}], "-", 
-         RowBox[{"16", " ", "epsilon", " ", "eta", " ", "I1", " ", "x"}], "-", 
-         SuperscriptBox["x", "2"], "+", 
-         RowBox[{"3", " ", "epsilon", " ", 
-          SuperscriptBox["x", "2"]}], "+", 
-         RowBox[{"2", " ", 
-          SuperscriptBox["epsilon", "2"], " ", 
-          SuperscriptBox["x", "2"]}], "-", 
-         RowBox[{"2", " ", "eta", " ", 
-          SuperscriptBox["x", "2"]}], "+", 
-         RowBox[{"6", " ", "epsilon", " ", "eta", " ", 
-          SuperscriptBox["x", "2"]}], "+", 
-         RowBox[{"4", " ", 
-          SuperscriptBox["epsilon", "2"], " ", "eta", " ", 
-          SuperscriptBox["x", "2"]}], "+", 
-         RowBox[{"8", " ", "I0", " ", 
-          SuperscriptBox["x", "2"]}], "-", 
-         RowBox[{"8", " ", "epsilon", " ", "I0", " ", 
-          SuperscriptBox["x", "2"]}], "-", 
-         RowBox[{"8", " ", "eta", " ", "I1", " ", 
-          SuperscriptBox["x", "2"]}], "+", 
-         RowBox[{"8", " ", "epsilon", " ", "eta", " ", "I1", " ", 
-          SuperscriptBox["x", "2"]}], "+", 
-         RowBox[{"x", " ", 
-          RowBox[{"(", 
-           RowBox[{
-            RowBox[{"-", "4"}], "+", 
-            RowBox[{"2", " ", 
-             SuperscriptBox["epsilon", "2"], " ", 
-             RowBox[{"(", 
-              RowBox[{
-               RowBox[{"-", "1"}], "+", "x"}], ")"}]}], "-", 
-            RowBox[{"5", " ", "x"}], "-", 
-            RowBox[{"epsilon", " ", 
-             RowBox[{"(", 
-              RowBox[{"2", "+", "x"}], ")"}]}]}], ")"}], " ", 
-          RowBox[{"Beta", "[", 
-           RowBox[{
-            RowBox[{"1", "-", "eta"}], ",", 
-            RowBox[{"1", "-", "eta"}]}], "]"}]}], "+", 
-         RowBox[{"8", " ", "eta", " ", 
-          RowBox[{"Li2", "[", "1", "]"}]}], "-", 
-         RowBox[{"8", " ", "epsilon", " ", "eta", " ", 
-          RowBox[{"Li2", "[", "1", "]"}]}], "+", 
-         RowBox[{"16", " ", "epsilon", " ", "eta", " ", "x", " ", 
-          RowBox[{"Li2", "[", "1", "]"}]}], "+", 
-         RowBox[{"8", " ", "eta", " ", 
-          SuperscriptBox["x", "2"], " ", 
-          RowBox[{"Li2", "[", "1", "]"}]}], "-", 
-         RowBox[{"8", " ", "epsilon", " ", "eta", " ", 
-          SuperscriptBox["x", "2"], " ", 
-          RowBox[{"Li2", "[", "1", "]"}]}], "+", 
-         RowBox[{"4", " ", "eta", " ", 
-          RowBox[{"(", 
-           RowBox[{"1", "-", 
-            RowBox[{"epsilon", " ", 
-             SuperscriptBox[
+          RowBox[{
+           RowBox[{"-", "3"}], " ", 
+           SuperscriptBox["2", 
+            RowBox[{"1", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", 
+           SuperscriptBox["\[Pi]", "eta"]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"1", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", 
+           SuperscriptBox["\[Pi]", "eta"]}], "+", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", 
+           SuperscriptBox["epsilon", "2"], " ", 
+           SuperscriptBox["\[Pi]", "eta"]}], "-", 
+          RowBox[{"5", " ", 
+           SuperscriptBox["2", 
+            RowBox[{"1", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"1", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", 
+           SuperscriptBox["epsilon", "2"], " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "I0", " ", 
+           SuperscriptBox["\[Pi]", "eta"]}], "-", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", "I0", " ", 
+           SuperscriptBox["\[Pi]", "eta"]}], "-", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "eta", " ", "I1", " ", 
+           SuperscriptBox["\[Pi]", "eta"]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", "eta", " ", 
+           "I1", " ", 
+           SuperscriptBox["\[Pi]", "eta"]}], "+", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", "x"}], "-", 
+          RowBox[{"3", " ", 
+           SuperscriptBox["2", 
+            RowBox[{"1", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", "x"}], "-", 
+          RowBox[{"3", " ", 
+           SuperscriptBox["2", 
+            RowBox[{"1", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", 
+           SuperscriptBox["epsilon", "2"], " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", "x"}], "+", 
+          RowBox[{"3", " ", 
+           SuperscriptBox["2", 
+            RowBox[{"1", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", "x"}], "-", 
+          RowBox[{"5", " ", 
+           SuperscriptBox["2", 
+            RowBox[{"1", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", "x"}], "-", 
+          RowBox[{"3", " ", 
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", 
+           SuperscriptBox["epsilon", "2"], " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", "x"}], "+", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"2", "+", "eta"}]], " ", "epsilon", " ", "I0", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", "x"}], "-", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"2", "+", "eta"}]], " ", "epsilon", " ", "eta", " ", "I1",
+            " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", "x"}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"1", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", 
+           SuperscriptBox["epsilon", "2"], " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"]}], "-", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"1", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"]}], "+", 
+          RowBox[{"3", " ", 
+           SuperscriptBox["2", 
+            RowBox[{"1", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"]}], "+", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", 
+           SuperscriptBox["epsilon", "2"], " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "I0", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"]}], "-", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", "I0", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"]}], "-", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "eta", " ", "I1", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", "eta", " ", 
+           "I1", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"]}], "-", 
+          RowBox[{
+           SuperscriptBox[
+            RowBox[{"(", 
+             RowBox[{"4", " ", "\[Pi]"}], ")"}], "eta"], " ", 
+           SuperscriptBox["x", "2"]}], "+", 
+          RowBox[{"3", " ", "epsilon", " ", 
+           SuperscriptBox[
+            RowBox[{"(", 
+             RowBox[{"4", " ", "\[Pi]"}], ")"}], "eta"], " ", 
+           SuperscriptBox["x", "2"]}], "+", 
+          RowBox[{"x", " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{
+              SuperscriptBox["2", 
+               RowBox[{"1", "+", 
+                RowBox[{"2", " ", "eta"}]}]], " ", 
+              SuperscriptBox["\[Pi]", "eta"], " ", 
               RowBox[{"(", 
                RowBox[{
-                RowBox[{"-", "1"}], "+", "x"}], ")"}], "2"]}], "+", 
-            SuperscriptBox["x", "2"]}], ")"}], " ", 
-          RowBox[{"Li2", "[", 
-           RowBox[{"1", "-", "x"}], "]"}]}], "+", 
-         RowBox[{"4", " ", 
-          RowBox[{"Log", "[", "x", "]"}]}], "-", 
-         RowBox[{"4", " ", "epsilon", " ", 
-          RowBox[{"Log", "[", "x", "]"}]}], "+", 
-         RowBox[{"8", " ", "eta", " ", "I0", " ", 
-          RowBox[{"Log", "[", "x", "]"}]}], "-", 
-         RowBox[{"8", " ", "epsilon", " ", "eta", " ", "I0", " ", 
-          RowBox[{"Log", "[", "x", "]"}]}], "+", 
-         RowBox[{"8", " ", "epsilon", " ", "x", " ", 
-          RowBox[{"Log", "[", "x", "]"}]}], "+", 
-         RowBox[{"16", " ", "epsilon", " ", "eta", " ", "I0", " ", "x", " ", 
-          RowBox[{"Log", "[", "x", "]"}]}], "+", 
-         RowBox[{"4", " ", 
-          SuperscriptBox["x", "2"], " ", 
-          RowBox[{"Log", "[", "x", "]"}]}], "-", 
-         RowBox[{"4", " ", "epsilon", " ", 
-          SuperscriptBox["x", "2"], " ", 
-          RowBox[{"Log", "[", "x", "]"}]}], "+", 
-         RowBox[{"8", " ", "eta", " ", "I0", " ", 
-          SuperscriptBox["x", "2"], " ", 
-          RowBox[{"Log", "[", "x", "]"}]}], "-", 
-         RowBox[{"8", " ", "epsilon", " ", "eta", " ", "I0", " ", 
-          SuperscriptBox["x", "2"], " ", 
-          RowBox[{"Log", "[", "x", "]"}]}], "+", 
-         RowBox[{"4", " ", "eta", " ", 
-          SuperscriptBox[
-           RowBox[{"Log", "[", "x", "]"}], "2"]}], "-", 
-         RowBox[{"4", " ", "epsilon", " ", "eta", " ", 
-          SuperscriptBox[
-           RowBox[{"Log", "[", "x", "]"}], "2"]}], "+", 
-         RowBox[{"8", " ", "epsilon", " ", "eta", " ", "x", " ", 
-          SuperscriptBox[
-           RowBox[{"Log", "[", "x", "]"}], "2"]}], "+", 
-         RowBox[{"4", " ", "eta", " ", 
-          SuperscriptBox["x", "2"], " ", 
-          SuperscriptBox[
-           RowBox[{"Log", "[", "x", "]"}], "2"]}], "-", 
-         RowBox[{"4", " ", "epsilon", " ", "eta", " ", 
-          SuperscriptBox["x", "2"], " ", 
-          SuperscriptBox[
-           RowBox[{"Log", "[", "x", "]"}], "2"]}]}], ")"}], " ", 
-       SuperscriptBox["\<\"k.k\"\>", 
-        RowBox[{
-         RowBox[{"-", "1"}], "-", "eta"}]]}]}]}], "}"}], ",", 
+                RowBox[{"-", "2"}], "-", "epsilon", "+", 
+                RowBox[{
+                 SuperscriptBox["epsilon", "2"], " ", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"-", "1"}], "+", "x"}], ")"}]}], "-", 
+                RowBox[{"4", " ", "x"}]}], ")"}]}], "-", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"-", "3"}], "+", "epsilon"}], ")"}], " ", 
+              SuperscriptBox[
+               RowBox[{"(", 
+                RowBox[{"4", " ", "\[Pi]"}], ")"}], "eta"], " ", "x"}]}], 
+            ")"}], " ", 
+           RowBox[{"Beta", "[", 
+            RowBox[{
+             RowBox[{"1", "-", "eta"}], ",", 
+             RowBox[{"1", "-", "eta"}]}], "]"}]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           RowBox[{"Li2", "[", "1", "]"}]}], "-", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           RowBox[{"Li2", "[", "1", "]"}]}], "+", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"2", "+", "eta"}]], " ", "epsilon", " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", "x", " ", 
+           RowBox[{"Li2", "[", "1", "]"}]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"], " ", 
+           RowBox[{"Li2", "[", "1", "]"}]}], "-", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"], " ", 
+           RowBox[{"Li2", "[", "1", "]"}]}], "-", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"-", "1"}], "+", 
+             RowBox[{"epsilon", " ", 
+              SuperscriptBox[
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"-", "1"}], "+", "x"}], ")"}], "2"]}], "-", 
+             SuperscriptBox["x", "2"]}], ")"}], " ", 
+           RowBox[{"Li2", "[", 
+            RowBox[{"1", "-", "x"}], "]"}]}], "+", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           RowBox[{"Log", "[", "x", "]"}]}], "-", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", "epsilon", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           RowBox[{"Log", "[", "x", "]"}]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "eta", " ", "I0", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           RowBox[{"Log", "[", "x", "]"}]}], "-", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", "eta", " ", 
+           "I0", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           RowBox[{"Log", "[", "x", "]"}]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", "x", " ", 
+           RowBox[{"Log", "[", "x", "]"}]}], "+", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"2", "+", "eta"}]], " ", "epsilon", " ", "eta", " ", "I0",
+            " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", "x", " ", 
+           RowBox[{"Log", "[", "x", "]"}]}], "+", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"], " ", 
+           RowBox[{"Log", "[", "x", "]"}]}], "-", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", "epsilon", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"], " ", 
+           RowBox[{"Log", "[", "x", "]"}]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "eta", " ", "I0", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"], " ", 
+           RowBox[{"Log", "[", "x", "]"}]}], "-", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", "eta", " ", 
+           "I0", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"], " ", 
+           RowBox[{"Log", "[", "x", "]"}]}], "+", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox[
+            RowBox[{"Log", "[", "x", "]"}], "2"]}], "-", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", "epsilon", " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox[
+            RowBox[{"Log", "[", "x", "]"}], "2"]}], "+", 
+          RowBox[{
+           SuperscriptBox["2", 
+            RowBox[{"3", "+", 
+             RowBox[{"2", " ", "eta"}]}]], " ", "epsilon", " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", "x", " ", 
+           SuperscriptBox[
+            RowBox[{"Log", "[", "x", "]"}], "2"]}], "+", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"], " ", 
+           SuperscriptBox[
+            RowBox[{"Log", "[", "x", "]"}], "2"]}], "-", 
+          RowBox[{
+           SuperscriptBox["4", 
+            RowBox[{"1", "+", "eta"}]], " ", "epsilon", " ", "eta", " ", 
+           SuperscriptBox["\[Pi]", "eta"], " ", 
+           SuperscriptBox["x", "2"], " ", 
+           SuperscriptBox[
+            RowBox[{"Log", "[", "x", "]"}], "2"]}]}], ")"}], " ", 
+        SuperscriptBox["\<\"k.k\"\>", 
+         RowBox[{
+          RowBox[{"-", "1"}], "-", "eta"}]]}]}]}]}], "}"}], ",", 
    RowBox[{"{", 
     RowBox[{"\<\"inclusive\"\>", ",", 
      RowBox[{
-      RowBox[{"-", 
-       FractionBox[
-        RowBox[{"\[ImaginaryI]", " ", 
-         SuperscriptBox["g", "4"], " ", "I0", " ", "Axiloop`Private`Q", " ", 
-         RowBox[{"(", 
-          RowBox[{
-           RowBox[{"-", "1"}], "+", "x"}], ")"}]}], 
-        RowBox[{"4", " ", 
-         SuperscriptBox["\[Pi]", "2"]}]]}], "+", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "I1", " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", "I0", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}], 
+       RowBox[{"64", " ", 
+        SuperscriptBox["\[Pi]", "4"]}]], "-", 
+      FractionBox[
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", "I1", " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}]}], 
-       RowBox[{"4", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"64", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         RowBox[{"Li2", "[", "1", "]"}]}], 
-       RowBox[{"4", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"64", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
           RowBox[{"-", "10"}], "+", 
@@ -1541,121 +1910,125 @@ Cell[BoxData[
              SuperscriptBox["x", "2"]}], ")"}], " ", 
            RowBox[{"Li2", "[", 
             RowBox[{"1", "-", "x"}], "]"}]}]}], ")"}]}], 
-       RowBox[{"16", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"256", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
       FractionBox[
-       RowBox[{"3", " ", "\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+       RowBox[{"3", " ", 
+        SuperscriptBox["g", "4"], " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         RowBox[{"Log", "[", 
          RowBox[{"1", "-", "x"}], "]"}]}], 
-       RowBox[{"16", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"256", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "I0", " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", "I0", " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         RowBox[{"Log", "[", 
          RowBox[{"1", "-", "x"}], "]"}]}], 
-       RowBox[{"4", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"64", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
+      FractionBox[
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", "x", " ", 
+        RowBox[{"Log", "[", "x", "]"}]}], 
+       RowBox[{"64", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
           RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", "x", " ", 
-        RowBox[{"Log", "[", "x", "]"}]}], 
-       RowBox[{"4", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
-        RowBox[{"(", 
-         RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
-      FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         RowBox[{"Log", "[", "x", "]"}]}], 
-       RowBox[{"8", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"128", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "I0", " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", "I0", " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         RowBox[{"Log", "[", "x", "]"}]}], 
-       RowBox[{"4", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"64", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         RowBox[{"Log", "[", 
          RowBox[{"1", "-", "x"}], "]"}], " ", 
         RowBox[{"Log", "[", "x", "]"}]}], 
-       RowBox[{"8", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"128", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
-          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "-", 
+          RowBox[{"-", "1"}], "+", "x"}], ")"}]}]], "+", 
       FractionBox[
-       RowBox[{"\[ImaginaryI]", " ", 
-        SuperscriptBox["g", "4"], " ", "Axiloop`Private`Q", " ", 
+       RowBox[{
+        SuperscriptBox["g", "4"], " ", 
         RowBox[{"(", 
          RowBox[{"1", "+", 
           SuperscriptBox["x", "2"]}], ")"}], " ", 
         SuperscriptBox[
          RowBox[{"Log", "[", "x", "]"}], "2"]}], 
-       RowBox[{"8", " ", 
-        SuperscriptBox["\[Pi]", "2"], " ", 
+       RowBox[{"128", " ", 
+        SuperscriptBox["\[Pi]", "4"], " ", 
         RowBox[{"(", 
          RowBox[{
           RowBox[{"-", "1"}], "+", "x"}], ")"}]}]]}]}], "}"}], ",", 
    RowBox[{"{", 
     RowBox[{"\<\"Z\"\>", ",", 
-     FractionBox[
-      RowBox[{"\[ImaginaryI]", " ", 
-       SuperscriptBox["g", "2"], " ", "Axiloop`Private`Q", " ", 
-       RowBox[{"(", 
-        RowBox[{
+     RowBox[{"-", 
+      FractionBox[
+       RowBox[{
+        SuperscriptBox["g", "2"], " ", 
+        RowBox[{"(", 
          RowBox[{
-          RowBox[{"(", 
-           RowBox[{
-            RowBox[{"-", "3"}], "+", 
-            RowBox[{"4", " ", "I0"}]}], ")"}], " ", 
-          RowBox[{"(", 
-           RowBox[{"1", "+", 
-            SuperscriptBox["x", "2"]}], ")"}]}], "-", 
-         RowBox[{"2", " ", 
-          RowBox[{"(", 
-           RowBox[{
-            RowBox[{"-", "1"}], "-", 
-            SuperscriptBox["x", "2"]}], ")"}], " ", 
-          RowBox[{"Log", "[", "x", "]"}]}]}], ")"}]}], 
-      RowBox[{
-       RowBox[{"-", "1"}], "-", 
-       SuperscriptBox["x", "2"]}]]}], "}"}]}], "}"}]], "Output"]
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"-", "3"}], "+", 
+             RowBox[{"4", " ", "I0"}]}], ")"}], " ", 
+           RowBox[{"(", 
+            RowBox[{"1", "+", 
+             SuperscriptBox["x", "2"]}], ")"}]}], "-", 
+          RowBox[{"2", " ", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{"-", "1"}], "-", 
+             SuperscriptBox["x", "2"]}], ")"}], " ", 
+           RowBox[{"Log", "[", "x", "]"}]}]}], ")"}]}], 
+       RowBox[{"16", " ", 
+        SuperscriptBox["\[Pi]", "2"], " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"-", "1"}], "-", 
+          SuperscriptBox["x", "2"]}], ")"}]}]]}]}], "}"}]}], "}"}]], "Output"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]
@@ -1681,26 +2054,51 @@ Notebook[{
 Cell[CellGroupData[{
 Cell[579, 22, 113, 1, 76, "Title"],
 Cell[695, 25, 109, 1, 46, "Subtitle"],
-Cell[807, 28, 161, 5, 43, "Input"],
 Cell[CellGroupData[{
-Cell[993, 37, 32, 0, 26, "Subsubtitle"],
+Cell[829, 30, 161, 5, 43, "Input"],
+Cell[993, 37, 440, 9, 23, "Message"],
 Cell[CellGroupData[{
-Cell[1050, 41, 611, 17, 27, "Input"],
-Cell[1664, 60, 2221, 63, 106, "Output"]
+Cell[1458, 50, 82, 1, 36, "Print"],
+Cell[1543, 53, 86, 1, 51, "Print"],
+Cell[1632, 56, 104, 1, 20, "Print"],
+Cell[1739, 59, 90, 1, 20, "Print"],
+Cell[1832, 62, 103, 1, 51, "Print"],
+Cell[1938, 65, 356, 9, 20, "Print"],
+Cell[2297, 76, 312, 7, 51, "Print"],
+Cell[2612, 85, 626, 8, 216, "Print"],
+Cell[3241, 95, 98, 1, 51, "Print"],
+Cell[3342, 98, 220, 5, 20, "Print"],
+Cell[3565, 105, 279, 6, 20, "Print"]
+}, Open  ]],
+Cell[3859, 114, 425, 9, 23, "Message"],
+Cell[4287, 125, 433, 9, 23, "Message"],
+Cell[4723, 136, 488, 10, 23, "Message"],
+Cell[CellGroupData[{
+Cell[5236, 150, 87, 1, 20, "Print"],
+Cell[5326, 153, 334, 8, 20, "Print"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[3934, 129, 47, 0, 26, "Subsubtitle"],
+Cell[5709, 167, 32, 0, 26, "Subsubtitle"],
 Cell[CellGroupData[{
-Cell[4006, 133, 803, 22, 27, "Input"],
-Cell[4812, 157, 20568, 488, 562, "Output"]
+Cell[5766, 171, 611, 17, 27, "Input"],
+Cell[6380, 190, 551, 11, 23, "Message"],
+Cell[6934, 203, 453, 9, 23, "Message"],
+Cell[7390, 214, 2221, 63, 106, "Output"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[25429, 651, 47, 0, 26, "Subsubtitle"],
+Cell[9660, 283, 47, 0, 26, "Subsubtitle"],
 Cell[CellGroupData[{
-Cell[25501, 655, 830, 23, 27, "Input"],
-Cell[26334, 680, 42866, 977, 1010, "Output"]
+Cell[9732, 287, 803, 22, 27, "Input"],
+Cell[10538, 311, 20458, 502, 516, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[31045, 819, 47, 0, 26, "Subsubtitle"],
+Cell[CellGroupData[{
+Cell[31117, 823, 830, 23, 27, "Input"],
+Cell[31950, 848, 50095, 1182, 979, "Output"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]
