@@ -172,11 +172,11 @@ Kernel[L_, M__, R_, kernel_:{}] := Module[{definition, exclusive, inclusive, Pe,
 
 	exclusive = IntegrateLoop[definition, l];
 
-	PeZ = ExtractPole[exclusive, eta]  //. epsilon -> 0;
-	Pe = GetValue[kernel, "exclusive"];
+	PeZ = ExtractPole[GetValue[exclusive, "expanded"], eta]  //. epsilon -> 0;
+	Pe = GetValue[GetValue[kernel, "exclusive"], "expanded"];
 	Z = If[Equal[kernel, {}], 0, PeZ / Pe //. epsilon -> 0];
 
-	var01 = IntegrateFinal[exclusive - Pe Z / eta] //. eta -> epsilon;
+	var01 = IntegrateFinal[GetValue[exclusive, "expanded"] - Pe Z / eta] //. eta -> epsilon;
 	var02 = ExtractPole[var01, epsilon];
 	inclusive = Collect[Expand[var02], {(Log[x])^2, Log[x] Log[1-x], x Log[x], I0 Log[x], I0 Log[1-x], Log[x], Log[1-x], I0, I1, Li2[1]}, Simplify];
  
@@ -314,11 +314,17 @@ IntegrateLoopExpandRules = {
 	T0 -> 1/eta Beta[1-eta, 1-eta]
 }
 
-IntegrateLoop[kernel_, l_, expand_:True] := Module[{step01, step02, step03},
+IntegrateLoop[kernel_, l_, expand_:True] := Module[{compact, expanded, step01},
 	step01 = ReduceIntegral[CollectIntegral[kernel, l], l] //. KK[l, xyz___] -> K[xyz];
-	step02 = step01 //. {{IntegrateLoopRules[l]}, {p.p -> 0}};
-	step03 = If[expand == True, step02 //. IntegrateLoopExpandRules, step02];
-	Simplify[ step03 //. {0^-eta -> 0, 0^(1-eta) -> 0, 0^(2-eta) -> 0} ]
+	compact = Simplify[step01 //. {{IntegrateLoopRules[l]}, {p.p -> 0}, {0^-eta -> 0, 0^(1-eta) -> 0, 0^(2-eta) -> 0}}];
+	
+	expanded = Simplify[compact //. IntegrateLoopExpandRules];
+	(*expanded = Simplify[ step02 //. {0^-eta -> 0, 0^(1-eta) -> 0, 0^(2-eta) -> 0} ];*)
+	
+	{
+		{"compact", Collect[compact, {Pi^eta, 4^eta, (4 Pi)^eta, (k.k)^(-1-eta), Gamma[1+eta], g^4, P0, P1, R0, R1, R2, R3, R4, R5, S0, T0}, Simplify]},
+		{"expanded", expanded}
+	}
 ];
 
 (* Renormalization routines and helpers *)

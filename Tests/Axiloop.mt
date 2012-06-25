@@ -134,7 +134,10 @@ LO = Kernel[FP[k] ** FV[mu], {FPx[p], GPx[mu, nu, p - k]}, FV[nu] ** FP[k]];
  
 Test[
 	GetValue[LO, "exclusive"],
-	2 g^2 ((1 - x) (1 - epsilon) + 2 x / (1 - x)) (k.k)^(-1),
+	{
+		{"compact", 2 g^2 ((1-x)(1-epsilon) +  2 x / (1-x)) / k.k},
+		{"expanded", 2 g^2 ((1-x) (1-epsilon) + 2 x / (1-x)) / k.k}
+	},
 	TestID->"Kernel LO exclusive",
 	EquivalenceFunction->EqualSimplify
 ]

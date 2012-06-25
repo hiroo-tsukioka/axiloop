@@ -24,4 +24,11 @@
 Needs["Axiloop`"]
 
 (* EquivalenceFunction for Test. It turns out that Equal doesn't do the job. *)
-EqualSimplify[x_, y_] := SameQ[0, Simplify[x-y]];
+EqualSimplify[x_, y_] := Module[{},
+	If[ListQ[x] && ListQ[y],
+		EqualSimplify[First[x], First[y]] && EqualSimplify[Rest[x], Rest[y]],
+	If[StringQ[x] && StringQ[y],
+		SameQ[x, y],
+		SameQ[0, Simplify[x-y]]
+	]]
+];
