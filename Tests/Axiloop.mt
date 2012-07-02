@@ -163,6 +163,26 @@ NLOc = Kernel[
 	LO
 ]
 
+
+Test[
+	GetValue[GetValue[NLOc, "exclusive"], "compact"],
+	2 g^4 (4 Pi)^(-2+eta) Gamma[1+eta] (k.k)^(-1-eta) / (1-x) (
+		  Axiloop`Private`P0 3 ((1+x^2) - epsilon (1-x)^2)
+		+ Axiloop`Private`P1 (-1)(1-epsilon(1-x))(2-x)
+		+ Axiloop`Private`R0 (3+x^2 - epsilon (2-3x+x^2) - epsilon^2 (1-x))
+		+ Axiloop`Private`R1 (-3 + (2-x) epsilon + (1-x) epsilon^2)
+		+ Axiloop`Private`R2 x (-3 + (2-x) epsilon + (1-x) epsilon^2)
+		+ Axiloop`Private`R3 (1-epsilon)
+		+ Axiloop`Private`R4 (1-epsilon) x^2
+		+ Axiloop`Private`R5 (1-epsilon) 2 x
+		+ Axiloop`Private`S0 (-1-x^2 + epsilon (1-x)^2)
+		+ Axiloop`Private`T0 (2(1-x-2x^2) - epsilon(2-x) - epsilon^2 (1-x)x)
+		+ Axiloop`Private`T1 (1-epsilon) (3x-2)x/2
+	),
+	TestID->"Kernel NLOc exclusive compact",
+	EquivalenceFunction->EqualSimplify
+]
+
 Test[
 	GetValue[NLOc, "inclusive"],
 	- (g/(4 Pi))^4 ( (1+x^2)/(1-x) (-7 + 2 Log[x]^2 + 2 Log[x] Log[1-x] - 3 Log[1-x] + 2 Li2[1-x] + 4 Li2[1] - 4 I1 + 4 I0 Log[x] + 4 I0 Log[1-x]) - (1-x) (3 - 2 Log[x] - 4 I0) + x ),
@@ -198,6 +218,18 @@ NLOe = Kernel[
 	{FPx[p], GPx[mu, nu, p-k]},
 	FV[nu] ** FP[k],
 	LO
+]
+
+Test[
+	GetValue[GetValue[NLOe, "exclusive"], "compact"],
+	2 g^4 (4 Pi)^(-2+eta) Gamma[1+eta] (k.k)^(-1-eta) (
+		  Axiloop`Private`P0 (-4) ((1+x^2)/(1-x) - epsilon (1-x))
+		+ Axiloop`Private`P1 (1-epsilon(1-x))(2-x)/(1-x)
+		+ Axiloop`Private`T0 (1+x+4x^2 + epsilon(4-3x)x - epsilon^2 (1-x)) / (1-x)
+		+ Axiloop`Private`T1 (-1)(1-epsilon)(x + epsilon(1-x))x / (1-x)
+	),
+	TestID->"Kernel NLOe exclusive compact",
+	EquivalenceFunction->EqualSimplify
 ]
 
 Test[

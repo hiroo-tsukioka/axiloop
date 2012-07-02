@@ -285,8 +285,8 @@ IntegrateLoopRules[l_] := {
 (* I3(p,k,0)      *)	K[{},{p,k,0},{}]  :> Q (k.k)^(-1-eta) R0,
 
 (*                *)	K[{xx_},{0,y_},{}]   :> K[{xx},{y,0},{}],
-(* I2x(y,0)       *)	K[{xx_},{y_,0},{}]   :> Q (y.y)^(-eta) xx.y T0/2,
-(* I2x(p,k)       *)	K[{xx_},{p,k},{}]    :> Q (q.q)^(-eta) (xx.p - xx.k) T0/2 + xx.k K[{},{p,k},{}],
+(* I2x(y,0)       *)	K[{xx_},{y_,0},{}]   :> Q (y.y)^(-eta) xx.y T1/2,
+(* I2x(p,k)       *)	K[{xx_},{p,k},{}]    :> Q (q.q)^(-eta) (xx.p - xx.k) T1/2 + xx.k K[{},{p,k},{}],
 (* I3x(p,k,0)     *)	K[{xx_},{p,k,0},{}]  :> Q (k.k)^(-1-eta) (xx.p R1 + xx.k R2),
 
 (* I3xy(p,k,0)    *)	K[{xx_, yy_},{p,k,0},{}]  :> Q (k.k)^(-1-eta) (xx.p yy.p R3 + xx.k yy.k R4 + (xx.k yy.p + xx.p yy.k) R5 + k.k xx.yy R6 ),
@@ -311,7 +311,8 @@ IntegrateLoopExpandRules = {
 	S1 -> 1/eta^2 - 1/eta Log[x] x/(1-x)  + x/(1-x) Li2[1-x] - Li2[1],
 	S2 -> 1/eta Log[x]/(1-x) - Li2[1-x]/(1-x),
 	S3 -> 1/eta (I0 + Log[x]/(1-x)) - I1 + I0 Log[x]/(1-x) - Li2[1] - x/(1-x) Li2[1-x] + (Log[x]^2)/2,
-	T0 -> 1/eta Beta[1-eta, 1-eta]
+	T0 -> T1,
+	T1 -> 1/eta Beta[1-eta, 1-eta] 
 }
 
 IntegrateLoop[kernel_, l_, expand_:True] := Module[{compact, expanded, step01},
