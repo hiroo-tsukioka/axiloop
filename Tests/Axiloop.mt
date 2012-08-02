@@ -129,3 +129,15 @@ Test[
 	-2,
 	TestID->"ExtractPole-2"
 ]
+
+Test[
+	GetValue[0, "key", 1],
+	1,
+	TestID->"GetValue-1"
+]
+
+Test[
+	GetValue[{{"key1", 0}, {"key2", 2}}, "key2", 1],
+	2,
+	TestID->"GetValue-2"
+]

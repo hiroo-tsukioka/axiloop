@@ -25,8 +25,8 @@
 (*             evolution kernels up to next-to-leading order.                 *)
 (*                                                                            *)
 (*  Author:   Oleksandr Gituliar <oleksandr@gituliar.org>                     *)
-(*  Created:  04 May 2012                                                     *)
-(*  Modified: 14 June 2012                                                    *)
+(*  Created:  04-05-2012                                                     *)
+(*  Modified: 02-08-2012                                                    *)
 (*  Homepage: http://gituliar.org/axiloop.html                                *)
 (*                                                                            *)
 (*============================================================================*)
@@ -189,7 +189,11 @@ Kernel[L_, M__, R_, kernel_:{}] := Module[{definition, exclusive, inclusive, Pe,
 ];
 
 GetValue[kernel_, key_, default_:0] := Module[{items, value},
-	items = Select[kernel, First[#] == key &];
+	items = If[
+		ListQ[kernel],
+		Select[kernel, First[#] == key &],
+		{}
+	];
 
 	value = If[
 		Equal[items, {}],
