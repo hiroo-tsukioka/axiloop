@@ -114,6 +114,19 @@ Unprotect[ReplaceRepeated];
 	ReplaceRepeated[expr_,{rules__List}] := ReplaceRepeated[expr //. First[{rules}], Rest[{rules}]];
 Protect[ReplaceRepeated];
 
+GetValue[kernel_, key_, default_:0] := If[
+	!ListQ[kernel] || Equal[kernel, {}],
+	default,
+	Module[{match},
+		match = Select[kernel, First[#] == key &, 1];
+		If[
+			match == {},
+			default,
+			Last[First[match]]
+		]
+	]
+];
+
 (* Kinematics definition and some transformations. *)
 
 Unprotect[S];
@@ -186,21 +199,6 @@ Kernel[L_, M__, R_, kernel_:{}] := Module[{definition, exclusive, inclusive, Pe,
 		{"inclusive", inclusive},
 		{"Z", Z}
 	}
-];
-
-GetValue[kernel_, key_, default_:0] := Module[{items, value},
-	items = If[
-		ListQ[kernel],
-		Select[kernel, First[#] == key &],
-		{}
-	];
-
-	value = If[
-		Equal[items, {}],
-		default,
-		Last[First[items]]
-	];
-	Return[value];
 ];
 
 IntegrateFinal[kernel_] := Module[{},

@@ -141,3 +141,9 @@ Test[
 	2,
 	TestID->"GetValue-2"
 ]
+
+Test[
+	GetValue[{{"key1", 0}, {"key2", 2}}, "key3", 3],
+	3,
+	TestID->"GetValue-3"
+]
