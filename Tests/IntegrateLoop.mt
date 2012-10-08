@@ -48,8 +48,8 @@ Test[
 Test[
 	IntegrateLoop[1/(l.l (l-p).(l-p) l.n), l],
 	{
-		{"compact", 0},
-		{"expanded", 0}
+		{"compact", I Axiloop`Private`B0 (4*Pi)^(-2 + eta) Gamma[1 + eta] (p.p)^-eta},
+		{"expanded", I (4*Pi)^(-2 + eta) Gamma[1 + eta] (I0/eta - I1 + Li2[1]) (p.p)^-eta}
 	},
 	TestID->"K2(p,0;0)",
 	EquivalenceFunction->EqualSimplify
@@ -70,7 +70,7 @@ Test[
 Test[
 	IntegrateLoop[1/(l.l (l-k).(l-k) (l-p).(l-p) l.n), l],
 	{
-		{"compact", I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`S0  (k.k)^(-1-eta)},
+		{"compact", I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`S0 (k.k)^(-1-eta)},
 		{"expanded", I (4 Pi)^(-2+eta) Gamma[1+eta] ( 1/eta^2 + (Log[x] - I0)/eta + I1 - I0 Log[x] - 2 Li2[1] - 2 Li2[1-x] - (Log[x]^2)/2)  (k.k)^(-1-eta)}
 	},
 	TestID->"K3(p,k,0;0)",
@@ -81,36 +81,34 @@ Test[
 Test[
 	IntegrateLoop[l.xx/(l.l (l-k).(l-k) l.n), l],
 	{
-		{"compact", I (4 Pi)^(-2+eta) Gamma[1+eta] (2 x Axiloop`Private`P1 k.xx + Axiloop`Private`P3 k.k n.xx) / (2 x^2  (k.k)^eta)},
-		{"expanded", I (4 Pi)^(-2+eta) Gamma[1+eta] (2 x Beta[1-eta, 1-eta] k.xx + (2 - I0 - Log[x] + eta (4 + I1 - Li2[1] - I0 Log[x] - (Log[x]^2)/2)) k.k n.xx) / (2 eta x^2  (k.k)^eta)}
+		{"compact", I (4 Pi)^(-2+eta) Gamma[1+eta] (2 Axiloop`Private`P1 k.xx / k.n + Axiloop`Private`P3 k.k n.xx / (k.n)^2) / (2 (k.k)^eta)},
+		{"expanded", I (4 Pi)^(-2+eta) Gamma[1+eta] (2 Beta[1-eta, 1-eta] k.xx / k.n + (2 - I0 - Log[x] + eta (4 + I1 - Li2[1] - I0 Log[x] - (Log[x]^2)/2)) k.k n.xx / (k.n)^2) / (2 eta (k.k)^eta)}
 	},
 	TestID->"K2x(k,0;0)",
 	EquivalenceFunction->EqualSimplify
 ]
 
 
+expr := IntegrateLoop[l.xx/(l.l (l-p).(l-p) l.n), l];
 Test[
-	IntegrateLoop[l.xx/(l.l (l-p).(l-p) l.n), l],
-	{
-		{"compact", 0},
-		{"expanded", 0}
-	},
-	TestID->"K2x(p,0;0)",
+	GetValue[expr, "compact"],
+	I (4 Pi)^(-2 + eta) Gamma[1 + eta] (p.p)^-eta ( 1/2 Axiloop`Private`B3 n.xx p.p / (p.n)^2 + Axiloop`Private`B1 p.xx / p.n),
+	TestID->"K2x(p,0;0) compact",
+	EquivalenceFunction->EqualSimplify
+]
+Test[
+	GetValue[expr, "expanded"],
+	I (4 Pi)^(-2 + eta) Gamma[1 + eta] (p.p)^-eta (1/2 ((2 - I0)/eta + 4 + I1 - Li2[1]) n.xx p.p / (p.n)^2 + Beta[1-eta, 1-eta]/eta p.xx / p.n),
+	TestID->"K2x(p,0;0) expanded",
 	EquivalenceFunction->EqualSimplify
 ]
 
 
+expr := IntegrateLoop[l.xx/(l.l (l-k).(l-k) (l-p).(l-p) l.n), l];
 Test[
-	IntegrateLoop[l.xx/(l.l (l-k).(l-k) (l-p).(l-p) l.n), l],
-	{
-		{"compact", I (4 Pi)^(-2+eta) Gamma[1+eta] (xx.p Axiloop`Private`S1 + xx.k Axiloop`Private`S2 + xx.n k.k/(2 k.n) Axiloop`Private`S3 )  (k.k)^(-1-eta)},
-		{"expanded", I (4 Pi)^(-2+eta) Gamma[1+eta] (
-			xx.p (1/eta^2 - 1/eta Log[x] x/(1-x)  + x/(1-x) Li2[1-x] - Li2[1]) +
-			xx.k (1/eta Log[x]/(1-x) - Li2[1-x]/(1-x)) + 
-			xx.n k.k/(2 k.n) (1/eta (I0 + Log[x]/(1-x)) - I1 + I0 Log[x]/(1-x) - Li2[1] - x/(1-x) Li2[1-x] + (Log[x]^2)/2)
-		) (k.k)^(-1-eta)}
-	},
-	TestID->"K3x(p,k,0;0)",
+	GetValue[expr, "compact"],
+	I (4 Pi)^(-2+eta) Gamma[1+eta] (xx.p Axiloop`Private`S1 + xx.k Axiloop`Private`S2 + xx.n k.k/(2 k.n) Axiloop`Private`S3 )  (k.k)^(-1-eta),
+	TestID->"K3x(p,k,0;0) compact",
 	EquivalenceFunction->EqualSimplify
 ]
 
@@ -126,80 +124,60 @@ Test[
 ]
 
 
+expr := IntegrateLoop[1/((l-p).(l-p) (l-k).(l-k)), l];
 Test[
-	IntegrateLoop[1/((l-p).(l-p) (l-k).(l-k)), l],
-	{
-		{"compact", 0},
-		{"expanded", 0}
-	},
-	(* Axiloop`Private`Q Axiloop`Private`T0 / (k.k)^eta, *)
-	TestID->"I2(p,k)",
+	GetValue[expr, "compact"],
+	I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`T0 / (q.q)^eta,
+	TestID->"I2(p,k) compact",
 	EquivalenceFunction->EqualSimplify
 ]
 
 
+expr := IntegrateLoop[1/(l.l (l-p).(l-p) (l-k).(l-k)), l];
 Test[
-	IntegrateLoop[1/(l.l (l-p).(l-p) (l-k).(l-k)), l],
-	{
-		{"compact", I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`R0 (k.k)^(-1-eta)},
-		{"expanded", I (4 Pi)^(-2+eta) Gamma[1+eta] (1/eta^2 - Li2[1]) (k.k)^(-1-eta)}
-	},
-	TestID->"I3(p,k,0)",
+	GetValue[expr, "compact"],
+	I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`R0 (k.k)^(-1-eta),
+	TestID->"I3(p,k,0) compact",
 	EquivalenceFunction->EqualSimplify
 ]
 
 
+expr := IntegrateLoop[l.xx/(l.l (l-k).(l-k)), l]; 
 Test[
-	IntegrateLoop[l.xx/(l.l (l-k).(l-k)), l],
-	{
-		{"compact", I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`T0 k.xx / (2 (k.k)^eta)},
-		{"expanded", I (4 Pi)^(-2+eta) Gamma[1+eta] Beta[1-eta, 1-eta] k.xx / (2 eta (k.k)^eta)}
-	},
-	TestID->"I2x(y,0)",
+	GetValue[expr, "compact"],
+	I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`T1 k.xx / (2 (k.k)^eta),
+	TestID->"I2x(y,0) compact",
 	EquivalenceFunction->EqualSimplify
 ]
 
 
+expr := IntegrateLoop[l.xx/((l-p).(l-p) (l-k).(l-k)), l]; 
 Test[
-	IntegrateLoop[l.xx/((l-p).(l-p) (l-k).(l-k)), l],
-	{
-		{"compact", 0},
-		{"expanded", 0}
-	},
-	TestID->"I2x(p,k)",
+	GetValue[expr, "compact"],
+	I (4 Pi)^(-2 + eta) Gamma[1 + eta] (q.q)^-eta (Axiloop`Private`T0 k.xx + 1/2 Axiloop`Private`T1 (p.xx - k.xx)),
+	TestID->"I2x(p,k) compact",
 	EquivalenceFunction->EqualSimplify
 ]
 
 
+expr := IntegrateLoop[l.xx/(l.l (l-p).(l-p) (l-k).(l-k)), l]; 
 Test[
-	IntegrateLoop[l.xx/(l.l (l-p).(l-p) (l-k).(l-k)), l],
-	{
-		{"compact", I (4 Pi)^(-2+eta) Gamma[1+eta] (xx.p Axiloop`Private`R1 + xx.k Axiloop`Private`R2) (k.k)^(-1-eta)},
-		{"expanded", I (4 Pi)^(-2+eta) Gamma[1+eta] (xx.p (1/eta^2 + 2/eta + 4 - Li2[1]) - xx.k (1/eta + 2)) (k.k)^(-1-eta)}
-	},
-	TestID->"I3x(p,k,0)",
+	GetValue[expr, "compact"],
+	I (4 Pi)^(-2+eta) Gamma[1+eta] (xx.p Axiloop`Private`R1 + xx.k Axiloop`Private`R2) (k.k)^(-1-eta),
+	TestID->"I3x(p,k,0) compact",
 	EquivalenceFunction->EqualSimplify
 ]
 
 
+expr := IntegrateLoop[l.xx l.yy / (l.l (l-p).(l-p) (l-k).(l-k)), l]; 
 Test[
-	IntegrateLoop[l.xx l.yy / (l.l (l-p).(l-p) (l-k).(l-k)), l],
-	{
-		{"compact",
-			I (4 Pi)^(-2+eta) Gamma[1+eta] (
+	GetValue[expr, "compact"],
+	I (4 Pi)^(-2+eta) Gamma[1+eta] (
 				xx.p yy.p Axiloop`Private`R3 +
 				xx.k yy.k Axiloop`Private`R4 +
 				(xx.k yy.p + xx.p yy.k) Axiloop`Private`R5 +
 				k.k xx.yy Axiloop`Private`R6
-			) (k.k)^(-1-eta)},
-		{"expanded",
-			I (4 Pi)^(-2+eta) Gamma[1+eta] (
-				xx.p yy.p (1/eta^2 + 3/eta + 7 - Li2[1]) +
-				xx.k yy.k (-1/(2 eta) - 1) +
-				(xx.k yy.p + xx.p yy.k) (-1/(2 eta) - 3/2) +
-				k.k xx.yy (1/(4 eta) + 3/4)
-			) (k.k)^(-1-eta) }
-	},
-	TestID->"I3xy(p,k,0)",
+			) (k.k)^(-1-eta),
+	TestID->"I3xy(p,k,0) compact",
 	EquivalenceFunction->EqualSimplify
 ]

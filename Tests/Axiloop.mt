@@ -31,56 +31,54 @@ Test[
 ]
 
 Test[
-	Axiloop`Tracer`Private`d,
-	4-2*epsilon,
-	TestID->"VectorDimension"
-]
-
-Test[
 	FP[k, f1],
-	I * G[f1, k] / k.k,
+	I * G[k, f1] / k.k,
 	TestID->"FermionPropagator"
 ]
 
 Test[
 	FV[mu, f1],
-	- I g G[f1, {mu}],
+	- I g G[{mu}, f1],
 	TestID->"FermionVertex"
 ]
 
 Test[
 	GP[mu, mu, p],
-	- I 2 (1 - epsilon) / p.p,
+	I (2 - d) / p.p,
 	TestID->"GluonPropagator",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
-	GV[mu,p, mu,k, nu,p],
-	g (-3 + 2 epsilon) (k.{nu} - p.{nu}),
+	Simplify[GV[mu,p, mu,k, nu,p]],
+	g (1 - d) (k.{nu} - p.{nu}),
 	TestID->"GluonVertex",
 	EquivalenceFunction->EqualSimplify
 ]
 
-LOdefinition = DefineKernel[FP[k] ** FV[mu], {FPx[p], GPx[mu, nu, q]}, FV[nu] ** FP[k]];
+LO = x/(4 k.n) Kernel[G[n]**FP[k]**FV[mu]**FPx[p]**GPx[mu,nu,p-k]**FV[nu]**FP[k]];
 
 Test[
-	LOdefinition,
-	2 g^2 (k.k (1 - epsilon) - x (p.p + k.k) (1 - epsilon) + 2 x (k.k - x p.p)/(1 - x)) / (k.k)^2,
+	LO,
+	(1/((k.k)^2 k.n (k.n - n.p)))
+	* 2 g^2 x (k.k ((-1 - eps) (k.n)^2 
+    + 2 eps k.n n.p + (-1 - eps) (n.p)^2)
+    + k.n (-(-1 - eps) n.p (p.p - q.q)
+    + k.n ((1 - eps) p.p - (-1 - eps) q.q))),
 	TestID->"LO-Kernel",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
 	IntegrateFinal[1/k.k],
-	1/Gamma[1-epsilon] (4 Pi)^(-2+epsilon) (1-x)^(-epsilon) (k.k)^(-epsilon) / (-epsilon),
+	1/Gamma[1+eps] (4 Pi)^(-2-eps) (1-x)^eps (k.k)^eps / eps,
 	TestID->"IntegrateKernel",
 	EquivalenceFunction->EqualSimplify
 ]
 
 Test[
-	IntegrateFinal[LOdefinition] //. p.p -> 0,
-	1/Gamma[1-epsilon] 2 g^2 (4 Pi)^(-2+epsilon) (1-x)^(-1-epsilon) (1 + x^2 - epsilon (1-x)^2) (k.k)^(-epsilon) / (-epsilon),
+	IntegrateFinal[LO] //. {p.p -> 0, q.q -> 0},
+	((2^(-3 - 2*eps)*g^2*Pi^(-2 - eps)*x*((1 + eps)*S[k, n]^2 - 2*eps*S[k, n]*S[n, p] + (1 + eps)*S[n, p]^2))/(-eps*(1 - x)^(-eps)*Gamma[1 + eps]*S[k, k]^(-eps)*S[k, n]*(S[k, n] - S[n, p]))),
 	TestID->"IntegrateLOKernel",
 	EquivalenceFunction->EqualSimplify
 ]
@@ -114,7 +112,8 @@ Test[
 Test[
 	Axiloop`Private`ReduceIntegral[Axiloop`Private`KK[l, {}, {0}, {k1, k2}], l],
 	(Axiloop`Private`KK[l, {}, {-k1}, {0}] - Axiloop`Private`KK[l, {}, {-k2}, {0}]) / (k1.n - k2.n),
-	TestID->"ReduceIntegral-3"
+	TestID->"ReduceIntegral-3",
+	EquivalenceFunction->EqualSimplify
 ]
 
 
@@ -147,3 +146,21 @@ Test[
 	3,
 	TestID->"GetValue-3"
 ]
+
+
+Test[
+	S[-a,b],
+	- a.b,
+	TestID->"ScalarProduct-01"
+]
+
+
+Test[
+    Counterterm[
+        {{"exclusive", {{"expanded", (1 - x)/eta + x}}}},
+        {{"exclusive", {{"expanded", 1}}}},
+        eta
+    ],
+    1-x,
+    TestID->"Counterterm"
+ ]
