@@ -97,7 +97,7 @@ IntegrateFinal::usage =
 IntegrateLoop::usage =
 	"Integrate over loop momenta."
 
-Kernel::usage =
+GammaTrace::usage =
 	"Defines a 2PI kernel."
 
 Li2::usage =
@@ -172,37 +172,16 @@ GV[i1_,p1_, i2_,p2_, i3_,p3_] :=
 	  + {i3}.{i1} (p3.{i2}-p1.{i2})
 );
 
-Kernel[topology_, ndim_:4 + 2 eps] := Module[{result},
+Unprotect[GammaTrace];
+GammaTrace[topology_, ndim_:4 - 2 eps] := Module[{result},
 	Spur[f0];
 	VectorDimension[ndim];
-	result = ExpandNumerator[topology //. ((#->f0)& /@ fermionLines)];
+	result = Expand[topology //. ((#->f0)& /@ fermionLines)];
 	NoSpur[f0];
-	VectorDimension[d];
-	Return[result];
+	VectorDimension[Global`d];
+	Return[Simplify[result]];
 ];
-
-(*---------------------------------------------------------------------------*)
-
-
-PartonDensity[topology_, LO_:{}] := Module[{exclusive, inclusive, kernel, Z},
-	exclusive = Kernel[topology, 4 + 2 eps];
-
-	PeZ = ExtractPole[GetValue[exclusive, "expanded"], eta]  //. epsilon -> 0;
-	Pe = GetValue[GetValue[kernel, "exclusive"], "expanded"];
-	Z = If[Equal[kernel, {}], 0, PeZ / Pe //. epsilon -> 0];
-
-	var01 = IntegrateFinal[GetValue[exclusive, "expanded"] - Pe Z / eta] //. eta -> epsilon;
-	var02 = ExtractPole[var01, epsilon];
-	inclusive = Collect[Expand[var02], {(Log[x])^2, Log[x] Log[1-x], x Log[x], I0 Log[x], I0 Log[1-x], Log[x], Log[1-x], I0, I1, Li2[1]}, Simplify];
- 
-	{
-		{"definition", definition},
-		{"exclusive", exclusive},
-		{"inclusive", inclusive},
-		{"Z", Z}
-	}
-];
-
+Protect[GammaTrace];
 
 (*---------------------------------------------------------------------------*)
 (*--------------------- FINAL-STATE MOMENTA INTEGRATION ---------------------*)
