@@ -103,6 +103,9 @@ Kernel::usage =
 Li2::usage =
 	"Dilogarythm function; Li2[x] = - Integrate[Log[1-t]/t, {t, 0, x}]."
 
+Counterterm::usage = ""
+
+
 Begin["`Private`"]
 
 (* Useful modifications to standard functions *)
@@ -364,6 +367,21 @@ IntegrateLoop[kernel_, l_, expand_:True] := Module[{compact, expanded, step01},
 ];
 
 (* Renormalization routines and helpers *)
+
+
+(*---------------------------------------------------------------------------*)
+(*-------------------------- COUNTERTERM FUNCTION ---------------------------*)
+(*---------------------------------------------------------------------------*)
+
+Counterterm[ExclusiveNLO_, ExclusiveLO_, eta_] := Module[{},
+	OnShellPole = ExtractPole[ExclusiveNLO, eta] //. OnShellRules;
+	OnShellExclusiveLO = ExclusiveLO //. OnShellRules;
+
+	If[ SameQ[ExclusiveLO, 0],
+		0,
+		OnShellPole / OnShellExclusiveLO
+	]
+];
 
 ExtractPole[kernel_, eta_] := Simplify[Coefficient[Series[kernel, {eta, 0, 1}], eta, -1]];
 
