@@ -33,6 +33,42 @@
 
 BeginPackage["Axiloop`", {"Axiloop`Tracer`"}]
 
+(*---------------------------------------------------------------------------*)
+(*---------------------- FEYNMAN RULES and GAMMA TRACE ----------------------*)
+(*---------------------------------------------------------------------------*)
+
+FP::usage = "FP[momentum, Line -> f1] -- a fermion propagator in the light-cone
+gauge."
+
+FPx::usage = "FPx[momentum, Line -> f1] -- a crossed (final-state, on-shell)
+fermion propagator in the light-cone gauge."
+
+FV::usage = "FV[index, Line -> f1] -- a fermion vertex in the light-cone gauge."
+
+G::usage = "G[<vector or index>, Line -> f1] -- a gamma matrix.
+
+Usage:
+    G[{mu}]     a gamma matrix with vector index `mu`;
+    G[p]        a gamma matrix convoluted with a vector,
+                the same as `G[{mu}] p.{mu}`;"
+
+GP::usage = "GP[mu, nu, p] -- a gluon propagator in the light-cone gauge."
+
+GPx::usage = "GPx[mu, nu, p] -- a crossed (final-state, on-shell) gluon
+propagator in the light-cone gauge."
+
+GV::usage = "GV[i1,p1, i2,p2, i3,p3] -- a gluon vertex in the light-cone gauge."
+
+GammaTrace::usage = "GammaTrace[expr, NumberOfDimensions -> 4 - 2 eps] computes
+a trace of the gamma matrices product, `expr`, in the arbitrary
+number of dimensions, `NumberOfDimensions`.
+
+Usage:
+    In[1] := GammaTrace[G[{mu}]**G[{nu}], NumberOfDimensions -> 4 + eps]
+    Out[1] = 4 (4 + eps)"
+
+(*---------------------------------------------------------------------------*)
+
 eps::usage =
 	"Dimensional regulator; n = 4 + 2 eps."
 
@@ -62,28 +98,8 @@ x::usage =
 ExtractPole::usage =
 	"ExtractPole[expr, x] extract coefficient in front of 1/x in expr."
 
-FPx::usage =
-	"Crossed fermion propagator in light-cone gauge."
-	
-FP::usage =
-	"Fermion propagator in light-cone gauge."
-
-FV::usage =
-	"Fermion vertex in light-cone gauge."
-
 GetValue::usage =
 	"GetValue[kernel_, key_] get value from kernel associated with key."
-
-G::usage = "Gamma matrix"
-
-GPx::usage =
-	"Crossed gluon propagator in light-cone gauge."
-	
-GP::usage =
-	"Gluon propagator in light-cone gauge."
-
-GV::usage =
-	"Gluon vertex in light-cone gauge."
 
 I0::usage =
 	"Principal Value regulated integral; I0 = - Log[delta] + O[delta]."
@@ -96,9 +112,6 @@ IntegrateFinal::usage =
 
 IntegrateLoop::usage =
 	"Integrate over loop momenta."
-
-GammaTrace::usage =
-	"Defines a 2PI kernel."
 
 Li2::usage =
 	"Dilogarythm function; Li2[x] = - Integrate[Log[1-t]/t, {t, 0, x}]."
@@ -143,28 +156,30 @@ Protect[S];
 
 
 (*---------------------------------------------------------------------------*)
-(*------------------- FEYNMAN RULES and KERNEL DEFINITION -------------------*)
+(*---------------------- FEYNMAN RULES and GAMMA TRACE ----------------------*)
 (*---------------------------------------------------------------------------*)
 
-fermionLines = {};
+FermionLines = {};    (* A storage of fermion lines used by user. Is used    *)
+                      (* in `GammaTrace` as a list of lines to trace over.   *)
 
-LorentzTensor[mu_, nu_, p_] :=
-	- {mu}.{nu} + (p.{mu} n.{nu} + n.{mu} p.{nu}) / p.n;
-
-FP[p_, line_:f1] := FPx[p, line] / p.p;
-
-FPx[p_, line_:f1] := I Axiloop`G[p, line];
-
-FV[mu_, line_:f1] := - I g Axiloop`G[{mu}, line];
-
-G[v_, line_:f1] := (
-	fermionLines = Union[fermionLines, {line}];
-	Axiloop`Tracer`G[line, v]
+Options[G] = {Line -> f1};
+G[v_, OptionsPattern[]] := (
+	FermionLines = Union[FermionLines, {OptionValue[Line]}];
+	GTrace[OptionValue[Line], v]
 );
+
+Options[FP] = {Line -> f1};
+FP[p_, OptionsPattern[]] := FPx[p, Line -> OptionValue[Line]] / p.p;
+
+Options[FPx] = {Line -> f1};
+FPx[p_, OptionsPattern[]] := I G[p, Line -> OptionValue[Line]];
+
+Options[FV] = {Line -> f1};
+FV[mu_, OptionsPattern[]] := - I g G[{mu}, Line -> OptionValue[Line]];
 
 GP[mu_, nu_, p_] := GPx[mu, nu, p] / p.p;
 
-GPx[mu_, nu_, p_] := I LorentzTensor[mu, nu, p];
+GPx[mu_, nu_, p_] := - I ({mu}.{nu} - (p.{mu} n.{nu} + n.{mu} p.{nu}) / p.n)
 
 GV[i1_,p1_, i2_,p2_, i3_,p3_] :=
 	g ( {i1}.{i2} (p1.{i3}-p2.{i3})
@@ -172,16 +187,21 @@ GV[i1_,p1_, i2_,p2_, i3_,p3_] :=
 	  + {i3}.{i1} (p3.{i2}-p1.{i2})
 );
 
-Unprotect[GammaTrace];
-GammaTrace[topology_, ndim_:4 - 2 eps] := Module[{result},
-	Spur[f0];
+Options[GammaTrace] = {NumberOfDimensions -> 4 - 2 eps};
+GammaTrace[expr_, OptionsPattern[]] := Module[
+	{ndim = OptionValue[NumberOfDimensions], result},
+	
 	VectorDimension[ndim];
-	result = Expand[topology //. ((#->f0)& /@ fermionLines)];
+	Spur[f0];
+	result = Expand[expr //. {
+		((#->f0)& /@ FermionLines),
+		{Global`d -> ndim, NonCommutativeMultiply -> Times}
+	}];
 	NoSpur[f0];
 	VectorDimension[Global`d];
-	Return[Simplify[result]];
+	Return[result];
 ];
-Protect[GammaTrace];
+
 
 (*---------------------------------------------------------------------------*)
 (*--------------------- FINAL-STATE MOMENTA INTEGRATION ---------------------*)

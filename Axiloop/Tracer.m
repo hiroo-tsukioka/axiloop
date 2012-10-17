@@ -58,6 +58,8 @@
 (*     Changes made by O.Gituliar <gituliar@gmail.com>:                   *)
 (*                                                                        *)
 (*       * switch from Tracer` to Axiloop`Tracer` context;                *)
+(*       * rename GammaTrace -> GTrace;                                   *)
+(*       * remove `G = GTrace` alias;                                     *)
 (*                                                                        *)
 (**************************************************************************)
  
@@ -69,7 +71,7 @@ BeginPackage[ "Axiloop`Tracer`" ];
 (*---------------------- UNPROTECT SPECICAL SYMBOLS ----------------------*)
 (*------------------------ AND MAKE "TABULA RASA" ------------------------*)
  
-Unprotect[ AntiCommute, ContractEpsGamma, Eps, G, GammaTrace, G5, H,
+Unprotect[ AntiCommute, ContractEpsGamma, Eps, GTrace, G5, H,
            ListCommands, NoSpur, OnShell, OutputFormat, RemoveHatMomenta,
            RemoveNCM, S, Sigma, SortLine, Spur, T, ToDiracBasis,
            ToHatTilde, ToOtimes, ToUG5, U, VectorDimension, Version ];
@@ -96,7 +98,7 @@ MajorChanges = "
  
 Commands = "The package defines the following commands:
 \n\"AntiCommute\", \"ContractEpsGamma\", \"Eps\", \"G\",
-\"GammaTrace\", \"G5\", \"H\",\n\"ListCommands\", \"NoSpur\",
+\"GTrace\", \"G5\", \"H\",\n\"ListCommands\", \"NoSpur\",
 \"OnShell\", \"OutputFormat\", \"RemoveHatMomenta\",\n
 \"RemoveNCM\", \"S\", \"Sigma\", \"SortLine\", \"Spur\", \"T\",
 \"ToDiracBasis\",\n\"ToHatTilde\", \"ToOtimes\", \"ToUG5\", \"U\",
@@ -141,12 +143,9 @@ a linear combination with scalar coefficients. Arguments of Eps[]
 can be a mixture of Lorentz indices and momenta, e.g.
 \"Eps[[p,{mu},q,{nu}]\" means \"Eps_{alpha mu beta nu} p^alpha q^beta\"
 in a standard physics notation.";
- 
-G::usage = "G[l,exp1,...,expn] is a REDUCE-like shorthand for
-GammaTrace[l,exp1,...,expn]. Type `?GammaTrace' for more information.";
- 
-GammaTrace::usage =
-"GammaTrace[l,exp1,...,expn] calculates the trace of a string of gamma
+
+GTrace::usage =
+"GTrace[l,exp1,...,expn] calculates the trace of a string of gamma
 matrices in arbitrary dimensions. The space-time dimension can be set with
 \"VectorDimension[]\". The expi can be: Symbols ( e.g. \"p\", \"q\" ) which
 denote vectors, brackets (e.g. \"{mu}\", \"{nu}\" ) which denote indices or
@@ -535,14 +534,12 @@ Format[ sigma[l_, Hold[{m_,n_}]], TeXForm ] :=
 (*--------------------- CONVERSION TO INTERNAL FORMAT --------------------*)
  
 (* 
- * Convert user level functions G, GammaTrace, Eps, Sigma to internal
+ * Convert user level functions G, GTrace, Eps, Sigma to internal
  * functions tr, eps, sigma. All actual calculations are done with tr,
  * eps and sigma. Gamma algebra objects are combined in a list.
  *)
  
-G[line_, a___] := tr[line, {a}];                (* Synonym for GammaTrace *)
- 
-GammaTrace[line_, a___] := tr[line, {a}];
+GTrace[line_, a___] := tr[line, {a}];
  
 Sigma[l_,m_,n_] := sigma[l,{m,n}];
  
@@ -646,7 +643,7 @@ SpurOut[] := Block[ {i, string = "The gamma matrix line(s) \""},
 	       Print[ string ] ];
  
  
-(*---------------- SET OUTPUT STYLE FOR GAMMATRACE[list] -----------------*)
+(*---------------- SET OUTPUT STYLE FOR GTrace[list] -----------------*)
  
 OutputFormat[ flag_:query ] := 
    ( Switch[ flag,
@@ -1493,7 +1490,7 @@ tr /: a___ ** tr[l_,{b___}] ** f__ ** tr[l_,{c___}] ** e___ :=
  
 (*------------- PROTECT SPECICAL SYMBOLS FROM ACCIDENTAL USE -------------*)
  
-Protect[ AntiCommute, ContractEpsGamma, Eps, G, GammaTrace, G5, H,
+Protect[ AntiCommute, ContractEpsGamma, Eps, GTrace, G5, H,
          ListCommands, NoSpur, OnShell, OutputFormat, RemoveHatMomenta,
          RemoveNCM, S, Sigma, SortLine, Spur, T, ToDiracBasis,
          ToHatTilde, ToOtimes, ToUG5, U, VectorDimension, Version ];
