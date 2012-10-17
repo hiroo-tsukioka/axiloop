@@ -60,6 +60,7 @@
 (*       * switch from Tracer` to Axiloop`Tracer` context;                *)
 (*       * rename GammaTrace -> GTrace;                                   *)
 (*       * remove `G = GTrace` alias;                                     *)
+(*       * disable printing of a startup and some other message;          *)
 (*                                                                        *)
 (**************************************************************************)
  
@@ -76,7 +77,7 @@ Unprotect[ AntiCommute, ContractEpsGamma, Eps, GTrace, G5, H,
            RemoveNCM, S, Sigma, SortLine, Spur, T, ToDiracBasis,
            ToHatTilde, ToOtimes, ToUG5, U, VectorDimension, Version ];
  
-Remove[ "Axiloop`Tracer`*", "Axiloop`Tracer`Private`*" ];
+Remove[ "Axiloop`Tracer`*" (*, "Axiloop`Tracer`Private`*"*)];
  
  
 (*-------------------------- STATUS OF TRACER -----------------------------*)
@@ -107,7 +108,7 @@ Commands = "The package defines the following commands:
  
  
 (*--------------------------- STARTUP MESSAGE -----------------------------*)
- 
+(*
 Print[" \n                               T R A C E R"];
 Print["                              =============\n \n"];
 Print["     A MATHEMATICA PACKAGE FOR GAMMA-ALGEBRA IN ARBITRARY DIMENSIONS"]
@@ -119,7 +120,7 @@ Print["                    (based on MATHEMATICA Version ", MathVersion,
 Print[ Commands ];
 Print["DEFAULT SETTINGS ON STARTUP:
 \n----------------------------" ];
- 
+*)
  
 (*------------------ SET UP SYMBOLS OF PACKAGE TO EXPORT -----------------*)
  
@@ -534,7 +535,7 @@ Format[ sigma[l_, Hold[{m_,n_}]], TeXForm ] :=
 (*--------------------- CONVERSION TO INTERNAL FORMAT --------------------*)
  
 (* 
- * Convert user level functions G, GTrace, Eps, Sigma to internal
+ * Convert user level functions GTrace, Eps, Sigma to internal
  * functions tr, eps, sigma. All actual calculations are done with tr,
  * eps and sigma. Gamma algebra objects are combined in a list.
  *)
@@ -593,7 +594,7 @@ AntiCommute[ flag_:query ] :=
  
 VectorDimension[ dim_:query ] :=
    Switch[ dim,
-	   query, Print[ "Current dimension is \"", ToString[d], "\"." ],
+	   query, (*Print[ "Current dimension is \"", ToString[d], "\"." ]*),
 	       4, ( Unprotect[ Release[protected] ];
 		    d = 4; 
 		    H[__] := 0;
@@ -609,8 +610,8 @@ VectorDimension[ dim_:query ] :=
 		    protected = Switch[ Head[d], 
 					Symbol, Protect[H, Release[d]],
 					     _, Protect[ H ]            ];
-		    Print[ "Dimension set to \"", ToString[d], 
-			   "\". Used type of G5 left unchanged." ]
+		    (*Print[ "Dimension set to \"", ToString[d], 
+			   "\". Used type of G5 left unchanged." ]*)
 		  )
 	   ];
  
@@ -640,7 +641,7 @@ SpurOut[] := Block[ {i, string = "The gamma matrix line(s) \""},
 		   CalcTable[[Length[CalcTable]]] ], "\" will be traced." ];
 	       If[ Length[CalcTable]==0, string =
 		   "No gamma matrix line will be traced.", ];
-	       Print[ string ] ];
+	       (* Print[ string ] *) ];
  
  
 (*---------------- SET OUTPUT STYLE FOR GTrace[list] -----------------*)
@@ -649,8 +650,8 @@ OutputFormat[ flag_:query ] :=
    ( Switch[ flag,
 	       Global`texlike,   TeXlike := True;,
 	       Global`subscript, TeXlike := False; ];
-     Print[ "Current OutputFormat is set to ",
-	      If[ TeXlike, "\"texlike\"", "\"subscript\"" ], "." ]
+     (*Print[ "Current OutputFormat is set to ",
+	      If[ TeXlike, "\"texlike\"", "\"subscript\"" ], "." ]*)
    );
  
  
@@ -660,8 +661,8 @@ RemoveNCM[ flag_:query ] :=
    ( Switch[ flag,
              Tracer`on,   NCMflag = True;,
              Tracer`off,  NCMflag = False; ];
-     Print[ "NonCommutativeMultiply will be ",
-            If[ NCMflag, "removed.", "kept." ] ]
+     (*Print[ "NonCommutativeMultiply will be ",
+            If[ NCMflag, "removed.", "kept." ] ]*)
    );
  
 NCMflag = False;
