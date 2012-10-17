@@ -24,14 +24,18 @@
 Get["Tests/main.mt"];
 
 
-LO = Kernel[FP[k] ** FV[mu], {FPx[p], GPx[mu, nu, p - k]}, FV[nu] ** FP[k]];
+LO = PartonDensity[
+  x (G[n]/(4 k.n)) ** FP[k] ** FV[mu] ** FPx[p] ** GPx[mu, nu, q] ** 
+    FV[nu] ** FP[k]
+]
  
 Test[
 	GetValue[LO, "exclusive"],
-	{
-		{"compact", 2 g^2 ((1-x)(1-epsilon) +  2 x / (1-x)) / k.k},
-		{"expanded", 2 g^2 ((1-x) (1-epsilon) + 2 x / (1-x)) / k.k}
-	},
+	2 g^2 (
+	    (-1 + eps (-1 + x)^2 - x^2) k.k + 
+        x (1 + eps (-1 + x) + x) p.p + 
+        x (-1 + eps + x - eps x) q.q
+    ) / ((-1 + x) (k.k)^2),
 	TestID->"Kernel LO exclusive",
 	EquivalenceFunction->EqualSimplify
 ]
