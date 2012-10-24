@@ -23,12 +23,166 @@
 
 Get["Tests/main.mt"]
 
+
 Test[
-	IntegrateLoop[1/(l.l l.n), l] + IntegrateLoop[1/(l-p).(l-p), l] - IntegrateLoop[1/(l-k).(l-k), l],
-	{
-		{"compact", 0},
-		{"expanded", 0}
-	},
+	Axiloop`Private`KK[l, {x},{y},{z}] l.p
+		//. Axiloop`Private`CollectIntegralRules[l],
+	Axiloop`Private`KK[l, {p,x},{y},{z}],
+	TestID->"CollectIntegralRules Test 01",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {x},{y},{z}] (l.p)^3
+		//. Axiloop`Private`CollectIntegralRules[l],
+	Axiloop`Private`KK[l, {p,p,p,x},{y},{z}],
+	TestID->"CollectIntegralRules Test 02",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {x},{y},{z}] / l.l
+		//. Axiloop`Private`CollectIntegralRules[l],
+	Axiloop`Private`KK[l, {x},{0,y},{z}],
+	TestID->"CollectIntegralRules Test 03",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {x},{y},{z}] / (l-p).(l-p)
+		//. Axiloop`Private`CollectIntegralRules[l],
+	Axiloop`Private`KK[l, {x},{p,y},{z}],
+	TestID->"CollectIntegralRules Test 04",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {x},{y},{z}] / (l+p).(l+p)
+		//. Axiloop`Private`CollectIntegralRules[l],
+	Axiloop`Private`KK[l, {x},{-p,y},{z}],
+	TestID->"CollectIntegralRules Test 05",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {x},{y},{z}] / l.n
+		//. Axiloop`Private`CollectIntegralRules[l],
+	Axiloop`Private`KK[l, {x},{y},{0,z}],
+	TestID->"CollectIntegralRules Test 06",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {x},{y},{z}] / (l-p).n
+		//. Axiloop`Private`CollectIntegralRules[l],
+	Axiloop`Private`KK[l, {x},{y},{p,z}],
+	TestID->"CollectIntegralRules Test 07",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {x},{y},{z}] / (-l+p).n
+		//. Axiloop`Private`CollectIntegralRules[l],
+	- Axiloop`Private`KK[l, {x},{y},{p,z}],
+	TestID->"CollectIntegralRules Test 08",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {x},{y},{z}] / (l+p).n
+		//. Axiloop`Private`CollectIntegralRules[l],
+	Axiloop`Private`KK[l, {x},{y},{-p,z}],
+	TestID->"CollectIntegralRules Test 09",
+	EquivalenceFunction->EqualSimplify
+]
+
+
+Test[
+	Axiloop`Private`KK[l, {x1,l,x2},{y1,0,y2},{z}]
+		//. Axiloop`Private`ReduceIntegralRules[l],
+    Axiloop`Private`KK[l, {x1,x2},{y1,y2},{z}],
+	TestID->"ReduceIntegralRules Test 01",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {x1,p,x2},{y1,p,y2},{z}]
+		//. Axiloop`Private`ReduceIntegralRules[l],
+    ( p.p Axiloop`Private`KK[l, {x1,x2},{y1,p,y2},{z}]
+        + Axiloop`Private`KK[l, {x1,l,x2},{y1,p,y2},{z}]
+        - Axiloop`Private`KK[l, {x1,x2},{y1,y2},{z}]
+    ) / 2,
+	TestID->"ReduceIntegralRules Test 02",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {x},{y},{p,k}]
+		//. Axiloop`Private`ReduceIntegralRules[l][[1]],
+    (Axiloop`Private`KK[l, {x},{y},{p}]
+        - Axiloop`Private`KK[l, {x},{y},{k}]
+    ) / (p.n - k.n),
+	TestID->"ReduceIntegralRules Test 03",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {x1,n,x2},{y},{p}]
+		//. Axiloop`Private`ReduceIntegralRules[l][[1]],
+    Axiloop`Private`KK[l, {x1,x2},{y},{}]
+        + p.n Axiloop`Private`KK[l, {x1,x2},{y},{p}]
+    ,
+	TestID->"ReduceIntegralRules Test 04",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {l},{p,y1,y2},{z}]
+		//. Axiloop`Private`ReduceIntegralRules[l][[2]][[1]],
+    Axiloop`Private`KK[l, {},{y1,y2},{z}]
+        + 2 Axiloop`Private`KK[l, {p},{p,y1,y2},{z}]
+        - p.p Axiloop`Private`KK[l, {},{p,y1,y2},{z}]
+    ,
+	TestID->"ReduceIntegralRules Test 05",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {},{y1,y2},{p}]
+		//. Axiloop`Private`ReduceIntegralRules[l][[2]][[2]],
+    Axiloop`Private`KK[l, {},{y1-p,y2-p},{0}],
+	TestID->"ReduceIntegralRules Test 06",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {x},{y1,y2},{p}]
+		//. Axiloop`Private`ReduceIntegralRules[l][[2]][[3]],
+    Axiloop`Private`KK[l, {x},{y1-p,y2-p},{0}]
+        + p.x Axiloop`Private`KK[l, {},{y1-p,y2-p},{0}],
+	TestID->"ReduceIntegralRules Test 07",
+	EquivalenceFunction->EqualSimplify
+]
+
+Test[
+	Axiloop`Private`KK[l, {},{y},{0}]
+		//. Axiloop`Private`ReduceIntegralRules[l][[3]],
+    Axiloop`Private`KK[l, {},{0},{0}]
+        - 2 Axiloop`Private`KK[l, {y},{y,0},{0}]
+        + y.y Axiloop`Private`KK[l, {},{y,0},{0}],
+	TestID->"ReduceIntegralRules Test 08",
+	EquivalenceFunction->EqualSimplify
+]
+
+
+KK[l, {x___},{y___},{z1___,p_,k_,z2___}] :>
+			(KK[l, {x},{y},{z1,p,z2}] - KK[l, {x},{y},{z1,k,z2}]) / (p.n-k.n)
+
+Test[
+	IntegrateLoop[1/(l.l l.n), l]
+	    + IntegrateLoop[1/(l-p).(l-p), l]
+	    - IntegrateLoop[1/(l-k).(l-k), l],
+	0,
 	TestID->"K1(0;0)+I1(p)-I1(k)",
 	EquivalenceFunction->EqualSimplify
 ]
@@ -36,10 +190,9 @@ Test[
 
 Test[
 	IntegrateLoop[1/(l.l (l-k).(l-k) l.n), l],
-	{
-		{"compact", I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`P0 / (x (k.k)^eta)},
-		{"expanded", I (4 Pi)^(-2+eta) Gamma[1+eta] ((I0 + Log[x]) / eta - I1 + Li2[1] + I0 Log[x] + (Log[x]^2)/2) / (x (k.k)^eta)}
-	},
+	I (4 Pi)^(-2+eta) Gamma[1+eta] (
+	    (I0 + Log[x])/eta - I1 + Li2[1] + I0 Log[x] + (Log[x]^2)/2
+	) / (x (k.k)^eta),
 	TestID->"K2(k,0;0)",
 	EquivalenceFunction->EqualSimplify
 ]
@@ -47,10 +200,7 @@ Test[
 
 Test[
 	IntegrateLoop[1/(l.l (l-p).(l-p) l.n), l],
-	{
-		{"compact", I Axiloop`Private`B0 (4*Pi)^(-2 + eta) Gamma[1 + eta] (p.p)^-eta},
-		{"expanded", I (4*Pi)^(-2 + eta) Gamma[1 + eta] (I0/eta - I1 + Li2[1]) (p.p)^-eta}
-	},
+    I (4*Pi)^(-2 + eta) Gamma[1 + eta] (I0/eta - I1 + Li2[1]) (p.p)^-eta,
 	TestID->"K2(p,0;0)",
 	EquivalenceFunction->EqualSimplify
 ]
@@ -58,10 +208,7 @@ Test[
 
 Test[
 	IntegrateLoop[1/((l-k).(l-k) (l-p).(l-p) l.n), l],
-	{
-		{"compact", 0},
-		{"expanded", 0}
-	},
+	0,
 	TestID->"K2(p,k;0)",
 	EquivalenceFunction->EqualSimplify
 ]
@@ -69,10 +216,10 @@ Test[
 
 Test[
 	IntegrateLoop[1/(l.l (l-k).(l-k) (l-p).(l-p) l.n), l],
-	{
-		{"compact", I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`S0 (k.k)^(-1-eta)},
-		{"expanded", I (4 Pi)^(-2+eta) Gamma[1+eta] ( 1/eta^2 + (Log[x] - I0)/eta + I1 - I0 Log[x] - 2 Li2[1] - 2 Li2[1-x] - (Log[x]^2)/2)  (k.k)^(-1-eta)}
-	},
+	I (4 Pi)^(-2+eta) Gamma[1+eta] (
+	    1/eps^2 + (Log[x] - I0)/eps + I1 - I0 Log[x] - 2 Li2[1] - 2 Li2[1-x]
+	    - (Log[x]^2)/2
+	) (k.k)^(-1-eta),
 	TestID->"K3(p,k,0;0)",
 	EquivalenceFunction->EqualSimplify
 ]
@@ -80,34 +227,44 @@ Test[
 
 Test[
 	IntegrateLoop[l.xx/(l.l (l-k).(l-k) l.n), l],
-	{
-		{"compact", I (4 Pi)^(-2+eta) Gamma[1+eta] (2 Axiloop`Private`P1 k.xx / k.n + Axiloop`Private`P3 k.k n.xx / (k.n)^2) / (2 (k.k)^eta)},
-		{"expanded", I (4 Pi)^(-2+eta) Gamma[1+eta] (2 Beta[1-eta, 1-eta] k.xx / k.n + (2 - I0 - Log[x] + eta (4 + I1 - Li2[1] - I0 Log[x] - (Log[x]^2)/2)) k.k n.xx / (k.n)^2) / (2 eta (k.k)^eta)}
-	},
+	I (4 Pi)^(-2+eta) Gamma[1+eta] (
+	    2 Beta[1-eta, 1-eta] k.xx / k.n
+	    + (2 - I0 - Log[x] + eta (4 + I1 - Li2[1] - I0 Log[x] - (Log[x]^2)/2))
+	        * k.k n.xx / (k.n)^2
+	) / (2 eta (k.k)^eta),
 	TestID->"K2x(k,0;0)",
 	EquivalenceFunction->EqualSimplify
 ]
 
 
-expr := IntegrateLoop[l.xx/(l.l (l-p).(l-p) l.n), l];
 Test[
-	GetValue[expr, "compact"],
-	I (4 Pi)^(-2 + eta) Gamma[1 + eta] (p.p)^-eta ( 1/2 Axiloop`Private`B3 n.xx p.p / (p.n)^2 + Axiloop`Private`B1 p.xx / p.n),
+	IntegrateLoop[l.xx/(l.l (l-p).(l-p) l.n), l, Compact->True],
+	I (4 Pi)^(-2 + eta) Gamma[1 + eta] (p.p)^-eta (
+	    1/2 Axiloop`Private`B3 n.xx p.p / (p.n)^2
+	    + Axiloop`Private`B1 p.xx / p.n
+	),
 	TestID->"K2x(p,0;0) compact",
 	EquivalenceFunction->EqualSimplify
 ]
+
 Test[
-	GetValue[expr, "expanded"],
-	I (4 Pi)^(-2 + eta) Gamma[1 + eta] (p.p)^-eta (1/2 ((2 - I0)/eta + 4 + I1 - Li2[1]) n.xx p.p / (p.n)^2 + Beta[1-eta, 1-eta]/eta p.xx / p.n),
-	TestID->"K2x(p,0;0) expanded",
+	IntegrateLoop[l.xx/(l.l (l-p).(l-p) l.n), l],
+	I (4 Pi)^(-2 + eta) Gamma[1 + eta] (p.p)^-eta (
+	    1/2 ((2 - I0)/eta + 4 + I1 - Li2[1]) n.xx p.p / (p.n)^2
+	    + Beta[1-eta, 1-eta]/eta p.xx / p.n
+	),
+	TestID->"K2x(p,0;0)",
 	EquivalenceFunction->EqualSimplify
 ]
 
 
-expr := IntegrateLoop[l.xx/(l.l (l-k).(l-k) (l-p).(l-p) l.n), l];
 Test[
-	GetValue[expr, "compact"],
-	I (4 Pi)^(-2+eta) Gamma[1+eta] (xx.p Axiloop`Private`S1 + xx.k Axiloop`Private`S2 + xx.n k.k/(2 k.n) Axiloop`Private`S3 )  (k.k)^(-1-eta),
+	IntegrateLoop[l.xx/(l.l (l-k).(l-k) (l-p).(l-p) l.n), l, Compact->True],
+	I (4 Pi)^(-2+eta) Gamma[1+eta] (
+	    xx.p Axiloop`Private`S1
+	    + xx.k Axiloop`Private`S2
+	    + xx.n k.k/(2 k.n) Axiloop`Private`S3
+	) (k.k)^(-1-eta),
 	TestID->"K3x(p,k,0;0) compact",
 	EquivalenceFunction->EqualSimplify
 ]
@@ -115,63 +272,58 @@ Test[
 
 Test[
 	IntegrateLoop[1/(l.l (l-k).(l-k)), l],
-	{
-		{"compact", I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`T0 / (k.k)^eta},
-		{"expanded", I (4 Pi)^(-2+eta) Gamma[1+eta] Beta[1-eta, 1-eta] / (eta (k.k)^eta)}
-	},
+	I (4 Pi)^(-2+eta) Gamma[1+eta] Beta[1-eta, 1-eta] / (eta (k.k)^eta),
 	TestID->"I2(y,0)",
 	EquivalenceFunction->EqualSimplify
 ]
 
 
-expr := IntegrateLoop[1/((l-p).(l-p) (l-k).(l-k)), l];
 Test[
-	GetValue[expr, "compact"],
+	IntegrateLoop[1/((l-p).(l-p) (l-k).(l-k)), l, Compact->True],
 	I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`T0 / (q.q)^eta,
 	TestID->"I2(p,k) compact",
 	EquivalenceFunction->EqualSimplify
 ]
 
 
-expr := IntegrateLoop[1/(l.l (l-p).(l-p) (l-k).(l-k)), l];
 Test[
-	GetValue[expr, "compact"],
+	IntegrateLoop[1/(l.l (l-p).(l-p) (l-k).(l-k)), l, Compact->True],
 	I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`R0 (k.k)^(-1-eta),
 	TestID->"I3(p,k,0) compact",
 	EquivalenceFunction->EqualSimplify
 ]
 
-
-expr := IntegrateLoop[l.xx/(l.l (l-k).(l-k)), l]; 
+ 
 Test[
-	GetValue[expr, "compact"],
+	IntegrateLoop[l.xx/(l.l (l-k).(l-k)), l, Compact->True],
 	I (4 Pi)^(-2+eta) Gamma[1+eta] Axiloop`Private`T1 k.xx / (2 (k.k)^eta),
 	TestID->"I2x(y,0) compact",
 	EquivalenceFunction->EqualSimplify
 ]
 
-
-expr := IntegrateLoop[l.xx/((l-p).(l-p) (l-k).(l-k)), l]; 
+ 
 Test[
-	GetValue[expr, "compact"],
-	I (4 Pi)^(-2 + eta) Gamma[1 + eta] (q.q)^-eta (Axiloop`Private`T0 k.xx + 1/2 Axiloop`Private`T1 (p.xx - k.xx)),
+	IntegrateLoop[l.xx/((l-p).(l-p) (l-k).(l-k)), l, Compact->True],
+	I (4 Pi)^(-2 + eta) Gamma[1 + eta] (q.q)^-eta (
+	    Axiloop`Private`T0 k.xx + 1/2 Axiloop`Private`T1 (p.xx - k.xx)
+	),
 	TestID->"I2x(p,k) compact",
 	EquivalenceFunction->EqualSimplify
 ]
 
 
-expr := IntegrateLoop[l.xx/(l.l (l-p).(l-p) (l-k).(l-k)), l]; 
 Test[
-	GetValue[expr, "compact"],
-	I (4 Pi)^(-2+eta) Gamma[1+eta] (xx.p Axiloop`Private`R1 + xx.k Axiloop`Private`R2) (k.k)^(-1-eta),
+	IntegrateLoop[l.xx/(l.l (l-p).(l-p) (l-k).(l-k)), l, Compact->True],
+	I (4 Pi)^(-2+eta) Gamma[1+eta] (
+	    xx.p Axiloop`Private`R1 + xx.k Axiloop`Private`R2
+	) (k.k)^(-1-eta),
 	TestID->"I3x(p,k,0) compact",
 	EquivalenceFunction->EqualSimplify
 ]
 
-
-expr := IntegrateLoop[l.xx l.yy / (l.l (l-p).(l-p) (l-k).(l-k)), l]; 
+ 
 Test[
-	GetValue[expr, "compact"],
+	IntegrateLoop[l.xx l.yy / (l.l (l-p).(l-p) (l-k).(l-k)), l, Compact->True],
 	I (4 Pi)^(-2+eta) Gamma[1+eta] (
 				xx.p yy.p Axiloop`Private`R3 +
 				xx.k yy.k Axiloop`Private`R4 +
