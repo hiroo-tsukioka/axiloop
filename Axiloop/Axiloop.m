@@ -242,7 +242,23 @@ CollectIntegralRules[l_] := {
 	KK[l, {},{},{}] -> 1
 };
 
-CollectIntegral[expr_, l_] := Expand[expr * KK[l, {},{},{}], l] //. CollectIntegralRules[l] ;
+CollectIntegral[expr_, l_] := Module[{},
+	Expand[expr * KK[l, {},{},{}], l] //. CollectIntegralRules[l]
+];
+
+
+ExpandIntegralRules = {
+	{
+		KK[l_, {x1_,x___},{y___},{z___}] :> x1.l KK[l, {x},{y},{z}],
+		KK[l_, {x___},{y1_,y___},{z___}] :> KK[l, {x},{y},{z}] / (l-y1).(l-y1),
+		KK[l_, {x___},{y___},{z1_,z___}] :> KK[l, {x},{y},{z}] / (l-z1).n,
+		KK[l_, {},{},{}] -> 1
+	}
+};
+ExpandIntegral[expr_] := Module[{},
+	Expand[expr //. ExpandIntegralRules]
+];
+
 
 ReduceIntegralRules[l_] := {
 	{
@@ -250,7 +266,9 @@ ReduceIntegralRules[l_] := {
             KK[l, {x1,x2},{y1,y2},{z}],
 
 		KK[l,{x1___,p_,x2___},{y1___,p_,y2___},{z___}] :>
-			(KK[l, {x1,x2},{y1,p,y2},{z}] p.p + KK[l, {x1,l,x2},{y1,p,y2},{z}] - KK[l, {x1,x2},{y1,y2},{z}]) / 2,
+			( KK[l, {x1,x2},{y1,p,y2},{z}] p.p
+			+ KK[l, {x1,l,x2},{y1,p,y2},{z}]
+			- KK[l, {x1,x2},{y1,y2},{z}] ) / 2,
 
 		KK[l, {x___},{y___},{z1___,p_,k_,z2___}] :>
 			(KK[l, {x},{y},{z1,p,z2}] - KK[l, {x},{y},{z1,k,z2}]) / (p.n-k.n),
@@ -259,7 +277,9 @@ ReduceIntegralRules[l_] := {
 			KK[l, {x1,x2},{y},{z1,z2}] + KK[l, {x1,x2},{y},{z1,p,z2}] p.n
 	}, {
 		KK[l, {l},{y1___,p_,y2___},{z___}] :>
-			KK[l, {},{y1,y2},{z}] + 2 KK[l, {p},{y1,p,y2},{z}] - p.p KK[l, {},{y1,p,y2},{z}],
+			( KK[l, {},{y1,y2},{z}]
+			+ 2 KK[l, {p},{y1,p,y2},{z}]
+			- p.p KK[l, {},{y1,p,y2},{z}] ),
 
 		KK[l, {},{y___},{p_Symbol}] :>
 			KK[l, {},(#-p)&/@{y},{0}],
@@ -273,8 +293,8 @@ ReduceIntegralRules[l_] := {
 };
 
 ReduceIntegral[expr_, l_] := Module[{},
-	expr //. ReduceIntegralRules[l]
-]
+	Expand[expr //. ReduceIntegralRules[l]]
+];
 
 IntegrateLoopRules[l_] := {
 						K[{},{p},{}] -> K[{},{0},{}],
@@ -314,8 +334,8 @@ IntegrateLoopRules[l_] := {
 (* I3(p,k,0)      *)	K[{},{p,k,0},{}]  :> Q (k.k)^(-1-eta) R0,
 
 (*                *)	K[{xx_},{0,y_},{}]   :> K[{xx},{y,0},{}],
-(* I2x(y,0)       *)	K[{xx_},{y_,0},{}]   :> Q (y.y)^(-eta) xx.y T1/2,
-(* I2x(p,k)       *)	K[{xx_},{p,k},{}]    :> Q (q.q)^(-eta) (xx.p - xx.k) T1/2 + xx.k K[{},{p,k},{}],
+(* I2x(y,0)       *)	K[{xx_},{y_,0},{}]   :> Q (y.y)^(-eta) xx.y T1,
+(* I2x(p,k)       *)	K[{xx_},{p,k},{}]    :> Q (q.q)^(-eta) (xx.p - xx.k) T1 + xx.k K[{},{p,k},{}],
 (* I3x(p,k,0)     *)	K[{xx_},{p,k,0},{}]  :> Q (k.k)^(-1-eta) (xx.p R1 + xx.k R2),
 
 (* I3xy(p,k,0)    *)	K[{xx_, yy_},{p,k,0},{}] :> Q (k.k)^(-1-eta) (xx.p yy.p R3 + xx.k yy.k R4 + (xx.k yy.p + xx.p yy.k) R5 + k.k xx.yy R6 ),
