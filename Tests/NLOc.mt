@@ -24,15 +24,24 @@
 Get["Tests/LO.mt"];
 
 
-NLOc = Kernel[
-	FP[k] ** FV[i1] ** FP[l - k] ** FV[mu] ** FP[l - p] ** FV[i2] ** GP[i1, i2, l],
-	{ FPx[p], GPx[mu, nu, p - k]},
-	FV[nu] ** FP[k],
+NLOc = PartonDensity[
+	x (G[n]/(4 k.n)) ** FP[k] ** FV[i1] ** FP[l - k] ** FV[mu] ** FP[l - p] **
+	    FV[i2] ** GP[i1, i2, l] ** FPx[p] ** GPx[mu, nu, p - k] ** FV[nu] **
+	    FP[k],
 	LO
 ]
 
+kernel = GetValue[NLOc, "kernel"];
 Test[
-	GetValue[GetValue[NLOc, "exclusive"], "compact"],
+	Axiloop`Private`ExpandIntegral[
+		Axiloop`Private`ReduceIntegral[
+			Axiloop`Private`CollectIntegral[kernel, l], l
+		]
+	],
+	kernel,
+	TestID->"Test 01",
+	EquivalenceFunction->EqualSimplify
+]
 	2 g^4 (4 Pi)^(-2+eta) Gamma[1+eta] (k.k)^(-1-eta) / (1-x) (
 		  Axiloop`Private`P0 3 ((1+x^2) - epsilon (1-x)^2)
 		+ Axiloop`Private`P1 (-1 + epsilon(1-x))(2-x)
