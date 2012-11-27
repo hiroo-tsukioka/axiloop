@@ -25,7 +25,7 @@
 (*             evolution kernels up to next-to-leading order.                 *)
 (*                                                                            *)
 (*  Author:   Oleksandr Gituliar <oleksandr@gituliar.org>                     *)
-(*  Created:  04-05-2012                                                     *)
+(*  Created:  04-05-2012                                                      *)
 (*  Homepage: http://gituliar.org/axiloop.html                                *)
 (*                                                                            *)
 (*============================================================================*)
@@ -139,6 +139,10 @@ Protect[Debug];
 
 Unprotect[Dot];
     (-x_).y_ := - x.y;
+    (*
+    x_.(-y_) := - x.y;
+    (x_.(-x_))^2 := (x.x)^2;
+    *)
 Protect[Dot];
 
 Unprotect[ReplaceRepeated];
@@ -237,18 +241,20 @@ CollectIntegralRules[l_] := {
 	KK[l, {x___},{y___},{z___}] / S[l,l] :>
 		KK[l, {x},{0,y},{z}],
 	KK[l, {x___},{y___},{z___}] / S[l-l1_,l-l1_] :>
-		KK[l, {x},{l1,y},{z}],
-	KK[l, {x___},{y___},{z___}] / S[l+l1_,l+l1_] :>
 		KK[l, {x},{-l1,y},{z}],
+	KK[l, {x___},{y___},{z___}] / S[l+l1_,l+l1_] :>
+		KK[l, {x},{l1,y},{z}],
 
 	KK[l, {x___},{y___},{z___}] /  S[l,n] :>
 		KK[l, {x},{y},{0,z}],
+	KK[l, {x___},{y___},{z___}] / (S[l,n]+S[ln_,n]) :>
+		KK[l, {x},{y},{ln,z}],
 	KK[l, {x___},{y___},{z___}] / (S[l,n]-S[ln_,n]) :>
+		KK[l, {x},{y},{-ln,z}],
+	KK[l, {x___},{y___},{z___}] /  S[l+ln_,n] :>
 		KK[l, {x},{y},{ln,z}],
 	KK[l, {x___},{y___},{z___}] / (S[ln_,n]-S[l,n]) :>
-		- KK[l, {x},{y},{ln,z}],
-	KK[l, {x___},{y___},{z___}] /  S[l+ln_,n] :>
-		KK[l, {x},{y},{-ln,z}],
+		- KK[l, {x},{y},{-ln,z}],
 
 	KK[l, {},{},{}] -> 1
 };
@@ -261,8 +267,8 @@ CollectIntegral[expr_, l_] := Module[{},
 ExpandIntegralRules = {
 	{
 		KK[l_, {x1_,x___},{y___},{z___}] :> x1.l KK[l, {x},{y},{z}],
-		KK[l_, {x___},{y1_,y___},{z___}] :> KK[l, {x},{y},{z}] / (l-y1).(l-y1),
-		KK[l_, {x___},{y___},{z1_,z___}] :> KK[l, {x},{y},{z}] / (l-z1).n,
+		KK[l_, {x___},{y1_,y___},{z___}] :> KK[l, {x},{y},{z}] / (l+y1).(l+y1),
+		KK[l_, {x___},{y___},{z1_,z___}] :> KK[l, {x},{y},{z}] / (l+z1).n,
 		KK[l_, {},{},{}] -> 1
 	}
 };
@@ -271,30 +277,48 @@ ExpandIntegral[expr_] := Module[{},
 ];
 
 
-ReduceIntegralRules[l_] := {
+ReduceIntegralRulesNew[l_] := {
+	{
+		KK[l, {}, {-k,0}, {}] -> KK[l, {}, {k,0}, {}],
+		KK[l, {}, {-p,-k}, {}] -> KK[l, {}, {p,k}, {}],
+		KK[l, {}, {-p,-k,0}, {}] -> KK[l, {}, {p,k,0}, {}],
+		KK[l, {x_}, {-k,0}, {}] -> - KK[l, {x}, {k,0}, {}],
+		KK[l, {x_}, {-p,-k,0}, {}] -> - KK[l, {x}, {p,k,0}, {}],
+		KK[l, {x_,y_}, {-p,-k,0}, {}] :> KK[l, {x,y}, {p,k,0}, {}],
+		
+		KK[l, {}, {-k}, {0}] -> - KK[l, {}, {k}, {0}],
+		
+		KK[l, {}, {-p,-k}, {0}] :> - KK[l, {}, {p,k}, {0}],
+		KK[l, {x_}, {-k,0}, {0}] -> KK[l, {x}, {k,0}, {0}],
+		KK[l, {x_}, {-p,-k}, {0}] :> KK[l, {x}, {p,k}, {0}],
+		KK[l, {x_}, {-p,-k,0}, {0}] -> KK[l, {x}, {p,k,0}, {0}],
+		KK[l, {x_,y_}, {-p,-k,0}, {0}] :> - KK[l, {x,y}, {p,k,0}, {0}]
+	},
+	
 	{
 		KK[l, {p,k}, {p,k,0}, {0}] ->
-		    1/2 ( KK[l, {k}, {p,k}, {0}]
+		    - 1/2 ( KK[l, {k}, {p,k}, {0}]
 		    	+ KK[l, {k}, {p,k,0}, {0}] p.p
 		    	- KK[l, {k}, {k,0}, {0}]
 		    ),
 		KK[l, {p,p}, {p,k,0}, {0}] ->
-		    1/2 ( KK[l, {p}, {p,k}, {0}]
+		    - 1/2 ( KK[l, {p}, {p,k}, {0}]
 		    	+ KK[l, {p}, {p,k,0}, {0}] p.p
 		    	- KK[l, {p}, {k,0}, {0}]
 		    ),
 		KK[l, {k,k}, {p,k,0}, {0}] ->
-		    1/2 ( KK[l, {k}, {p,k}, {0}]
+		    - 1/2 ( KK[l, {k}, {p,k}, {0}]
 		    	+ KK[l, {k}, {p,k,0}, {0}] k.k
 		    	- KK[l, {k}, {p,0}, {0}]
-		    ),
+		    )
+	}
+	(*    
 		KK[l, {p}, {p,k}, {0}] -> 
 			1/2 ( KK[l, {}, {p}, {0}]
 				- KK[l, {}, {k}, {0}]
 				+ 2 KK[l, {k}, {p,k}, {0}]
 				+ (p.p-k.k) KK[l, {}, {p,k}, {0}]
 			),
-		
 		KK[l, {}, {p}, {0}] -> (
 			KK[l, {}, {0}, {0}]
 			+ 2 KK[l, {p}, {p,0}, {0}]
@@ -304,96 +328,227 @@ ReduceIntegralRules[l_] := {
 			KK[l, {}, {0}, {0}]
 			+ 2 KK[l, {k}, {k,0}, {0}]
 			- k.k KK[l, {}, {k,0}, {0}]
+		),
+		
+		KK[l, {}, {p,k}, {0}] -> 1/(k.k-p.p) (
+			KK[l, {}, {p}, {0}]
+			- KK[l, {}, {k}, {0}]
+			- 2 KK[l, {p}, {p,k}, {0}]
+			+ 2 KK[l, {k}, {p,k}, {0}]
 		)
+	}
+	*)
+};
+
+ReduceIntegralRules[l_] := {
+	ReduceIntegralRulesNew[l][[1]],
+	{
+		KK[l, {x1___,l,x2___},{y1___,0,y2___},{z___}] :>
+            KK[l, {x1,x2},{y1,y2},{z}],
+
+		KK[l,{x1___,a_,x2___},{y1___,a_,y2___},{z___}] :>
+			( KK[l, {x1,x2},{y1,y2},{z}]
+			- KK[l, {x1,x2},{y1,a,y2},{z}] a.a
+			- KK[l, {x1,l,x2},{y1,a,y2},{z}]) / 2
+		(*
+		KK[l, {x___},{y___},{z1___,z2_,z3_,z4___}] :>
+			(KK[l, {x},{y},{z1,z2,z4}] - KK[l, {x},{y},{z1,z3,z4}]) / (z2.n-z3.n),
+
+		KK[l, {x1___,n,x2___},{y___},{z1___,z_,z2___}] :>
+			KK[l, {x1,x2},{y},{z1,z2}] + KK[l, {x1,x2},{y},{z1,z,z2}] z.n
+		*)
+	}, {
+		KK[l, {l},{y1___,y_,y2___},{z___}] :>
+			( KK[l, {},{y1,y2},{z}]
+			- 2 KK[l, {y},{y1,y,y2},{z}]
+			- y.y KK[l, {},{y1,y,y2},{z}] )
+		(*
+		KK[l, {},{y___},{p_Symbol}] :>
+			KK[l, {},(#-p)&/@{y},{0}],
+
+		KK[l, {x_Symbol},{y___},{p_Symbol}] :>
+			KK[l, {x},(#-p)&/@{y},{0}] + x.p KK[l, {},(#-p)&/@{y},{0}]
+		*)
+	}, {
+		KK[l, {},{y_Symbol},{0}] :>
+			KK[l, {},{0},{0}] - 2 KK[l, {y},{y,0},{0}] - y.y KK[l, {},{y,0},{0}]
+	}
 };
 
 ReduceIntegral[expr_, l_] := Module[{},
 	Expand[expr //. ReduceIntegralRules[l]]
 ];
 
+IntegrateLoopRulesNull[l_] := {};
+
 IntegrateLoopRules[l_] := {
 	(* I2 *)
+	(*
 	K[{},{p,0},{}] -> Q (p.p)^(-eta) T0,
 	K[{},{k,0},{}] -> Q (k.k)^(-eta) T0,
-	K[{},{p,k},{}] -> Q (q.q)^(-eta) T0,
-
+	*)
+	K[{},{k,p},{}] -> Q (q.q)^(-eta) T0,
+	(*
 	(* I2x *)
-	K[{k},{p,0},{}] -> Q (p.p)^(-eta) k.p T1,
-	K[{p},{k,0},{}] -> Q (k.k)^(-eta) k.p T1,
-	K[{k},{k,0},{}] -> Q (k.k)^(-eta) k.k T1,
-	K[{p},{p,0},{}] -> Q (p.p)^(-eta) p.p T1,
-	
+	K[{p},{k,0},{}] -> - Q (k.k)^(-eta) k.p T1,
+	K[{k},{k,0},{}] -> - Q (k.k)^(-eta) k.k T1,
+	K[{n},{k,0},{}] -> - Q (k.k)^(-eta) k.n T1,
+	K[{q},{k,0},{}] -> - Q (k.k)^(-eta) k.q T1,
+	K[{p},{p,0},{}] -> - Q (p.p)^(-eta) p.p T1,
+	K[{k},{p,0},{}] -> - Q (p.p)^(-eta) k.p T1,
+	K[{n},{p,0},{}] -> - Q (p.p)^(-eta) n.p T1,
+	K[{p},{q,0},{}] -> - Q (q.q)^(-eta) p.q T1,
+	K[{k},{q,0},{}] -> - Q (q.q)^(-eta) k.q T1,
+	K[{x_},{p,k},{}] :>  K[{x},{q,0},{}] - K[{k},{q,0},{}],
+	*)
 	(* I3 *)
-	K[{},{p,k,0},{}] -> Q (k.k)^(-1-eta) R0,
-
-    (* I3x *)
-    K[{k},{p,k,0},{}] -> Q (k.k)^(-1-eta) (k.p R1 + k.k R2),
-    K[{n},{p,k,0},{}] -> Q (k.k)^(-1-eta) (p.n R1 + k.n R2),
-    K[{p},{p,k,0},{}] -> Q (k.k)^(-1-eta) (p.p R1 + k.p R2),
-
-    (* I3xy *)
-    K[{xx_, yy_},{p,k,0},{}] :> Q (k.k)^(-1-eta) (
-    	xx.p yy.p R3 + xx.k yy.k R4
-    	+ (xx.k yy.p + xx.p yy.k) R5
-    	+ k.k xx.yy R6
-    ),
-
-	(* K2 *)
-	K[{},{k,0},{0}] -> Q (k.k)^(-eta) P0 / k.n,
-	K[{},{p,0},{0}] -> Q (p.p)^(-eta) P0 / p.n,
-	K[{},{p,k},{0}] -> Q (q.q)^(-eta) K0 / p.n,
+	K[{},{p,k,0},{}] -> - Q (k.k)^(-1-eta) R0,
+	K[{},{k,p,0},{}] -> K[{},{p,k,0},{}],
 	
+    (* I3x *)
+    K[{x_},{k,p,0},{}] :> Q (k.k)^(-1-eta) (p.x R1 + k.x R2),
+    
+    (* I3xy *)
+    K[{x_, y_},{k,p,0},{}] :> - Q (k.k)^(-1-eta) (
+    	p.x p.y R3 + k.x k.y R4
+    	+ (k.x p.y + p.x k.y) R5
+    	+ k.k x.y R6
+    ),
+	
+	(* K2 *)
+	K[{},{k,0},{0}] -> - Q (k.k)^(-eta) P0 / k.n,
+	K[{},{p,0},{0}] -> - Q (p.p)^(-eta) B0 / p.n,
+	(*
+	K[{},{p,k},{0}] -> - Q (q.q)^(-eta) K0 / p.n,
+	*)
 	(* K2x *)
+	K[{q},{k,0},{0}] -> K[{p},{k,0},{0}] - K[{k},{k,0},{0}],
 	K[{k},{p,0},{0}] -> Q (p.p)^(-eta)/p.n (
 		k.p B1 + k.n p.p/(2 p.n) B3
 	),
 	K[{p},{p,0},{0}] -> Q (p.p)^(-eta)/p.n (
 		p.p B1 + p.n p.p/(2 p.n) B3
 	),
-	K[{k},{k,0},{0}] -> Q (k.k)^(-eta)/k.n (
-		k.k P1 + k.n k.k/(2 k.n) P3
-	),
-	K[{p},{k,0},{0}] -> Q (k.k)^(-eta)/k.n (
-		k.p P1 + p.n k.k/(2 k.n) P3
+	K[{n},{p,0},{0}] -> Q (p.p)^(-eta)/p.n (
+		p.n B1 + n.n p.p/(2 p.n) B3
 	),
 	
+	
+	K[{x_},{k,0},{0}] :> Q (k.k)^(-eta)/k.n (
+		k.x P1 + n.x k.k/(2 k.n) P3
+	),
+	(*
+	K[{x_},{p,k},{0}] -> Q (q.q)^(-eta) (
+		x.p V1 + x.k V2
+	),
+	*)
+	(* K3 *)
+	K[{},{p,k,0},{0}] -> - Q (k.k)^(-1-eta)/p.n S0,
+	K[{},{k,p,0},{0}] -> K[{},{p,k,0},{0}],
+	
 	(* K3x *)
-	K[{k},{p,k,0},{0}] -> Q (k.k)^(-1-eta)/p.n (
+	K[{k},{k,p,0},{0}] -> - Q (k.k)^(-1-eta)/p.n (
 		k.p S1 + k.k S2 + k.n k.k/(2 k.n) S3
 	),
-	K[{p},{p,k,0},{0}] -> Q (k.k)^(-1-eta)/p.n (
+	K[{p},{k,p,0},{0}] -> - Q (k.k)^(-1-eta)/p.n (
 		p.p S1 + p.k S2 + p.n k.k/(2 k.n) S3
+	),
+	K[{n},{k,p,0},{0}] -> - Q (k.k)^(-1-eta)/p.n (
+		p.n S1 + k.n S2 + n.n k.k/(2 k.n) S3
 	),
 	
 	Q -> I (4 Pi)^(-2+eta) Gamma[1+eta]
 };
 
+IntegrateLoopRulesOld[l_] := {
+						K[{},{p},{}] -> K[{},{0},{}],
+						K[{},{k},{}] -> K[{},{0},{}],
+
+(* K1(x; 0)       *)	(*K[{},{x_},{0}] -> 0,*)
+                        K[{},{x_},{}]  -> K[{},{0},{}],
+
+(* p.116 [Hein98] in IR region*)
+
+(* K2(0,k-p; 0)   *)	K[{},{0,k-p},{0}]    -> Q (q.q)^(-eta) C0 / (1-x),
+                    	K[{},{-k+p,0},{0}]   -> Q (q.q)^(-eta) C0 / (1-x),
+                    	
+(* K2(p,k; 0)     *)	K[{},{p,k},{0}]      -> 0,
+                    	K[{},{-k+p,-k},{0}]  -> Q (p.p)^(-eta) D0,
+                    	K[{p},{k-p, 0},{0}]  -> Q (q.q)^(-eta) (C1 p.q + C3 p.n q.q/(2 q.n)),
+                    	K[{p},{-k+p, 0},{0}] -> -Q (q.q)^(-eta) (C1 p.q + C3 p.n q.q/(2 q.n)),
+
+(* K2(k,0; 0)     *)	K[{},{k,0},{0}]      -> Q (k.k)^(-eta) P0 / k.n,
+                    	K[{},{0,-k},{0}]     -> - K[{},{k,0},{0}],
+(* K2(p,0; 0)     *)	K[{},{p,0},{0}]      -> Q (p.p)^(-eta) B0,
+                    	K[{},{0,-p},{0}]     -> - K[{},{p,0},{0}],
+                    	
+                    	(*K[{},{0,-q},{0}]     -> - K[{},{q,0},{0}],*)
+(* K3(p,k,0; 0)   *)	K[{},{p,k,0},{0}]    -> Q (k.k)^(-1-eta) S0,
+
+(*                *)	K[{xx_},{0,y_},{0}]  :> K[{xx},{y,0},{0}],
+(* K2x(k,0; 0)    *)	K[{xx_},{k,0},{0}]   :> Q (k.k)^(-eta) / k.n (xx.k P1 + xx.n k.k/(2 k.n) P3 ),
+                    	K[{xx_},{-k,0},{0}]  :> K[{xx},{k,0},{0}],
+(* K2x(p,0; 0)    *)	K[{xx_},{p,0},{0}]   :> Q (p.p)^(-eta) / p.n (xx.p B1 + xx.n p.p/(2 p.n) B3 ),
+                    	K[{xx_},{-p,0},{0}]  :> K[{xx},{p,0},{0}],
+                    	(*K[{xx_},{-q,0},{0}]  :> K[{xx},{q,0},{0}],*)
+(* K3x(p,k,0; 0)  *)	K[{xx_},{p,k,0},{0}] :> Q (k.k)^(-1-eta) (xx.p S1 + xx.k S2 + xx.n k.k/(2 k.n) S3),
+
+(* I2(y,0)        *)	K[{},{y_,0},{}]   :> Q (y.y)^(-eta) T0,
+(* I2(p,k)        *)	K[{},{p,k},{}]    :> Q (q.q)^(-eta) T0,
+(* I3(p,k,0)      *)	K[{},{p,k,0},{}]  :> Q (k.k)^(-1-eta) R0,
+
+(*                *)	K[{xx_},{0,y_},{}]   :> K[{xx},{y,0},{}],
+(* I2x(y,0)       *)	K[{xx_},{y_,0},{}]   :> Q (y.y)^(-eta) xx.y T1,
+(* I2x(p,k)       *)	K[{xx_},{p,k},{}]    :> Q (q.q)^(-eta) (xx.p - xx.k) T1 + xx.k K[{},{p,k},{}],
+(* I3x(p,k,0)     *)	K[{xx_},{p,k,0},{}]  :> Q (k.k)^(-1-eta) (xx.p R1 + xx.k R2),
+
+(* I3xy(p,k,0)    *)	K[{xx_, yy_},{p,k,0},{}] :> Q (k.k)^(-1-eta) (xx.p yy.p R3 + xx.k yy.k R4 + (xx.k yy.p + xx.p yy.k) R5 + k.k xx.yy R6 ),
+
+(* K3(p,k,0)      *)	K[{},{-k+p,0,-k},{0}] -> - Q (k.k)^(-1-eta) / q.n U0,
+
+                        Q -> I (4 Pi)^(-2+eta) Gamma[1+eta]
+}
+
+IntegrateLoopExpandRulesNull = {};
+
 IntegrateLoopExpandRules = {
+	
 	B0 -> I0 / eta - I1 + Li2[1],
 	B1 -> Beta[1-eta, 1-eta] / eta,
-	B3 -> (2 - I0) / eta + 4 + I1 - Li2[1],
+	
+	B3 -> (I0 - 2) / eta - 4 - I1 + Li2[1],
+	
 	C0 -> (Log[1-x] + I0) / eta - I1 + I0 Log[1-x] + (Log[1-x]^2)/2 + Li2[1],
 	C1 -> Beta[1-eta, 1-eta] / eta,
-	C3 -> (2 - Log[1-x] - I0) / eta + 4 + I1 - I0 Log[1-x] - (Log[1-x]^2)/2 - Li2[1],
+	C3 -> (I0 + Log[1-x] - 2) / eta - 4 - I1 + I0 Log[1-x] + (Log[1-x]^2)/2 + Li2[1],
 	D0 -> (Log[1-x] - Log[x]) / eta + (Log[x]^2)/2 - (Log[1-x]^2)/2 + Li2[1] - 2 Li2[1-x] - Log[x]Log[1-x],
 	K0 -> - Log[x] / ((1-x) eta),
 	P0 -> (Log[x] + I0) / eta - I1 + I0 Log[x] + (Log[x]^2)/2 + Li2[1],
 	P1 -> Beta[1-eta, 1-eta] / eta,
-	P3 -> (2 - Log[x] - I0) / eta + 4 + I1 - I0 Log[x] - (Log[x]^2)/2 - Li2[1],
+	
+	P3 -> (Log[x] + I0 - 2) / eta - 4 - I1 + I0 Log[x] + (Log[x]^2)/2 + Li2[1],
+	
 	R0 -> 1/eps^2 - Li2[1],
 	R1 -> 1/eps^2 + 2/eps + 4 - Li2[1],
 	R2 -> -1/eps - 2,
 	R3 -> 1/eps^2 + 3/eps + 7 - Li2[1],
 	R4 -> -1/(2 eps) - 1,
 	R5 -> -1/(2 eps) - 3/2,
-	R6 -> 1/(4 eta) + 3/4,
+	R6 -> 1/(4 eps) + 3/4,
 	S0 -> 1/eps^2 + (Log[x] - I0) / eps + I1 - I0 Log[x] - 2 Li2[1] - 2 Li2[1-x] - (Log[x]^2)/2,
 	S1 -> 1/eps^2 - x Log[x] / ((1-x) eps)  + x/(1-x) Li2[1-x] - Li2[1],
 	S2 -> Log[x]/((1-x) eps) - Li2[1-x]/(1-x),
-	S3 -> - (I0 + Log[x]/(1-x)) / eps - I1 + I0 Log[x]/(1-x) - Li2[1] - x/(1-x) Li2[1-x] + (Log[x]^2)/2,
+
+	S3 -> - ((I0 + Log[x]/(1-x)) / eta - I1 + I0 Log[x]/(1-x) - Li2[1] - x/(1-x) Li2[1-x] + (Log[x]^2)/2),
+
 	T0 -> Beta[1-eta, 1-eta] / eta,
 	T1 -> Beta[1-eta, 1-eta] / (2 eta),
+	
+	V1 -> (x Log[x] + 1-x)/(1-x)^2 / eta,
+	V2 -> - (Log[x] + 1-x)/(1-x)^2 / eta,
+	
 	U0 -> 1/eps^2 + (Log[x] - 2 Log[1-x] - I0) / eps + I1 - I0 Log[x] + 2 Li2[1-x] - (Log[x]^2)/2 + Log[1-x]^2 - 6 Li2[1]
+	
 }
 
 Options[IntegrateLoop] = {Compact -> False};
@@ -414,7 +569,7 @@ IntegrateLoop[kernel_, l_, OptionsPattern[]] := Module[
 
 	If[OptionValue[Compact], Return[compact]];
 
-	expanded = Simplify[compact //. IntegrateLoopExpandRules];
+	expanded = Simplify[compact /. IntegrateLoopExpandRules];
 	Return[expanded];
 ];
 
@@ -457,9 +612,16 @@ PartonDensity[topology_, LO_:0] := Module[
 		},
 		Simplify];
 	
+	(*
+	eLO = GetValue[GetValue[kernel, "exclusive"], "expanded"];
+
+	var01 = IntegrateFinal[GetValue[exclusive, "expanded"] - eLO Z / eta] //. eta -> eps;
+	var02 = ExtractPole[var01, eps];
+	inclusive = Collect[Expand[var02], {(Log[x])^2, Log[x] Log[1-x], x Log[x], I0 Log[x], I0 Log[1-x], Log[x], Log[1-x], I0, I1, Li2[1]}, Simplify];
+ 	*)
 	{
 		{"kernel", KernelNLO},
-		{"exclusive", ExclusiveNLO},
+		{"exclusive", ExclusiveNLO (* IntegrateLoop[KernelNLO, l, Compact->True] //. {ScalarProductRules}*)},
 		{"inclusive", InclusiveNLO},
 		{"Z", Z}
 	}
@@ -483,6 +645,22 @@ ScalarProductRules = {
 	k.q -> (p.p-k.k-q.q)/2,
 	p.q -> (p.p-k.k+q.q)/2,
 
+	k.{i1_} K[{{i1_}},{y___},{z___}] :> K[{k},{y},{z}],
+	p.{i1_} K[{{i1_}},{y___},{z___}] :> K[{p},{y},{z}],
+	n.{i1_} K[{{i1_}},{y___},{z___}] :> K[{n},{y},{z}],
+	
+	k.{i1_} k.{i2_} K[{{i1_},{i2_}}, {y___}, {z___}] :> K[{k,k}, {y}, {z}],
+	k.{i1_} p.{i2_} K[{{i1_},{i2_}}, {y___}, {z___}] :> K[{k,p}, {y}, {z}],
+	k.{i1_} n.{i2_} K[{{i1_},{i2_}}, {y___}, {z___}] :> K[{k,n}, {y}, {z}],
+	k.{i2_} n.{i1_} K[{{i1_},{i2_}}, {y___}, {z___}] :> K[{k,n}, {y}, {z}],
+	p.{i1_} p.{i2_} K[{{i1_},{i2_}}, {y___}, {z___}] :> K[{p,p}, {y}, {z}],
+	p.{i1_} n.{i2_} K[{{i1_},{i2_}}, {y___}, {z___}] :> K[{p,n}, {y}, {z}],
+	p.{i2_} n.{i1_} K[{{i1_},{i2_}}, {y___}, {z___}] :> K[{p,n}, {y}, {z}],
+	n.{i1_} n.{i2_} K[{{i1_},{i2_}}, {y___}, {z___}] :> K[{n,n}, {y}, {z}],
+	{i1_}.{i2_} K[{{i1_},{i2_}}, {k,p,0}, {z___}] :> K[{}, {k,p}, {z}],
+	
+	K[{x_,n}, {y___}, {0}] :> K[{x}, {y}, {}],
+	
 	n.q -> n.p - n.k,
 	n.p -> 1,
 	n.k -> x
@@ -504,9 +682,24 @@ Counterterm[ExclusiveNLO_, ExclusiveLO_, eta_] := Module[{},
 	]
 ];
 
+(*ExtractPole[kernel_, eta_] := Simplify[Normal[Series[kernel, {eta, 0, -1}]]];*)
 ExtractPole[kernel_, eta_] := Simplify[
 	Coefficient[Series[kernel, {eta, 0, 1}], eta, -1]
 ];
+
+Pretty[expr_, matches_:{}] := Module[{defaults},
+	defaults = {
+		Pi^eta,
+		4^eta,
+		(4 Pi)^eta,
+		(k.k)^(-1-eta),
+		Gamma[1+eta],
+		g^4
+	}; 
+	
+	Collect[expr, Join[defaults, matches] , Simplify]
+];
+
 
 Print["Exiting AXILOOP..."];
 
