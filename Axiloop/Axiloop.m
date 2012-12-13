@@ -227,7 +227,7 @@ GammaTrace[expr_, OptionsPattern[]] := Module[
 
 IntegrateFinal[kernel_, ndim_:4 + 2 eps] := Module[{eps},
 	eps = Simplify[ndim/2 - 2];
-	(4 Pi)^(-2+eps)/Gamma[1-eps](1-x)^(-eps) Integrate[(k.k)^(eps) kernel, k.k]
+	(4 Pi)^(-2+eps)/Gamma[1-eps] (1 + eps Log[1-x]) Integrate[(k.k)^(eps) kernel, k.k]
 ];
 
 
@@ -248,13 +248,13 @@ CollectIntegralRules[l_] := {
 	KK[l, {x___},{y___},{z___}] / S[l+l1_,l+l1_] :>
 		KK[l, {x},{l1,y},{z}],
 
-	KK[l, {x___},{y___},{z___}] /  S[l,n] :>
+	KK[l, {x___},{y___},{z___}] / S[l,n] :>
 		KK[l, {x},{y},{0,z}],
 	KK[l, {x___},{y___},{z___}] / (S[l,n]+S[ln_,n]) :>
 		KK[l, {x},{y},{ln,z}],
 	KK[l, {x___},{y___},{z___}] / (S[l,n]-S[ln_,n]) :>
 		KK[l, {x},{y},{-ln,z}],
-	KK[l, {x___},{y___},{z___}] /  S[l+ln_,n] :>
+	KK[l, {x___},{y___},{z___}] / S[l+ln_,n] :>
 		KK[l, {x},{y},{ln,z}],
 	KK[l, {x___},{y___},{z___}] / (S[ln_,n]-S[l,n]) :>
 		- KK[l, {x},{y},{-ln,z}],
@@ -567,33 +567,17 @@ PartonDensity[topology_, LO_:0] := Module[
 	];
 	(*Debug["kernel", KernelNLO];*)
 	
-	v1 = Expand[
-		Simplify[KernelNLO //. {IntegrateLoopRules, ScalarProductRules}]
-	];
+	TT = Expand[
+		Simplify[KernelNLO //. {IntegrateLoopRules}]
+	] //. {ScalarProductRules};
 	Debug["T", Collect[
-		Expand[(v1 //. {OnShellRules}) / (Gamma[1+eir] g^4 Pi^(-2+eir) 2^(2 eir))],
+		Expand[TT / (Gamma[1+eir] g^4 Pi^(-2+eir) 2^(2 eir))] //.
+		    {OnShellRules, {0^(2-eir)->0, 0^(1-eir)->0}},
 		{B0, B1, K0, P0, P1, R0, R1, R2, R3, R4, R5, R6, S0, S1, S2, S3, T0, T1},
 		Simplify
 	]];
-	ExclusiveNLO = Expand[v1 //. {IntegrateLoopExpandRules, ScalarProductRules}];
-	(*
-	ExclusiveNLO = Expand[
-		Expand[Simplify[KernelNLO //. {IntegrateLoopRules, IntegrateLoopExpandRules}]
-			//. {ScalarProductRules}
-	]];
-	*)
-	(*
-	Debug["exclusive", Collect[
-		Expand[
-			(KernelNLO / (g^4 Pi^(2-eir) Gamma[1+eir])) //.
-				{IntegrateLoopRules}
-		] //. {ScalarProductRules, OnShellRules, {0^(1-eir)->0, 0^(2-eir)->0}},
-		{B0, B1, K0, P0, P1, R0, R1, R2, R3, R4, R5, R6, S0, S1, S2, S3, T0, T1},
-		Simplify
-	]];
-	*)
-	(*Debug["exclusive", ExclusiveNLO];*)
 	
+	ExclusiveNLO = Expand[TT //. {IntegrateLoopExpandRules, ScalarProductRules}];
 	ExclusiveLO = GetValue[LO, "exclusive"];
 	
 	OnShellNLOPole = Simplify[
@@ -605,12 +589,6 @@ PartonDensity[topology_, LO_:0] := Module[
 		0,
 		Simplify[OnShellNLOPole / OnShellExclusiveLO]
 	];
-	(*
-	Z = Simplify[
-		Counterterm[ExclusiveNLO, ExclusiveLO, euv] //.
-			{{eps->0}, ScalarProductRules, OnShellRules}
-	];
-	*)
 	Debug["Z", Z];
 	Debug["DoublePole", Simplify[
 		Coefficient[
@@ -619,19 +597,16 @@ PartonDensity[topology_, LO_:0] := Module[
 			-2
 		] //. {OnShellRules}
 	]];
-	(*Debug["Z", Expand[ExtractPole[ExclusiveNLO, euv]]];*)
-	(*
-	Debug["Pole1", ExtractPole[ExclusiveNLO, euv]];
-	Debug["Pole2", Z ExclusiveLO];
-	*)
+	
+	
 	v0 = Expand[
-		ExclusiveNLO - 2^(2 eir) Pi^(eir) Gamma[1+eir] (k.k)^-eir Z ExclusiveLO / (euv)
+		ExclusiveNLO - 2^(2 eir) Pi^(eir) Gamma[1+eir] Z ExclusiveLO / (euv)
 	];
-	Debug["v0", v0];
+	(*Debug["v0", v0];*)
 	v1 = Expand[
 		v0 //. {eir -> -eps, euv -> -eps}
 	];
-	Debug["v1", v1];
+	(*Debug["v1", v1];*)
 	v2 = Expand[v1 //. {OnShellRules, {0^(eps)->0, 0^(1+eps)->0, 0^(2+eps)->0}}];
 	Debug["v2", v2];
 	v3 = Expand[IntegrateFinal[v2, 4 + 2 eps]];
@@ -648,20 +623,13 @@ PartonDensity[topology_, LO_:0] := Module[
 	];
 	v2 = ExtractPole[v1, eps] //. {ScalarProductRules};
 	InclusiveNLO = Collect[
-		Expand[Simplify[v2]],
+		Expand[Simplify[v4]],
 		{
 			(Log[x])^2, Log[x] Log[1 - x], x Log[x], I0 Log[x], I0 Log[1 - x],
 			Log[x], Log[1 - x], I0, I1, Li2[1]
 		},
 		Simplify];
 	
-	(*
-	eLO = GetValue[GetValue[kernel, "exclusive"], "expanded"];
-
-	var01 = IntegrateFinal[GetValue[exclusive, "expanded"] - eLO Z / eta] //. eta -> eps;
-	var02 = ExtractPole[var01, eps];
-	inclusive = Collect[Expand[var02], {(Log[x])^2, Log[x] Log[1-x], x Log[x], I0 Log[x], I0 Log[1-x], Log[x], Log[1-x], I0, I1, Li2[1]}, Simplify];
- 	*)
 	{
 		{"kernel", KernelNLO},
 		{"exclusive", ExclusiveNLO (* IntegrateLoop[KernelNLO, l, Compact->True] //. {ScalarProductRules}*)},
@@ -711,7 +679,6 @@ Counterterm[ExclusiveNLO_, ExclusiveLO_, eta_] := Module[{},
 	]
 ];
 
-(*ExtractPole[kernel_, eta_] := Simplify[Normal[Series[kernel, {eta, 0, -1}]]];*)
 ExtractPole[kernel_, eta_] := Simplify[
 	Coefficient[Series[kernel, {eta, 0, 1}], eta, -1]
 ];
