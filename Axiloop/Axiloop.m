@@ -205,7 +205,7 @@ GV[i1_,p1_, i2_,p2_, i3_,p3_] :=
 	  + {i3}.{i1} (p3.{i2}-p1.{i2})
 );
 
-Options[GammaTrace] = {NumberOfDimensions -> 4 - 2 eps};
+Options[GammaTrace] = {NumberOfDimensions -> 4 + 2 eps};
 GammaTrace[expr_, OptionsPattern[]] := Module[
 	{ndim = OptionValue[NumberOfDimensions], result},
 	
@@ -412,7 +412,7 @@ IntegrateLoopRules = {
     K[{x_},{k,p,0},{}] :> Q (k.k)^(-1-eir) (p.x R1 + k.x R2),
     
     (* I3xy *)
-    K[{x_, y_},{k,p,0},{}] :> Q (k.k)^(-1-eir) (
+    K[{x_, y_},{k,p,0},{}] :> - Q (k.k)^(-1-eir) (
     	p.x p.y R3 + k.x k.y R4
     	+ (k.x p.y + p.x k.y) R5
     	+ k.k x.y R6
@@ -467,17 +467,17 @@ IntegrateLoopExpandRules = {
 	B0 -> I0/euv - I1 + Li2[1],
 	B1 -> 1/euv + 2,
 	
-	B3 -> (I0 - 2) / euv - 4 - I1 + Li2[1],
+	B3 -> (I0 - 2)/euv - I1 - 4 + Li2[1],
 	
-	C0 -> (Log[1-x] + I0) / euv - I1 + I0 Log[1-x] + (Log[1-x]^2)/2 + Li2[1],
-	C1 -> 1 / euv + 2,
-	C3 -> (I0 + Log[1-x] - 2) / euv - 4 - I1 + I0 Log[1-x] + (Log[1-x]^2)/2 + Li2[1],
-	D0 -> (Log[1-x] - Log[x]) / euv + (Log[x]^2)/2 - (Log[1-x]^2)/2 + Li2[1] - 2 Li2[1-x] - Log[x]Log[1-x],
-	K0 -> - Log[x] / ((1-x) euv),
-	P0 -> (Log[x] + I0) / euv - I1 + I0 Log[x] + (Log[x]^2)/2 + Li2[1],
+	C0 -> (Log[1-x] + I0)/euv - I1 + I0 Log[1-x] + (Log[1-x]^2)/2 + Li2[1],
+	C1 -> 1/euv + 2,
+	C3 -> (I0 + Log[1-x] - 2)/euv - 4 - I1 + I0 Log[1-x] + (Log[1-x]^2)/2 + Li2[1],
+	D0 -> (Log[1-x] - Log[x])/euv + (Log[x]^2)/2 - (Log[1-x]^2)/2 + Li2[1] - 2 Li2[1-x] - Log[x]Log[1-x],
+	K0 -> - Log[x]/((1-x) euv),
+	P0 -> (I0 + Log[x])/euv - I1 + I0 Log[x] + (Log[x]^2)/2 + Li2[1],
 	P1 -> 1/euv + 2,
 	
-	P3 -> (Log[x] + I0 - 2) / euv - 4 - I1 + I0 Log[x] + (Log[x]^2)/2 + Li2[1],
+	P3 -> (I0 + Log[x] - 2)/euv - I1 + I0 Log[x] + (Log[x]^2)/2 - 4 + Li2[1],
 	
 	R0 -> 1/eir^2 - Li2[1],
 	R1 -> 1/eir^2 + 2/eir + 4 - Li2[1],
@@ -486,11 +486,11 @@ IntegrateLoopExpandRules = {
 	R4 -> -1/(2 eir) - 1,
 	R5 -> -1/(2 eir) - 3/2,
 	R6 -> 1/(4 euv) + 3/4,
-	S0 -> 1/eir^2 + (Log[x] - I0) / eir + I1 - I0 Log[x] - 2 Li2[1] - 2 Li2[1-x] - (Log[x]^2)/2,
-	S1 -> 1/eir^2 - x Log[x] / ((1-x) eir)  + x/(1-x) Li2[1-x] - Li2[1],
+	S0 -> 1/eir^2 - (I0 - Log[x])/eir + I1 - I0 Log[x] - 2 Li2[1] - 2 Li2[1-x] - (Log[x]^2)/2,
+	S1 -> 1/eir^2 - x Log[x]/((1-x) eir)  + x/(1-x) Li2[1-x] - Li2[1],
 	S2 -> Log[x]/((1-x) eir) - Li2[1-x]/(1-x),
 
-	S3 -> - ((I0 + Log[x]/(1-x)) / eir - I1 + I0 Log[x]/(1-x) - Li2[1] - x/(1-x) Li2[1-x] + (Log[x]^2)/2),
+	S3 -> - ((I0 + Log[x]/(1-x))/eir - I1 + I0 Log[x]/(1-x) - Li2[1] - x Li2[1-x]/(1-x) + (Log[x]^2)/2),
 
 	T0 -> 1/euv + 2,
 	T1 -> 1/(2 euv) + 1,
@@ -499,7 +499,6 @@ IntegrateLoopExpandRules = {
 	V2 -> - (Log[x] + 1-x)/(1-x)^2 / euv,
 	
 	U0 -> 1/eir^2 + (Log[x] - 2 Log[1-x] - I0) / eir + I1 - I0 Log[x] + 2 Li2[1-x] - (Log[x]^2)/2 + Log[1-x]^2 - 6 Li2[1]
-	
 }
 
 Options[IntegrateLoop] = {Compact -> False};
@@ -565,7 +564,6 @@ PartonDensity[topology_, LO_:0] := Module[
 				//. {KinematicRules}
 		]
 	];
-	(*Debug["kernel", KernelNLO];*)
 	
 	TT = Expand[
 		Simplify[KernelNLO //. {IntegrateLoopRules}]
@@ -590,6 +588,7 @@ PartonDensity[topology_, LO_:0] := Module[
 		Simplify[OnShellNLOPole / OnShellExclusiveLO]
 	];
 	Debug["Z", Z];
+	(*
 	Debug["DoublePole", Simplify[
 		Coefficient[
 			Series[ExclusiveNLO //. {eps -> -eir}, {eir, 0, 1}],
@@ -597,10 +596,10 @@ PartonDensity[topology_, LO_:0] := Module[
 			-2
 		] //. {OnShellRules}
 	]];
-	
+	*)
 	
 	v0 = Expand[
-		ExclusiveNLO - 2^(2 eir) Pi^(eir) Gamma[1+eir] Z ExclusiveLO / (euv)
+		ExclusiveNLO - 2^(2 eir) Pi^(eir) Gamma[1+eir] Z ExclusiveLO / euv
 	];
 	(*Debug["v0", v0];*)
 	v1 = Expand[
@@ -610,11 +609,10 @@ PartonDensity[topology_, LO_:0] := Module[
 	v2 = Expand[v1 //. {OnShellRules, {0^(eps)->0, 0^(1+eps)->0, 0^(2+eps)->0}}];
 	Debug["v2", v2];
 	v3 = Expand[IntegrateFinal[v2, 4 + 2 eps]];
-	Debug["v3", v3];
+	(*Debug["v3", v3];*)
 	v4 = ExtractPole[v3, eps];
-	Debug["v4", v4];
+	(*Debug["v4", v4];*)
 
-	
 	OnShellExclusiveLO = ExclusiveLO //. OnShellRules;
 	OnShellExclusiveNLO = ExclusiveNLO //.
 		{{eir -> -eps}, OnShellRules, {0^(eps)->0, 0^(1+eps)->0, 0^(2+eps)->0}};
@@ -626,13 +624,13 @@ PartonDensity[topology_, LO_:0] := Module[
 		Expand[Simplify[v4]],
 		{
 			(Log[x])^2, Log[x] Log[1 - x], x Log[x], I0 Log[x], I0 Log[1 - x],
-			Log[x], Log[1 - x], I0, I1, Li2[1]
+			Log[x], Log[1 - x], I0, I1, Li2[1], Li2[1-x]
 		},
 		Simplify];
 	
 	{
 		{"kernel", KernelNLO},
-		{"exclusive", ExclusiveNLO (* IntegrateLoop[KernelNLO, l, Compact->True] //. {ScalarProductRules}*)},
+		{"exclusive", ExclusiveNLO},
 		{"inclusive", InclusiveNLO},
 		{"Z", Z}
 	}
