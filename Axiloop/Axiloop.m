@@ -386,16 +386,15 @@ IntegrateLoopRulesNull[l_] := {};
 
 IntegrateLoopRules = {
 	(* I2 *)
-	(*
 	K[{},{p,0},{}] -> Q (p.p)^(-eir) T0,
 	K[{},{k,0},{}] -> Q (k.k)^(-eir) T0,
-	*)
 	K[{},{k,p},{}] -> Q (q.q)^(-eir) T0,
-	(*
+
 	(* I2x *)
 	K[{p},{k,0},{}] -> - Q (k.k)^(-eir) k.p T1,
 	K[{k},{k,0},{}] -> - Q (k.k)^(-eir) k.k T1,
 	K[{n},{k,0},{}] -> - Q (k.k)^(-eir) k.n T1,
+	(*
 	K[{q},{k,0},{}] -> - Q (k.k)^(-eir) k.q T1,
 	K[{p},{p,0},{}] -> - Q (p.p)^(-eir) p.p T1,
 	K[{k},{p,0},{}] -> - Q (p.p)^(-eir) k.p T1,
@@ -417,6 +416,10 @@ IntegrateLoopRules = {
     	+ (k.x p.y + p.x k.y) R5
     	+ k.k x.y R6
     ),
+	
+	(* K1 *)
+	K[{},{0},{0}] -> 0,
+	K[{},{k},{0}] -> K[{},{0},{0}] - 2 K[{k},{k,0},{0}] - k.k K[{},{k,0},{0}],
 	
 	(* K2 *)
 	K[{},{k,0},{0}] -> - Q (k.k)^(-eir) P0 / k.n,
@@ -571,7 +574,7 @@ PartonDensity[topology_, LO_:0] := Module[
 	Debug["T", Collect[
 		Expand[TT / (Gamma[1+eir] g^4 Pi^(-2+eir) 2^(2 eir))] //.
 		    {OnShellRules, {0^(2-eir)->0, 0^(1-eir)->0}},
-		{B0, B1, K0, P0, P1, R0, R1, R2, R3, R4, R5, R6, S0, S1, S2, S3, T0, T1},
+		{B0, B1, K0, P0, P1, P3, R0, R1, R2, R3, R4, R5, R6, S0, S1, S2, S3, T0, T1},
 		Simplify
 	]];
 	
@@ -607,19 +610,12 @@ PartonDensity[topology_, LO_:0] := Module[
 	];
 	(*Debug["v1", v1];*)
 	v2 = Expand[v1 //. {OnShellRules, {0^(eps)->0, 0^(1+eps)->0, 0^(2+eps)->0}}];
-	Debug["v2", v2];
+	(*Debug["v2", v2];*)
 	v3 = Expand[IntegrateFinal[v2, 4 + 2 eps]];
 	(*Debug["v3", v3];*)
 	v4 = ExtractPole[v3, eps];
 	(*Debug["v4", v4];*)
 
-	OnShellExclusiveLO = ExclusiveLO //. OnShellRules;
-	OnShellExclusiveNLO = ExclusiveNLO //.
-		{{eir -> -eps}, OnShellRules, {0^(eps)->0, 0^(1+eps)->0, 0^(2+eps)->0}};
-	v1 = IntegrateFinal[
-		OnShellExclusiveNLO + (Z OnShellExclusiveLO) / eps, 4 + 2 eps
-	];
-	v2 = ExtractPole[v1, eps] //. {ScalarProductRules};
 	InclusiveNLO = Collect[
 		Expand[Simplify[v4]],
 		{
@@ -679,19 +675,6 @@ Counterterm[ExclusiveNLO_, ExclusiveLO_, eta_] := Module[{},
 
 ExtractPole[kernel_, eta_] := Simplify[
 	Coefficient[Series[kernel, {eta, 0, 1}], eta, -1]
-];
-
-Pretty[expr_, matches_:{}] := Module[{defaults},
-	defaults = {
-		Pi^eta,
-		4^eta,
-		(4 Pi)^eta,
-		(k.k)^(-1-eta),
-		Gamma[1+eta],
-		g^4
-	}; 
-	
-	Collect[expr, Join[defaults, matches] , Simplify]
 ];
 
 
