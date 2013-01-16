@@ -1,6 +1,6 @@
 (*============================================================================*)
 (*                                                                            *)
-(*  Copyright (C) 2012 Oleksandr Gituliar.                                    *)
+(*  Copyright (C) 2012-2013 Oleksandr Gituliar.                               *)
 (*                                                                            *)
 (*  This file is part of Axiloop.                                             *)
 (*                                                                            *)
@@ -59,13 +59,6 @@ propagator in the light-cone gauge."
 
 GV::usage = "GV[i1,p1, i2,p2, i3,p3] -- a gluon vertex in the light-cone gauge."
 
-GammaTrace::usage = "GammaTrace[expr, NumberOfDimensions -> 4 - 2 eps] computes
-a trace of the gamma matrices product, `expr`, in the arbitrary
-number of dimensions, `NumberOfDimensions`.
-
-Usage:
-    In[1] := GammaTrace[G[{mu}]**G[{nu}], NumberOfDimensions -> 4 + eps]
-    Out[1] = 4 (4 + eps)"
 
 (*---------------------------------------------------------------------------*)
 
@@ -100,6 +93,20 @@ x::usage =
 
 ExtractPole::usage =
 	"ExtractPole[expr, x] extract coefficient in front of 1/x in expr."
+
+GammaTrace::usage =
+"GammaTrace[expr, NumberOfDimensions -> 4 + 2 eps] calculates trace
+of the gamma matrices product in arbitrary number of dimensions. Be
+sure to use non-commutative product `**` operation instead of commonly
+used commutative product `*`.
+
+Example:
+
+   	In[1] := GammaTrace[G[{mu}]**G[{mu}]]
+   	Out[1] = 4 (4 + 2 eps)
+   	
+   	In[2] := GammaTrace[G[{mu}]**G[{mu}], NumberOfDimensions -> ndim]
+   	Out[2] = 4 ndim"
 
 GetValue::usage =
 	"GetValue[kernel_, key_] get value from kernel associated with key."
@@ -177,17 +184,18 @@ Protect[S];
 (*---------------------- FEYNMAN RULES and GAMMA TRACE ----------------------*)
 (*---------------------------------------------------------------------------*)
 
-FermionLines = {};    (* A storage of fermion lines used by user. Is used    *)
-                      (* in `GammaTrace` as a list of lines to trace over.   *)
+$fermionLines = {};   (* A list of fermion lines used by user. `GammaTrace`  *)
+                      (* calculates trace over each line from that list.     *)
+                      (* By default `f1` line is used.                       *)
 
 Options[G] = {Line -> f1};
-G[v_, OptionsPattern[]] := (
-	FermionLines = Union[FermionLines, {OptionValue[Line]}];
-	GTrace[OptionValue[Line], v]
+G[x_, OptionsPattern[]] := (
+	$fermionLines = Union[$fermionLines, {OptionValue[Line]}];
+	GTrace[OptionValue[Line], x]
 );
 
 Options[FP] = {Line -> f1};
-FP[p_, OptionsPattern[]] := FPx[p, Line -> OptionValue[Line]] / p.p;
+FP[p_, OptionsPattern[]] := 1/p.p FPx[p, Line -> OptionValue[Line]];
 
 Options[FPx] = {Line -> f1};
 FPx[p_, OptionsPattern[]] := I G[p, Line -> OptionValue[Line]];
@@ -195,7 +203,7 @@ FPx[p_, OptionsPattern[]] := I G[p, Line -> OptionValue[Line]];
 Options[FV] = {Line -> f1};
 FV[mu_, OptionsPattern[]] := - I g G[{mu}, Line -> OptionValue[Line]];
 
-GP[mu_, nu_, p_] := GPx[mu, nu, p] / p.p;
+GP[mu_, nu_, p_] := 1/p.p GPx[mu, nu, p];
 
 GPx[mu_, nu_, p_] := - I ({mu}.{nu} - (p.{mu} n.{nu} + n.{mu} p.{nu}) / p.n)
 
@@ -207,17 +215,19 @@ GV[i1_,p1_, i2_,p2_, i3_,p3_] :=
 
 Options[GammaTrace] = {NumberOfDimensions -> 4 + 2 eps};
 GammaTrace[expr_, OptionsPattern[]] := Module[
-	{ndim = OptionValue[NumberOfDimensions], result},
+	{$ndim = OptionValue[NumberOfDimensions], $result},
 	
-	VectorDimension[ndim];
 	Spur[f0];
-	result = Expand[expr //. {
-		((#->f0)& /@ FermionLines),
-		{Global`d -> ndim, NonCommutativeMultiply -> Times}
-	}];
+	$result = Block[
+		{Global`d = $ndim},
+		
+		Expand[expr //. {
+			((#->f0)& /@ $fermionLines),
+			{NonCommutativeMultiply -> Times}
+		}]
+	];
 	NoSpur[f0];
-	(*VectorDimension[Global`d];*)
-	Return[result];
+	$result
 ];
 
 

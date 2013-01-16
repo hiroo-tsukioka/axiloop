@@ -19,62 +19,7 @@
 (*                                                                            *)
 (*============================================================================*)
 
-Needs["Axiloop`"]
 
-Get["Tests/utils.mt"];
-
-Print[?GammaTrace]
-
-Test[
-	GammaTrace[G[{mu}]**G[{mu}], NumberOfDimensions -> 4 + eps]
-	,
-	4 (4 + eps)
-	,
-	EquivalenceFunction -> EquivalentQ
-	,
-	TestID->"GammaTrace-20130116-N5X7J3"
-]
-
-Test[
-	GammaTrace[G[{mu}]**G[{nu}]**G[{mu}]**G[{nu}], NumberOfDimensions -> 4 - eps]
-	,
-	- 4 ((4 - eps))^2 + 8 (4 - eps)
-	,
-	EquivalenceFunction -> EquivalentQ
-	,
-	TestID->"GammaTrace-20130116-T9V2C4"
-]
-
-Test[
-	GammaTrace[G[{mu}]**G[{nu}], NumberOfDimensions -> 4 + eps]
-	,
-	4 {mu}.{nu}
-	,
-	TestID->"GammaTrace-20130116-G1O7O5"
-]
-
-Test[
-	GammaTrace[
-		G[{mu}]**G[{nu}]**G[{mu}]**G[{xi}],
-		NumberOfDimensions -> 4 + eps
-	]
-	,
-	- 4 (2 + eps) {nu}.{xi}
-	,
-	EquivalenceFunction -> EquivalentQ
-	,
-	TestID->"GammaTrace-20130116-Z8F5E3"
-]
-
-Test[
-	GammaTrace[
-		G[{mu}, Line->f2]**G[{nu}]**G[{mu}, Line->f2]**G[{xi}],
-		NumberOfDimensions -> 4 + eps
-	]
-	,
-	4 (4 + eps) 4 {nu}.{xi}
-	,
-	EquivalenceFunction -> EquivalentQ
-	,
-	TestID->"GammaTrace-20130116-U6U0O7"
+TestSuite[
+	{"GammaTrace.mt"}
 ]
