@@ -611,7 +611,7 @@ IntegrateLoop[expr_, l_] := Module[
 	collected = CollectLoopIntegrals[expr, l];
 	result["collected"] = collected;
 	
-	integrated = collected /. integrationRules /. phaseSpaceRule;
+	integrated = Expand[collected /. integrationRules /. phaseSpaceRule];
 	result["integrated"] = integrated;
 	unintegrated = Union[Cases[integrated, $$[__], Infinity]];
 	If[
@@ -621,7 +621,7 @@ IntegrateLoop[expr_, l_] := Module[
 			IntegrateLoop::unevaluated,
 			StringDrop[ToString[#], 16] &/@ unintegrated
 		];
-		Return[]
+		Return[result]
 	];
 	
 	expanded = Expand[integrated /. expansionRules];
@@ -655,7 +655,7 @@ SplittingFunction[topology_] := Module[
 	If[
 		!TrueQ[exclusive]
 		,
-		Return[]
+		Return[result]
 	];
 
 	result
