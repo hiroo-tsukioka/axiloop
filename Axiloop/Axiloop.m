@@ -129,6 +129,8 @@ Li2::usage =
 PartonDensity::usage =
 	"Kernel constructor; define and integrate a kernel."
 
+SplittingFunction::usage = ""
+
 Counterterm::usage = ""
 
 
@@ -245,6 +247,7 @@ IntegrateFinal[kernel_, ndim_:4 + 2 eps] := Module[{eps},
 (*------------------------ LOOP MOMENTA INTEGRATION -------------------------*)
 (*---------------------------------------------------------------------------*)
 
+(*
 CollectIntegralRules[l_] := {
 	KK[l, {x___},{y___},{z___}] S[l,p_] :>
 		KK[l, {p,x},{y},{z}],
@@ -271,10 +274,7 @@ CollectIntegralRules[l_] := {
 
 	KK[l, {},{},{}] -> 1
 };
-
-CollectIntegral[expr_, l_] := Module[{},
-	Expand[expr * KK[l, {},{},{}], l] //. CollectIntegralRules[l]
-];
+*)
 
 
 ExpandIntegralRules = {
@@ -555,40 +555,112 @@ IntegrateLoop[kernel_, l_, OptionsPattern[]] := Module[
 ];
 
 
+
+CollectLoopIntegrals[expr_, l_] := Module[
+	{result, collectRules, simplifyRules},
+	
+	collectRules = {
+		$$[{a___},{b___},{c___}] S[l, x_] :> $$[{a,x},{b},{c}],
+		$$[{a___},{b___},{c___}] S[l, x_]^n_ :>
+			$$[Flatten[{a,x&/@Range[n]}],{b},{c}] /; n>0,
+
+		$$[{a___},{b___},{c___}] / S[l, l] :> $$[{a},{b,0},{c}],
+		$$[{a___},{b___},{c___}] / S[l+x_Symbol, l+x_Symbol] :>
+			$$[{a},{b,x},{c}],
+		$$[{a___},{b___},{c___}] / S[l-x_Symbol, l-x_Symbol] :>
+			$$[{a},{b,-x},{c}],
+
+		$$[{a___},{b___},{c___}] S[l, n]^-1 :> $$[{a},{b},{c,0}],
+		
+		$$[{},{},{}] -> 1
+	};
+	
+	simplifyRules = {
+		$$[{a___}, {b___}, {c___}] :>
+			- $$[{a}, -# &/@ {b}, {c}] /; OddQ[Length[{a,c}]],
+        $$[{a___}, {b___}, {c___}] :> $$[{a}, -# &/@ {b}, {c}]
+	};
+	
+	result = Expand[expr $$[{},{},{}]] //. collectRules /. simplifyRules;
+	result = result /.
+		$$[{a___},{b___},{c___}] :> $$[Sort[{a}], Sort[{b}], Sort[{c}]];
+	
+	result
+];
+
+
+IntegrateLoop::unevaluated = "Unknown integral(s): `1`."
+
+IntegrateLoop[expr_, l_] := Module[
+	{collected, expanded, expansionRules, integrated, integrationRules,
+		 phaseSpaceRule, result, unintegrated},
+	
+	integrationRules = {
+		$$[{},{k,p},{ }] -> Q (q.q)^(-eir) T0,
+		$$[{},{k,p},{0}] -> - Q (q.q)^(-eir) K0 / p.n
+	};
+	
+	phaseSpaceRule = {
+		Q -> I (4 Pi)^(-2+eir) Gamma[1+eir]
+	};
+	
+	expansionRules = {
+		T0 -> 1/euv + 2
+	};
+	
+	collected = CollectLoopIntegrals[expr, l];
+	result["collected"] = collected;
+	
+	integrated = collected /. integrationRules /. phaseSpaceRule;
+	result["integrated"] = integrated;
+	unintegrated = Union[Cases[integrated, $$[__], Infinity]];
+	If[
+		unintegrated != {}
+		,
+		Message[
+			IntegrateLoop::unevaluated,
+			StringDrop[ToString[#], 16] &/@ unintegrated
+		];
+		Return[]
+	];
+	
+	expanded = Expand[integrated /. expansionRules];
+	result["expanded"] = expanded;
+	
+	result
+];
+
+
 (*---------------------------------------------------------------------------*)
-(*------------------------ CONTRACT INDICES FUNCTION ------------------------*)
+(*--------------------------- SPLITTING FUNCTION ----------------------------*)
 (*---------------------------------------------------------------------------*)
 
-ContractIndicesRules = {
+SplittingFunction[topology_] := Module[
+	{exclusive, kinematicRules, result, trace},
 	
-	k.{i1_} K[{{i1_}},{y__},{z___}] :> K[{k},{y},{z}],
-	p.{i1_} K[{{i1_}},{y__},{z___}] :> K[{p},{y},{z}],
-	n.{i1_} K[{{i1_}},{y__},{z___}] :> K[{n},{y},{z}],
+	kinematicRules = {
+		k.p -> (p.p + k.k - q.q) / 2,
+		k.q -> (p.p - k.k - q.q) / 2,
+		p.q -> (p.p - k.k + q.q) / 2
+	};
 	
-	k.{i1_} k.{i2_} K[{{i1_},{i2_}}, {y__}, {z___}] :> K[{k,k}, {y}, {z}],
-	k.{i1_} p.{i2_} K[{{i1_},{i2_}}, {y__}, {z___}] :> K[{k,p}, {y}, {z}],
-	k.{i1_} n.{i2_} K[{{i1_},{i2_}}, {y__}, {z___}] :> K[{k,n}, {y}, {z}],
-	k.{i2_} n.{i1_} K[{{i1_},{i2_}}, {y__}, {z___}] :> K[{k,n}, {y}, {z}],
-	p.{i1_} p.{i2_} K[{{i1_},{i2_}}, {y__}, {z___}] :> K[{p,p}, {y}, {z}],
-	p.{i1_} n.{i2_} K[{{i1_},{i2_}}, {y__}, {z___}] :> K[{p,n}, {y}, {z}],
-	p.{i2_} n.{i1_} K[{{i1_},{i2_}}, {y__}, {z___}] :> K[{p,n}, {y}, {z}],
-	n.{i1_} n.{i2_} K[{{i1_},{i2_}}, {y__}, {z___}] :> K[{n,n}, {y}, {z}],
-	{i1_}.{i2_} K[{{i1_},{i2_}}, {k,p,0}, {0}] :> K[{}, {k,p}, {0}],
-	
-	K[{n}, {k,p,0}, {0}] :> K[{}, {k,p,0}, {}],
-	K[{x_,n}, {k,p,0}, {0}] :> K[{x}, {k,p,0}, {}],
-	
-	q.{i1_} K[{{i1_}},{y__},{z___}] :> K[{q},{y},{z}],
-	k.{i1_} p.{i2_} K[{{i2_},{i1_}}, {y__}, {z___}] :> K[{k,p}, {y}, {z}],
-	{i1_}.{i2_} K[{{i1_},{i2_}}, {p,q,0}, {}] :> K[{}, {p,q}, {}]
+	trace = Expand[
+		GammaTrace[topology, NumberOfDimensions -> 4 + 2 eps] /.
+			kinematicRules
+	];
+	result["trace"] = trace;
 
-};
+	exclusive = IntegrateLoop[trace, l];
+	result["exclusive"] = exclusive;
+	If[
+		!TrueQ[exclusive]
+		,
+		Return[]
+	];
 
-ContractIndices[expr_] := expr //. ContractIndicesRules;
+	result
+];
 
-(*---------------------------------------------------------------------------*)
-(*------------------------- PARTON DENSITY FUNCTION -------------------------*)
-(*---------------------------------------------------------------------------*)
 
 PartonDensity[topology_, LO_:0] := Module[
 	{ExclusiveLO, ExclusiveNLO, InclusiveNLO, KernelNLO, Z},

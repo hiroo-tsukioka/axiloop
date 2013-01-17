@@ -19,9 +19,71 @@
 (*                                                                            *)
 (*============================================================================*)
 
+Needs["Axiloop`"]
 
-Get["Tests/main.mt"]
+Get["Tests/utils.mt"]
 
+
+CollectLoopIntegrals = Axiloop`Private`CollectLoopIntegrals;
+$$ = Axiloop`Private`$$;
+
+Test[
+	CollectLoopIntegrals[l.k l.p / l.n + X, l]
+	,
+	$$[{k,p},{},{0}] + X
+	,
+	TestID->"CollectLoopIntegrals-20130117-B1H3G4"
+];
+
+Test[
+	CollectLoopIntegrals[(l.k)^2 l.p / l.n, l]
+	,
+	$$[{k,k,p},{},{0}]
+	,
+	TestID->"CollectLoopIntegrals-20130117-Z8O3Q1"
+];
+
+Test[
+	CollectLoopIntegrals[(l.k)^2 (l.p)^3 / l.n, l]
+	,
+	$$[{k,k,p,p,p},{},{0}]
+	,
+	TestID->"CollectLoopIntegrals-20130117-O6U6V9"
+];
+
+Test[
+	CollectLoopIntegrals[(l.k)^2 (l.p)^3 l.q / l.n, l]
+	,
+	$$[{k,k,p,p,p,q},{},{0}]
+	,
+	TestID->"CollectLoopIntegrals-20130117-W4Q2H7"
+];
+
+Test[
+	CollectLoopIntegrals[l.k l.p / l.n + l.q l.p / (k.n l.n), l]
+	,
+	$$[{k,p},{},{0}] + $$[{p,q},{},{0}] / k.n
+	,
+	TestID->"CollectLoopIntegrals-20130117-H7N1A3"
+];
+
+Test[
+	CollectLoopIntegrals[1 / ((l+a).(l+a) l.n), l]
+	,
+	$$[{},{a},{0}]
+	,
+	TestID->"CollectLoopIntegrals-20130117-B4I6E3"
+];
+
+Test[
+	CollectLoopIntegrals[l.a / ((l-b).(l-b) (l+c).(l+c) l.n), l]
+	,
+	$$[{a},{-b,c},{0}]
+	,
+	TestID->"CollectLoopIntegrals-20130117-A1G0C3"
+];
+
+(*
 TestCase[input_, output_, testid_] := Module[{},
 	Test[
 		Axiloop`Private`CollectIntegral[input, l],
@@ -41,54 +103,55 @@ TestCase[input_, output_, testid_] := Module[{},
 
 TestCase[
 	l.x l.p / ((l-y).(l-y) (l-z).n),
-	Axiloop`Private`KK[l, {x,p},{y},{z}],
+	Axiloop`Private`KK[l, {x,p},{-y},{-z}],
 	"Test 01"
 ];
 
 TestCase[
 	(l.p)^3 l.x / ((l-y).(l-y) (l-z).n),
-	Axiloop`Private`KK[l, {p,p,p,x},{y},{z}],
+	Axiloop`Private`KK[l, {p,p,p,x},{-y},{-z}],
 	"Test 02"
 ];
 
 TestCase[
 	l.x / (l.l (l-y).(l-y) (l-z).n),
-	Axiloop`Private`KK[l, {x},{y,0},{z}],
+	Axiloop`Private`KK[l, {x},{-y,0},{-z}],
 	"Test 03"
 ];
 
 TestCase[
 	l.x / ((l-p).(l-p) (l-y).(l-y) (l-z).n),
-	Axiloop`Private`KK[l, {x},{y,p},{z}],
+	Axiloop`Private`KK[l, {x},{-y,-p},{-z}],
 	"Test 04"
 ];
 
 TestCase[
 	l.x / ((l+p).(l+p) (l-y).(l-y) (l-z).n),
-	Axiloop`Private`KK[l, {x},{-p,y},{z}],
+	Axiloop`Private`KK[l, {x},{p,-y},{-z}],
 	"Test 05"
 ]
 
 TestCase[
 	l.x / ((l-y).(l-y) l.n (l-z).n),
-	Axiloop`Private`KK[l, {x},{y},{z,0}],
+	Axiloop`Private`KK[l, {x},{-y},{-z,0}],
 	"Test 06"
 ];
 
 TestCase[
 	l.x / ((l-y).(l-y) (l-z).n (l-p).n),
-	Axiloop`Private`KK[l, {x},{y},{z,p}],
+	Axiloop`Private`KK[l, {x},{-y},{-z,-p}],
 	"Test 07"
 ];
 
 TestCase[
 	l.x / ((l-y).(l-y) (l-z).n (-l+p).n),
-	- Axiloop`Private`KK[l, {x},{y},{p,z}],
+	- Axiloop`Private`KK[l, {x},{-y},{-p,-z}],
 	"Test 08"
 ];
 
 TestCase[
 	l.x / ((l-y).(l-y) (l-z).n (l+p).n),
-	Axiloop`Private`KK[l, {x},{y},{-p,z}],
+	Axiloop`Private`KK[l, {x},{-y},{-z,p}],
 	"Test 09"
 ];
+*)
