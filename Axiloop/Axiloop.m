@@ -155,23 +155,6 @@ Unprotect[Dot];
     *)
 Protect[Dot];
 
-Unprotect[ReplaceRepeated];
-	ReplaceRepeated[expr_,{{}}] := expr;
-	ReplaceRepeated[expr_,{rules__List}] := ReplaceRepeated[expr //. First[{rules}], Rest[{rules}]];
-Protect[ReplaceRepeated];
-
-GetValue[kernel_, key_, default_:0] := If[
-	!ListQ[kernel] || Equal[kernel, {}],
-	default,
-	Module[{match},
-		match = Select[kernel, First[#] == key &, 1];
-		If[
-			match == {},
-			default,
-			Last[First[match]]
-		]
-	]
-];
 
 (* Kinematics definition and some transformations. *)
 
@@ -221,10 +204,10 @@ GammaTrace[expr_, OptionsPattern[]] := Module[
 	$result = Block[
 		{Global`d = $ndim},
 		
-		Expand[expr //. {
-			((#->f0)& /@ $fermionLines),
-			{NonCommutativeMultiply -> Times}
-		}]
+		Expand[expr
+			/. ((#->f0)& /@ $fermionLines)
+			/. NonCommutativeMultiply -> Times
+		]
 	];
 	NoSpur[f0];
 	$result
