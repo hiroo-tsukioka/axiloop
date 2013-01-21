@@ -83,6 +83,23 @@ Test[
 	TestID->"CollectLoopIntegrals-20130117-A1G0C3"
 ];
 
+Test[
+	CollectLoopIntegrals[l.a / ((l-b).(l-b) l.n), l]
+	,
+	$$[{a},{b},{0}]
+	,
+	TestID->"CollectLoopIntegrals-20130118-K7W6N0"
+];
+
+Test[
+	CollectLoopIntegrals[l.a / ((l+b).n l.n), l]
+	,
+	$$[{a},{},{0,b}]
+	,
+	TestID->"CollectLoopIntegrals-20130118-M5Z0W1"
+];
+
+
 (*
 TestCase[input_, output_, testid_] := Module[{},
 	Test[

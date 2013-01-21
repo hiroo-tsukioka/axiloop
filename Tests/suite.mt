@@ -21,5 +21,6 @@
 
 
 TestSuite[
-	{"GammaTrace.mt"}
+	{"GammaTrace.mt"
+	,"CollectLoopIntegrals.mt"}
 ]
