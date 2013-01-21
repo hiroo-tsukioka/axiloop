@@ -131,8 +131,6 @@ PartonDensity::usage =
 
 SplittingFunction::usage = ""
 
-Counterterm::usage = ""
-
 
 Begin["`Private`"]
 
@@ -760,24 +758,7 @@ ScalarProductRules = {
 };
 
 
-(*---------------------------------------------------------------------------*)
-(*-------------------------- COUNTERTERM FUNCTION ---------------------------*)
-(*---------------------------------------------------------------------------*)
-
-Counterterm[ExclusiveNLO_, ExclusiveLO_, eta_] := Module[{},
-	OnShellPole = ExtractPole[ExclusiveNLO, eta] //.
-		{{eps->0}, OnShellRules, {0^-eir->0, 0^(1-eir)->0, 0^(2-eir)->0}, {eir->0}};
-	OnShellExclusiveLO = ExclusiveLO //.
-		{OnShellRules};
-	Debug["OnShellPole", OnShellPole];
-
-	If[ SameQ[ExclusiveLO, 0],
-		0,
-		OnShellPole / OnShellExclusiveLO
-	]
-];
-
-ExtractPole[kernel_, eta_] := Simplify[
+ExtractPole[kernel_, eta_] := Expand[
 	Coefficient[Series[kernel, {eta, 0, 1}], eta, -1]
 ];
 
