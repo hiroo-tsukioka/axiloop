@@ -148,19 +148,8 @@ Protect[Debug];
 (* Useful modifications to standard functions *)
 
 Unprotect[Dot];
-    (-x_).y_ := - x.y;
-    (*
-    x_.(-y_) := - x.y;
-    (x_.(-x_))^2 := (x.x)^2;
-    *)
+    (-x_Symbol).y_Symbol := -x.y;
 Protect[Dot];
-
-
-(* Kinematics definition and some transformations. *)
-
-Unprotect[S];
-    S[n,n] = 0;
-Protect[S];
 
 
 (*---------------------------------------------------------------------------*)
@@ -622,7 +611,9 @@ SplittingFunction[topology_] := Module[
 	kinematicRules = {
 		k.p -> (p.p + k.k - q.q) / 2,
 		k.q -> (p.p - k.k - q.q) / 2,
-		p.q -> (p.p - k.k + q.q) / 2
+		p.q -> (p.p - k.k + q.q) / 2,
+
+		n.n -> 0
 	};
 	
 	trace = Expand[
