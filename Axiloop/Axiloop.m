@@ -137,16 +137,33 @@ SplittingFunction::usage = ""
 
 Begin["`Private`"]
 
-Print["Entering AXILOOP..."];
-
 
 (*------------------- MISCELLANEOUS ROUTINES and HELPERS --------------------*)
 
-DEBUG = True;
+$debug = True;
 
-Unprotect[Debug];
-	Debug[label_, expr_] := If[DEBUG, Print[Row[{label, expr}, " = "]]];
-Protect[Debug];
+DebugInfo::log = "`1`";
+
+DebugInfo[sender_, message_] := If[
+	$debug
+	,
+	Print[
+		"DebugInfo::"
+		,
+		sender
+		,
+		" : "
+		,
+		message
+	]
+];
+
+
+DebugInfo[
+	"Axiloop"
+	,
+	"Entering AXILOOP"
+];
 
 (* Useful modifications to standard functions *)
 
@@ -553,7 +570,13 @@ CollectLoopIntegrals[expr_, l_] := Module[
 	result = result
 		/. $$[{a___},{b___},{c___}] :> $$[Sort[{a}], Sort[{b}], Sort[{c}]];
 	result = result /. simplifyRules;
-	
+
+	DebugInfo[
+		"CollectLoopIntegrals"
+		,
+		StringDrop[ToString[#], 16] &/@ Union[Cases[result, $$[__], Infinity]]
+	];
+
 	result
 ];
 
@@ -804,7 +827,11 @@ PartonDensity[topology_, LO_:0] := Module[
 ];
 
 
-Print["Exiting AXILOOP..."];
+DebugInfo[
+	"Axiloop"
+	,
+	"Exiting AXILOOP"
+];
 
 End[]
 
