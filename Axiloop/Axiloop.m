@@ -268,16 +268,17 @@ IntegrateFinal[kernel_, ndim_:4 + 2 eps] := Module[{eps},
 (*---------------------------------------------------------------------------*)
 
 
-ExpandIntegralRules = {
-	{
-		KK[l_, {x1_,x___},{y___},{z___}] :> x1.l KK[l, {x},{y},{z}],
-		KK[l_, {x___},{y1_,y___},{z___}] :> KK[l, {x},{y},{z}] / (l+y1).(l+y1),
-		KK[l_, {x___},{y___},{z1_,z___}] :> KK[l, {x},{y},{z}] / (l+z1).n,
-		KK[l_, {},{},{}] -> 1
-	}
-};
-ExpandIntegral[expr_] := Module[{},
-	Expand[expr //. ExpandIntegralRules]
+ExpandLoopIntegrals[expr_, l_] := Module[
+	{expandRules},
+	
+	expandRules = {
+		$$[{x_,a___},{b___},{c___}] :> $$[{a},{b},{c}] l.x,
+		$$[{a___},{x_,b___},{c___}] :> $$[{a},{b},{c}] / (l+x).(l+x),
+		$$[{a___},{b___},{x_,c___}] :> $$[{a},{b},{c}] / (l+x).n,
+		$$[{},{},{}] -> 1
+	};
+	
+	Expand[expr //. expandRules]
 ];
 
 
