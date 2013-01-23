@@ -354,11 +354,20 @@ SimplifyLoopIntegrals[expr_] := Module[
 		$$[{p,p}, {0,k,p}, {0}] -> 1/2 (
 			$$[{p}, {0,k}, {0}] - $$[{p}, {k,p}, {0}] - $$[{p}, {0,k,p}, {0}] p.p
 		)
+		,
+		
+		$$[{k}, {0,k,p}, {0}] -> 1/2 (
+			$$[{}, {0,p}, {0}] - $$[{}, {k,p}, {0}] - $$[{}, {0,k,p}, {0}] k.k
+		)
+		,
+		$$[{p}, {0,k,p}, {0}] -> 1/2 (
+			$$[{}, {0,k}, {0}] - $$[{}, {k,p}, {0}] - $$[{}, {0,k,p}, {0}] p.p
+		)
 	};
 	
 	result = expr
-		(*/. signCorrectionRules*)
-		/. simplifyRules;
+		/. signCorrectionRules
+		//. simplifyRules;
 	
 	DebugInfo[
 		"SimplifyLoopIntegrals"
