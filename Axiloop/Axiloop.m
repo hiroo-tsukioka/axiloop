@@ -332,8 +332,8 @@ SimplifyLoopIntegrals[expr_] := Module[
 		
 	signCorrectionRules = {
 		$$[{a___}, {b___}, {c___}] :>
-			$$[{a}, -# &/@ {b}, -# &/@ {c}] /;
-				{b,c} == Select[{b,c}, Or[# == 0, MatchQ[#, Times[-1, _Symbol]]] &]
+			(-1)^(Length[{a}]+Length[{c}]) $$[{a}, -# &/@ {b}, -# &/@ {c}] /;
+				{b} == Select[{b}, Or[# == 0, MatchQ[#, Times[-1, _Symbol]]] &]
 	};
 
 	simplifyRules = {
