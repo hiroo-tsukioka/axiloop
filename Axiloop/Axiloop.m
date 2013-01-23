@@ -554,7 +554,7 @@ IntegrateLoopExpandRules = {
 
 
 CollectLoopIntegrals[expr_, l_] := Module[
-	{result, collectRules, signCorrectionRules, simplifyRules},
+	{collectRules, result},
 	
 	collectRules = {
 		$$[{a___},{b___},{c___}] S[l, x_] :> $$[{a,x},{b},{c}]
@@ -576,16 +576,38 @@ CollectLoopIntegrals[expr_, l_] := Module[
 		,
 		$$[{a___},{b___},{c___}] S[l+d_, n]^-1 :> $$[{a},{b},{c,d}]
 		,
+		$$[{a___},{b___},{c___}] S[l-d_, n]^-1 :> $$[{a},{b},{c,-d}]
+		,
+		$$[{a___},{b___},{c___}] S[-l+d_, n]^-1 :> - $$[{a},{b},{c,-d}]
+		,
 		
 		$$[{},{},{}] -> 1
 	};
 	
+	result = Expand[expr $$[{},{},{}]]
+		//. collectRules
+		/. $$[{a___},{b___},{c___}] :> $$[Sort[{a}], Sort[{b}], Sort[{c}]];
+	
+
+	DebugInfo[
+		"CollectLoopIntegrals"
+		,
+		StringDrop[ToString[#], 16] &/@ Union[Cases[{result}, $$[__], Infinity]]
+	];
+
+	result
+];
+
+
+SimplifyLoopIntegrals[expr_] := Module[
+	{result, signCorrectionRules, simplifyRules},
+		
 	signCorrectionRules = {
 		$$[{a___}, {b___}, {c___}] :>
 			$$[{a}, -# &/@ {b}, -# &/@ {c}] /;
 				{b,c} == Select[{b,c}, Or[# == 0, MatchQ[#, Times[-1, _Symbol]]] &]
 	};
-	
+
 	simplifyRules = {
 		$$[{a1___,x_,a2___},{0,b1___,x_,b2___},{c___}] :> 1/2 (
 			$$[{a1,a2}, {0,b1,b2}, {c}]
@@ -594,19 +616,16 @@ CollectLoopIntegrals[expr_, l_] := Module[
 		)
 	};
 	
-	result = Expand[expr $$[{},{},{}]]
-		//. collectRules
-		/. signCorrectionRules;
-	result = result
-		/. $$[{a___},{b___},{c___}] :> $$[Sort[{a}], Sort[{b}], Sort[{c}]];
-	result = result /. simplifyRules;
-
+	result = expr
+		/. signCorrectionRules
+		/. simplifyRules;
+	
 	DebugInfo[
-		"CollectLoopIntegrals"
+		"SimplifyLoopIntegrals"
 		,
-		StringDrop[ToString[#], 16] &/@ Union[Cases[result, $$[__], Infinity]]
+		StringDrop[ToString[#], 16] &/@ Union[Cases[{result}, $$[__], Infinity]]
 	];
-
+	
 	result
 ];
 
@@ -631,8 +650,8 @@ $onShellRules = {
 IntegrateLoop::unevaluated = "Unknown integral(s): `1`."
 
 IntegrateLoop[expr_, l_] := Module[
-	{collected, expanded, expansionRules, integrated, integrationRules,
-		 phaseSpaceRule, result, simplified, unevaluated},
+	{collected, expansionRules, integratedLong, integratedShort,
+	 integrationRules, phaseSpaceRule, simplified, unevaluated},
 	
 	integrationRules = {
 		$$[{},{0,k},{ }] ->   Q (k.k)^(-eir) T0,
@@ -707,37 +726,38 @@ IntegrateLoop[expr_, l_] := Module[
 	};
 	
 	collected = CollectLoopIntegrals[expr, l];
-	result["collected"] = collected;
-(*
-	simplified = SimplifyLoopIntegrals[expr, l];
-	result["simplified"] = simplified;
-*)
-	integrated = Expand[
-		collected
-		/. integrationRules
-		/. phaseSpaceRule
-		/. $kinematicRules
+	
+	simplified = SimplifyLoopIntegrals[collected];
+
+	integratedShort = Expand[
+		simplified
+			/. integrationRules
+			/. phaseSpaceRule
+			/. $kinematicRules
 	];
-	result["integrated"] = integrated;
-	unevaluated = Union[Cases[integrated, $$[__], Infinity]];
+	unevaluated = Union[Cases[integratedShort, $$[__], Infinity]];
 	If[
-		unintegrated != {}
+		unevaluated != {}
 		,
 		Message[
 			IntegrateLoop::unevaluated,
 			StringDrop[ToString[#], 16] &/@ unevaluated
 		];
-		result["expanded"] = Null;
-		Return[result]
+		Return[Null]
 	];
 	
-	expanded = Expand[
-		integrated
-		/. expansionRules
+	integratedLong = Expand[
+		integratedShort
+			/. expansionRules
 	];
-	result["expanded"] = expanded;
 	
-	result
+	{
+		{"collected", collected},
+		{"simplified", simplified},
+		{"integrated", {
+			{"short", integratedShort},
+			{"long", integratedLong}}}
+	}
 ];
 
 
@@ -751,34 +771,36 @@ ExtractPole[kernel_, eta_] := Expand[
 (*---------------------------------------------------------------------------*)
 
 SplittingFunction[topology_] := Module[
-	{counterterm, exclusive(*, kinematicRules*), result, trace},
+	{counterterm, exclusive, integrated, trace},
 	
 	trace = Expand[
 		GammaTrace[topology, NumberOfDimensions -> 4 + 2 eps]
 			/. $kinematicRules
 	];
-	result["trace"] = trace;
 
 	exclusive = IntegrateLoop[trace, l];
-	result["exclusive"] = exclusive;
+	integrated = $Get[exclusive, {"integrated", "long"}]; 
 	If[
-		exclusive["expanded"] == Null
+		integrated == Null
 		,
-		Return[result]
+		Return[Null]
 	];
 
 	counterterm = ExtractPole[
-		exclusive["expanded"]
+		integrated
 			/. {eps -> 0}
 			/. $onShellRules
 			/. {0^(-eir) -> 1, 0^(n_Integer-eir) :> 0 /; n>0}
 			/. {(k.k)^(-eir) -> 1, (k.k)^(n_Integer-eir) :> (k.k)^n}
 		,
 		euv
-	];
-	result["counterterm"] = counterterm; 
+	]; 
 
-	result
+	{
+		{"trace", trace},
+		{"exclusive", exclusive},
+		{"counterterm", counterterm}
+	}
 ];
 
 

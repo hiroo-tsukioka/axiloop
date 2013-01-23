@@ -86,7 +86,7 @@ Test[
 Test[
 	CollectLoopIntegrals[l.a / ((l-b).(l-b) l.n), l]
 	,
-	$$[{a},{b},{0}]
+	$$[{a},{-b},{0}]
 	,
 	TestID->"CollectLoopIntegrals-20130118-K7W6N0"
 ];
@@ -100,75 +100,74 @@ Test[
 ];
 
 
-(*
-TestCase[input_, output_, testid_] := Module[{},
-	Test[
-		Axiloop`Private`CollectIntegral[input, l],
-		output,
-		TestID->testid,
-		EquivalenceFunction->EqualSimplify
-	];
-	
-	Test[
-		Axiloop`Private`ExpandIntegral[output],
-		input,
-		TestID->testid,
-		EquivalenceFunction->EqualSimplify
-	];
+Test[
+	CollectLoopIntegrals[l.x l.p / ((l-y).(l-y) (l-z).n), l]
+	,
+	$$[{p,x},{-y},{-z}]
+	,
+	TestID->"CollectLoopIntegrals-20130123-W6T6U8"
 ];
 
-
-TestCase[
-	l.x l.p / ((l-y).(l-y) (l-z).n),
-	Axiloop`Private`KK[l, {x,p},{-y},{-z}],
-	"Test 01"
+Test[
+	CollectLoopIntegrals[(l.p)^3 l.x / ((l-y).(l-y) (l-z).n), l]
+	,
+	$$[{p,p,p,x},{-y},{-z}]
+	,
+	TestID->"CollectLoopIntegrals-20130123-E7R5K1"
 ];
 
-TestCase[
-	(l.p)^3 l.x / ((l-y).(l-y) (l-z).n),
-	Axiloop`Private`KK[l, {p,p,p,x},{-y},{-z}],
-	"Test 02"
+Test[
+	CollectLoopIntegrals[l.x / (l.l (l-y).(l-y) (l-z).n), l]
+	,
+	$$[{x},{0,-y},{-z}]
+	,
+	TestID->"CollectLoopIntegrals-20130123-X6L5V9"
 ];
 
-TestCase[
-	l.x / (l.l (l-y).(l-y) (l-z).n),
-	Axiloop`Private`KK[l, {x},{-y,0},{-z}],
-	"Test 03"
+Test[
+	CollectLoopIntegrals[l.x / ((l-p).(l-p) (l-y).(l-y) (l-z).n), l]
+	,
+	$$[{x},{-p,-y},{-z}]
+	,
+	TestID->"CollectLoopIntegrals-20130123-D7Z3W6"
 ];
 
-TestCase[
-	l.x / ((l-p).(l-p) (l-y).(l-y) (l-z).n),
-	Axiloop`Private`KK[l, {x},{-y,-p},{-z}],
-	"Test 04"
-];
-
-TestCase[
-	l.x / ((l+p).(l+p) (l-y).(l-y) (l-z).n),
-	Axiloop`Private`KK[l, {x},{p,-y},{-z}],
-	"Test 05"
+Test[
+	CollectLoopIntegrals[l.x / ((l+p).(l+p) (l-y).(l-y) (l-z).n), l]
+	,
+	$$[{x},{p,-y},{-z}]
+	,
+	TestID->"CollectLoopIntegrals-20130123-O0Z4U6"
 ]
 
-TestCase[
-	l.x / ((l-y).(l-y) l.n (l-z).n),
-	Axiloop`Private`KK[l, {x},{-y},{-z,0}],
-	"Test 06"
+Test[
+	CollectLoopIntegrals[l.x / ((l-y).(l-y) l.n (l-z).n), l]
+	,
+	$$[{x},{-y},{0,-z}]
+	,
+	TestID->"CollectLoopIntegrals-20130123-X5H3A1"
 ];
 
-TestCase[
-	l.x / ((l-y).(l-y) (l-z).n (l-p).n),
-	Axiloop`Private`KK[l, {x},{-y},{-z,-p}],
-	"Test 07"
+Test[
+	CollectLoopIntegrals[l.x / ((l-y).(l-y) (l-z).n (l-p).n), l]
+	,
+	$$[{x},{-y},{-p,-z}]
+	,
+	TestID->"CollectLoopIntegrals-20130123-W7H9E3"
 ];
 
-TestCase[
-	l.x / ((l-y).(l-y) (l-z).n (-l+p).n),
-	- Axiloop`Private`KK[l, {x},{-y},{-p,-z}],
-	"Test 08"
+Test[
+	CollectLoopIntegrals[l.x / ((l-y).(l-y) (l-z).n (-l+p).n), l]
+	,
+	- $$[{x},{-y},{-p,-z}]
+	,
+	TestID->"CollectLoopIntegrals-20130123-R1L8L5"
 ];
 
-TestCase[
-	l.x / ((l-y).(l-y) (l-z).n (l+p).n),
-	Axiloop`Private`KK[l, {x},{-y},{-z,p}],
-	"Test 09"
+Test[
+	CollectLoopIntegrals[l.x / ((l-y).(l-y) (l-z).n (l+p).n), l]
+	,
+	$$[{x},{-y},{p,-z}]
+	,
+	TestID->"CollectLoopIntegrals-20130123-T8U4X7"
 ];
-*)

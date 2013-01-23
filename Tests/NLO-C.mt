@@ -1,6 +1,6 @@
 (*============================================================================*)
 (*                                                                            *)
-(*  Copyright (C) 2012 Oleksandr Gituliar.                                    *)
+(*  Copyright (C) 2012-2013 Oleksandr Gituliar.                               *)
 (*                                                                            *)
 (*  This file is part of Axiloop.                                             *)
 (*                                                                            *)
@@ -31,7 +31,7 @@ $result = SplittingFunction[$topology];
 
 
 Test[
-	$result["counterterm"]
+	$Get[$result, "counterterm"]
 	,
 	Gamma[1+eir] 2^(2 eir) g^4 Pi^(-2+eir) (1+x^2) / (8 (1-x) k.k) *
 		(-3 + 4 I0 + 2 Log[x])
