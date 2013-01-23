@@ -339,7 +339,7 @@ SimplifyLoopIntegrals[expr_] := Module[
 	simplifyRules = {
 		$$[{a1___,x_,a2___},{0,b1___,x_,b2___},{c___}] :> 1/2 (
 			$$[{a1,a2}, {0,b1,b2}, {c}]
-			- $$[{a1,a2}, {b1,x,b2}, {c}] +
+			- $$[{a1,a2}, {b1,x,b2}, {c}] -
 			- $$[{a1,a2}, {0,b1,x,b2}, {c}] x.x
 		)
 	};
