@@ -338,15 +338,26 @@ SimplifyLoopIntegrals[expr_] := Module[
 	};
 
 	simplifyRules = {
+		(*
 		$$[{a1___,x_,a2___},{0,b1___,x_,b2___},{c___}] :> 1/2 (
-			$$[{a1,a2}, {0,b1,b2}, {c}]
-			- $$[{a1,a2}, {b1,x,b2}, {c}] -
-			- $$[{a1,a2}, {0,b1,x,b2}, {c}] x.x
+			$$[{a1,a2}, {0,b1,b2}, {c}] - $$[{a1,a2}, {b1,x,b2}, {c}] - $$[{a1,a2}, {0,b1,x,b2}, {c}] x.x
+		)
+		*)
+		$$[{k,k}, {0,k,p}, {0}] -> 1/2 (
+			$$[{k}, {0,p}, {0}] - $$[{k}, {k,p}, {0}] - $$[{k}, {0,k,p}, {0}] k.k
+		)
+		,
+		$$[{k,p}, {0,k,p}, {0}] -> 1/2 (
+			$$[{p}, {0,p}, {0}] - $$[{p}, {k,p}, {0}] - $$[{p}, {0,k,p}, {0}] k.k
+		)
+		,
+		$$[{p,p}, {0,k,p}, {0}] -> 1/2 (
+			$$[{p}, {0,k}, {0}] - $$[{p}, {k,p}, {0}] - $$[{p}, {0,k,p}, {0}] p.p
 		)
 	};
 	
 	result = expr
-		/. signCorrectionRules
+		(*/. signCorrectionRules*)
 		/. simplifyRules;
 	
 	DebugInfo[
@@ -400,8 +411,8 @@ IntegrateLoop[expr_, l_] := Module[
    
 
 		$$[{},{0,k},{0}] -> - Q (k.k)^(-eir) P0 / k.n,
-		$$[{},{0,p},{0}] -> - Q (p.p)^(-eir) B0 / p.n,
-		$$[{},{k,p},{0}] -> - Q (q.q)^(-eir) K0 / p.n,
+		$$[{},{0,p},{0}] -> - Q (p.p)^(-eir) B0 / n.p,
+		$$[{},{k,p},{0}] -> - Q (q.q)^(-eir) K0 / n.p,
 		
 		$$[{x_},{0,k},{0}] :> Q (k.k)^(-eir)/k.n (
 			k.x P1 + n.x k.k/(2 k.n) P3
