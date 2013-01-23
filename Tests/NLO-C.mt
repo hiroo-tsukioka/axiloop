@@ -23,11 +23,34 @@
 Get["Tests/utils.mt"];
 
 
-$topology = x (G[n]/(4 k.n)) ** FP[k] ** FV[i1] ** FP[l-k] ** FV[mu] **
-	FP[l-p] ** FV[i2] ** GP[i1, i2, l] ** FPx[p] ** GPx[mu, nu, p-k] **
+ExpandLoopIntegrals = Axiloop`Private`ExpandLoopIntegrals;
+
+$topology = x (G[n]/(4 k.n)) ** FP[k] ** FV[i1] ** FP[l+k] ** FV[mu] **
+	FP[l+p] ** FV[i2] ** GP[i1, i2, l] ** FPx[p] ** GPx[mu, nu, p-k] **
 	FV[nu] ** FP[k];
 
 $result = SplittingFunction[$topology];
+
+
+Test[
+	ExpandLoopIntegrals[$Get[$result, {"exclusive", "collected"}], l]
+	,
+	$Get[$result, "trace"]
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID -> "NLO-C-20130121-R0Q3G6"
+];
+
+Test[
+	ExpandLoopIntegrals[$Get[$result, {"exclusive", "simplified"}], l]
+	,
+	$Get[$result, "trace"]
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID -> "NLO-C-20130123-X1S7H2"
+];
 
 
 Test[
@@ -38,7 +61,7 @@ Test[
 	,
 	EquivalenceFunction -> EquivalentQ
 	,
-	TestID -> "NLOc-20130121-R0Q3G6"
+	TestID -> "NLO-C-20130123-M1X6E0"
 ];
 
 	
