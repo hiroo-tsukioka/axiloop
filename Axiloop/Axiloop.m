@@ -111,8 +111,8 @@ Example:
    	In[2] := GammaTrace[G[{mu}]**G[{mu}], NumberOfDimensions -> ndim]
    	Out[2] = 4 ndim"
 
-GetValue::usage =
-	"GetValue[kernel_, key_] get value from kernel associated with key."
+$Get::usage =
+	"$Get[hash_, key_] get value by key from a hash table."
 
 I0::usage =
 	"Principal Value regulated integral; I0 = - Log[delta] + O[delta]."
@@ -165,6 +165,36 @@ DebugInfo[
 	"Entering AXILOOP"
 ];
 
+
+$Get[hash_, keys_, default_:Null] := Module[
+	{item, key, value},
+	
+	key = If[
+		ListQ[keys]
+		,
+		First[keys]
+		,
+		keys
+	];
+
+	item = Select[hash, First[#] == key &, 1];
+
+	value = If[
+		item == {}
+		,
+		default
+		,
+		Last[First[item]]
+	];
+	
+	If[
+		!ListQ[keys] || Length[keys] == 1
+		,
+		value
+		,
+		$Get[value, Rest[keys]]
+	]
+];
 (* Useful modifications to standard functions *)
 
 Unprotect[Dot];

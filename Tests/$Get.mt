@@ -19,10 +19,51 @@
 (*                                                                            *)
 (*============================================================================*)
 
+Get["Tests/utils.mt"];
 
-TestSuite[
-	{"$Get.mt"
-	,"GammaTrace.mt"
-	,"CollectLoopIntegrals.mt"
-	,"NLO-C.mt"}
+
+Test[
+	$Get[{}, "key", 1]
+	,
+	1
+	,
+	TestID->"GetSet-20130122-O8G8A6"
+]
+
+Test[
+	$Get[{{"key_1", 0}, {"key_2", 2}}, "key_2"]
+	,
+	2
+	,
+	TestID->"GetSet-20130122-N3S3N4"
+]
+
+Test[
+	$Get[{{"key_1", 1}, {"key_2", 2}}, "key_3", 3]
+	,
+	3
+	,
+	TestID->"GetSet-20130122-S4W4I4"
+]
+
+Test[
+	$Get[{{"key_1", {{"key_1_1", 11}, {"key_1_2", 12}}}, {"key2", 2}}
+		,
+		{"key_1"}
+	]
+	,
+	{{"key_1_1", 11}, {"key_1_2", 12}}
+	,
+	TestID->"GetSet-20130122-N7O5P4"
+]
+
+Test[
+	$Get[{{"key_1", {{"key_1_1", 11}, {"key_1_2", 12}}}, {"key2", 2}}
+		,
+		{"key_1", "key_1_2"}
+	]
+	,
+	12
+	,
+	TestID->"GetSet-20130122-O6Y2O7"
 ]
