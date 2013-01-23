@@ -430,7 +430,7 @@ IntegrateLoop[expr_, l_] := Module[
 			p.x B1 + n.x p.p/(2 p.n) B3
 		),
 		$$[{x_},{k,p},{0}] :> Q (q.q)^(-eir) (
-			p.x V1 + k.x V2
+			p.x V1 + k.x V2 + n.x q.q V3
 		),
 		
 		$$[{},{0,k,p},{0}] -> Q (k.k)^(-1-eir)/p.n S0,
@@ -470,8 +470,8 @@ IntegrateLoop[expr_, l_] := Module[
 		T0 -> 1/euv + 2,
 		T1 -> 1/(2 euv) + 1,
 
-		V1 -> (x Log[x] + 1-x)/(1-x)^2 / euv,
-		V2 -> - (Log[x] + 1-x)/(1-x)^2 / euv
+		V1 -> ((1-x + x Log[x])/(1-x)^2 + 1/x) / euv,
+		V2 -> - (1-x + Log[x])/(1-x)^2 / euv
 	};
 	
 	collected = CollectLoopIntegrals[expr, l];
