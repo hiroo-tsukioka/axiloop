@@ -24,5 +24,6 @@ TestSuite[
 	{"$Get.mt"
 	,"GammaTrace.mt"
 	,"CollectLoopIntegrals.mt"
+	,"SimplifyLoopIntegrals.mt"
 	,"NLO-C.mt"}
 ]
