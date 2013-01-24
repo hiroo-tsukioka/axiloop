@@ -56,8 +56,8 @@ Test[
 Test[
 	$Get[$result, "counterterm"]
 	,
-	Gamma[1+eir] 2^(2 eir) g^4 Pi^(-2+eir) (1+x^2) / (8 (1-x) k.k) *
-		(-3 + 4 I0 + 2 Log[x])
+	g^4 Gamma[1+eir] (4 Pi)^(-2+eir) (1+x^2)/(1-x) *
+		2 (-3 + 4 I0 + 2 Log[x]) / k.k
 	,
 	EquivalenceFunction -> EquivalentQ
 	,

@@ -414,7 +414,7 @@ IntegrateLoop[expr_, l_] := Module[
 		
 		$$[{},{0,k,p},{}] -> - Q (k.k)^(-1-eir) R0,
 		$$[{x_},{0,k,p},{}] :> Q (k.k)^(-1-eir) (p.x R1 + k.x R2),
-		$$[{x_, y_},{0,k,p},{}] :> - Q (k.k)^(-1-eir) (
+		$$[{x_, y_},{0,k,p},{}] :> Q (k.k)^(-1-eir) (
     		p.x p.y R3 + k.x k.y R4 + (k.x p.y + p.x k.y) R5 + k.k x.y R6
    		),
    
@@ -470,7 +470,7 @@ IntegrateLoop[expr_, l_] := Module[
 		T0 -> 1/euv + 2,
 		T1 -> 1/(2 euv) + 1,
 
-		V1 -> ((1-x + x Log[x])/(1-x)^2 + 1/x) / euv,
+		V1 -> (1-x + x Log[x])/(1-x)^2 / euv,
 		V2 -> - (1-x + Log[x])/(1-x)^2 / euv
 	};
 	
