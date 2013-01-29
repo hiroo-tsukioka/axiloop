@@ -193,11 +193,26 @@ $Get[hash_, keys_, default_:Null] := Module[
 		$Get[value, Rest[keys]]
 	]
 ];
+
+
 (* Useful modifications to standard functions *)
 
 Unprotect[Dot];
-    (-x_Symbol).y_Symbol := -x.y;
+    (-x_).y_ := -x.y;
 Protect[Dot];
+
+
+CollectExclusiveShort[expr_] := Module[{},
+	Collect[
+		expr
+			/. {eps->0, (k.k)^(n_Integer-eir):>(k.k)^n, p.p->0, q.q->0}
+			/. {0^(-eir)->1, 0^(1-eir)->0, 0^(2-eir)->0}
+		,
+		{B0,B1,B3,K0,P0,P1,P3,R0,R1,R2,R3,R4,R5,R6,S0,S1,S2,T0,T1,V1,V2}
+		,
+		Simplify
+	]
+];
 
 
 (*---------------------------------------------------------------------------*)
@@ -255,7 +270,9 @@ GammaTrace[expr_, OptionsPattern[]] := Module[
 (*--------------------- FINAL-STATE MOMENTA INTEGRATION ---------------------*)
 (*---------------------------------------------------------------------------*)
 
-IntegrateFinal[kernel_, ndim_:4 + 2 eps] := Module[{eps},
+IntegrateFinal[kernel_, ndim_] := Module[
+	{eps},
+
 	eps = Simplify[ndim/2 - 2];
 	(4 Pi)^(-2+eps)/Gamma[1-eps] (1 + eps Log[1-x]) Integrate[(k.k)^(eps) kernel, k.k]
 ];
@@ -410,8 +427,8 @@ IntegrateLoop[expr_, l_] := Module[
 		$$[{x_},{0,q},{}] -> - Q (q.q)^(-eir) q.x T1,
 		$$[{x_},{k,p},{}] :> - Q (q.q)^(-eir) (q.x T1 - k.x T0),
 		
-		$$[{},{0,k,p},{}] -> - Q (k.k)^(-1-eir) R0,
-		$$[{x_},{0,k,p},{}] :> Q (k.k)^(-1-eir) (p.x R1 + k.x R2),
+		$$[{},{0,k,p},{}] -> Q (k.k)^(-1-eir) R0,
+		$$[{x_},{0,k,p},{}] :> - Q (k.k)^(-1-eir) (p.x R1 + k.x R2),
 		$$[{x_, y_},{0,k,p},{}] :> Q (k.k)^(-1-eir) (
     		p.x p.y R3 + k.x k.y R4 + (k.x p.y + p.x k.y) R5 + k.k x.y R6
    		),
@@ -431,7 +448,7 @@ IntegrateLoop[expr_, l_] := Module[
 			p.x V1 + k.x V2 + n.x q.q V3
 		),
 		
-		$$[{},{0,k,p},{0}] -> Q (k.k)^(-1-eir)/p.n S0,
+		$$[{},{0,k,p},{0}] -> - Q (k.k)^(-1-eir)/p.n S0,
 	
 		$$[{x_},{0,k,p},{0}] :> - Q (k.k)^(-1-eir)/p.n (
 			p.x S1 + k.x S2 + n.x k.k/(2 k.n) S3
@@ -497,7 +514,7 @@ IntegrateLoop[expr_, l_] := Module[
 		integratedShort
 			/. expansionRules
 	];
-	
+
 	{
 		{"collected", collected},
 		{"simplified", simplified},
@@ -544,10 +561,22 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 		,
 		Return[Null]
 	];
+	
+	exclusiveBare = If[
+		SameQ[$LO, Null]
+		,
+		Null
+		,
+		$PutOnShell[$Get[integrated, {"integrated", "short"}]]
+	];
+	
+	exclusive = $PutOnShell[$Get[integrated, {"integrated", "long"}]]
+		/. {eps^2 -> 0};
+	
 	If[
 		$debug
 		,
-		Module[{t$uv$k, t$uv$p, t$uv$q},
+		Module[{t$ir$k, t$uv$k, t$uv$p, t$uv$q},
 			t$uv$k = ExtractPole[
 				Expand[exclusive]
 					/. {p.p->0, q.q->0}
@@ -608,21 +637,49 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 			];		
 		]
 	];
-
-	counterterm = ExtractPole[
-		integrated
-			/. {eps -> 0}
-			/. $onShellRules
-			/. {0^(-eir) -> 1, 0^(n_Integer-eir) :> 0 /; n>0}
-			/. {(k.k)^(-eir) -> 1, (k.k)^(n_Integer-eir) :> (k.k)^n}
+	
+	Z = Simplify[If[
+		SameQ[$LO, Null]
 		,
-		euv
-	]; 
+		0
+		,
+		ExtractPole[
+			exclusive
+				(* /. {(k.k)^(n_Integer-eir) :> (k.k)^n} *)
+				/. {S[_,_]^(-eir) :> 1}
+			,
+			euv
+		] / $Get[$LO, "exclusive"]
+	] /. {eir -> 0, eps -> 0}];
+
+	counterterm = If[
+		SameQ[$LO, Null]
+		,
+		0
+		,
+		2^(2 eir) Pi^(eir) Gamma[1+eir] Z $Get[$LO, "exclusive"]
+	];
+	
+	exclusive = exclusive - counterterm / euv
+		/. {eir -> - eps, euv -> -eps}
+		/. {p.p -> 0, q.q -> 0}
+		/. {0^eps -> 0}
+	;
+
+	inclusive = Simplify[ExtractPole[
+		IntegrateFinal[exclusive, 4 + 2 eps]
+		,
+		eps
+	]];
 
 	{
 		{"trace", trace},
+		{"integrated", integrated},
+		{"Z", Z},
+		{"counterterm", counterterm},
+		{"exclusive-bare", exclusiveBare},
 		{"exclusive", exclusive},
-		{"counterterm", counterterm}
+		{"inclusive", inclusive}
 	}
 ];
 

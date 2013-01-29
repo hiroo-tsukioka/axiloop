@@ -25,15 +25,17 @@ Get["Tests/utils.mt"];
 
 ExpandLoopIntegrals = Axiloop`Private`ExpandLoopIntegrals;
 
+$LO = << "LO.result";
+
 $topology = x (G[n]/(4 k.n)) ** FP[k] ** FV[i1] ** FP[l+k] ** FV[mu] **
 	FP[l+p] ** FV[i2] ** GP[i1, i2, l] ** FPx[p] ** GPx[mu, nu, p-k] **
 	FV[nu] ** FP[k];
 
-$result = SplittingFunction[$topology];
+$result = SplittingFunction[$topology, $LO];
 
 
 Test[
-	ExpandLoopIntegrals[$Get[$result, {"exclusive", "collected"}], l]
+	ExpandLoopIntegrals[$Get[$result, {"integrated", "collected"}], l]
 	,
 	$Get[$result, "trace"]
 	,
@@ -43,7 +45,7 @@ Test[
 ];
 
 Test[
-	ExpandLoopIntegrals[$Get[$result, {"exclusive", "simplified"}], l]
+	ExpandLoopIntegrals[$Get[$result, {"integrated", "simplified"}], l]
 	,
 	$Get[$result, "trace"]
 	,
@@ -54,15 +56,24 @@ Test[
 
 
 Test[
-	$Get[$result, "counterterm"]
+	$Get[$result, "Z"]
 	,
-	g^4 Gamma[1+eir] (4 Pi)^(-2+eir) (1+x^2)/(1-x) *
-		2 (-3 + 4 I0 + 2 Log[x]) / k.k
+	g^2 (4 Pi)^-2 (-3 + 4 I0 + 2 Log[x])
 	,
 	EquivalenceFunction -> EquivalentQ
 	,
 	TestID -> "NLO-C-20130123-M1X6E0"
 ];
+
+Test[
+	$Get[$result, "inclusive"]
+	,
+	(g/(4 Pi))^4 ( (1+x^2)/(1-x) (-7 + 2 Log[x]^2 + 2 Log[x] Log[1-x] - 3 Log[1-x] + 2 Li2[1-x] + 4 Li2[1] - 4 I1 + 4 I0 Log[x] + 4 I0 Log[1-x]) - (1-x) (3 - 2 Log[x] - 4 I0) + x )
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID -> "NLO-C-20130129-V7Y1C7"
+]
 
 	
 (*
@@ -110,13 +121,6 @@ Test[
 		+ Axiloop`Private`T1 (1-eps) (3x-2)x
 	),
 	TestID->"Kernel NLOc exclusive compact",
-	EquivalenceFunction->EqualSimplify
-]
-
-Test[
-	GetValue[NLOc, "inclusive"],
-	- (g/(4 Pi))^4 ( (1+x^2)/(1-x) (-7 + 2 Log[x]^2 + 2 Log[x] Log[1-x] - 3 Log[1-x] + 2 Li2[1-x] + 4 Li2[1] - 4 I1 + 4 I0 Log[x] + 4 I0 Log[1-x]) - (1-x) (3 - 2 Log[x] - 4 I0) + x ),
-	TestID->"Kernel NLOc inclusive",
 	EquivalenceFunction->EqualSimplify
 ]
 
