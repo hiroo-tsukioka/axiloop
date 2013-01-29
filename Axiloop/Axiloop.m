@@ -142,8 +142,6 @@ Begin["`Private`"]
 
 $debug = True;
 
-DebugInfo::log = "`1`";
-
 DebugInfo[sender_, message_] := If[
 	$debug
 	,
@@ -519,20 +517,76 @@ ExtractPole[kernel_, eta_] := Expand[
 (*--------------------------- SPLITTING FUNCTION ----------------------------*)
 (*---------------------------------------------------------------------------*)
 
-SplittingFunction[topology_] := Module[
-	{counterterm, exclusive, integrated, trace},
+SplittingFunction[$topology_, $LO_:Null] := Module[
+	{counterterm, exclusive, exclusiveBare, inclusive, integrated, trace, Z,
+	 $PutOnShell},
+	
+	$PutOnShell[expr_] := Replace[
+		expr /. {
+			S[x_,x_]^(n_Integer-eir) :> 0 /; n > 0 && (x == p || x == q)
+			,
+			S[x_,x_]^n_Integer :> 0 /; n > 1 && (x == p || x == q)
+		}
+		,
+		{p.p -> 0, q.q -> 0}
+		,
+		2
+	];
 	
 	trace = Expand[
-		GammaTrace[topology, NumberOfDimensions -> 4 + 2 eps]
+		GammaTrace[$topology, NumberOfDimensions -> 4 + 2 eps]
 			/. $kinematicRules
 	];
 
-	exclusive = IntegrateLoop[trace, l];
-	integrated = $Get[exclusive, {"integrated", "long"}]; 
+	integrated = IntegrateLoop[trace, l]; 
 	If[
 		integrated == Null
 		,
 		Return[Null]
+	];
+	If[
+		$debug
+		,
+		Module[{t$uv$k, t$uv$p, t$uv$q},
+			t$uv$k = ExtractPole[
+				Expand[exclusive]
+					/. {p.p->0, q.q->0}
+					/. {0^(-eir)->0, 0^(_-eir):>0}
+				,
+				euv
+			];
+			t$uv$p = ExtractPole[
+				Expand[exclusive k.k]
+					/. {k.k->0, q.q->0}
+					/. {0^(-eir)->0, 0^(_-eir):>0}
+				,
+				euv
+			] / k.k;
+			t$uv$q = ExtractPole[
+				Expand[exclusive k.k]
+					/. {k.k->0, p.p->0}
+					/. {0^(-eir)->0, 0^(_-eir):>0}
+				,
+				euv
+			] / k.k;
+			
+			DebugInfo[
+				"SplittingFunction::T_UV^k"
+				,
+				Collect[t$uv$k, {I0, Log[x]}, Simplify]
+			];
+			DebugInfo[
+				"SplittingFunction::T_UV^p"
+				,
+				Collect[t$uv$p, {I0, Log[x]}, Simplify]
+			];
+			DebugInfo[
+				"SplittingFunction::T_UV^q"
+				,
+				Collect[t$uv$q, {I0, Log[x]}, Simplify]
+			];	
+	
+		]
 	];
 
 	counterterm = ExtractPole[
