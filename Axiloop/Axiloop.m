@@ -94,8 +94,8 @@ q::usage = "Final state particle momentum; q.q = 0."
 x::usage =
 	"x = k.n/p.n"
 
-ExtractPole::usage =
-	"ExtractPole[expr, x] extract coefficient in front of 1/x in expr."
+PolePart::usage =
+	"PolePart[expr, x] extract coefficient in front of 1/x in expr."
 
 GammaTrace::usage =
 "GammaTrace[expr, NumberOfDimensions -> 4 + 2 eps] calculates trace
@@ -525,7 +525,7 @@ IntegrateLoop[expr_, l_] := Module[
 ];
 
 
-ExtractPole[kernel_, eta_] := Expand[
+PolePart[kernel_, eta_] := Expand[
 	Coefficient[Series[kernel, {eta, 0, 1}], eta, -1]
 ];
 
@@ -577,21 +577,21 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 		$debug
 		,
 		Module[{t$ir$k, t$uv$k, t$uv$p, t$uv$q},
-			t$uv$k = ExtractPole[
+			t$uv$k = PolePart[
 				Expand[exclusive]
 					/. {p.p->0, q.q->0}
 					/. {0^(-eir)->0, 0^(_-eir):>0}
 				,
 				euv
 			];
-			t$uv$p = ExtractPole[
+			t$uv$p = PolePart[
 				Expand[exclusive k.k]
 					/. {k.k->0, q.q->0}
 					/. {0^(-eir)->0, 0^(_-eir):>0}
 				,
 				euv
 			] / k.k;
-			t$uv$q = ExtractPole[
+			t$uv$q = PolePart[
 				Expand[exclusive k.k]
 					/. {k.k->0, p.p->0}
 					/. {0^(-eir)->0, 0^(_-eir):>0}
@@ -615,7 +615,7 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 				Collect[t$uv$q, {I0, Log[x]}, Simplify]
 			];
 
-			t$ir$k = ExtractPole[Expand[exclusive], eir];
+			t$ir$k = PolePart[Expand[exclusive], eir];
 			DebugInfo[
 				"SplittingFunction::T_IR^k"
 				,
@@ -643,7 +643,7 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 		,
 		0
 		,
-		ExtractPole[
+		PolePart[
 			exclusive
 				(* /. {(k.k)^(n_Integer-eir) :> (k.k)^n} *)
 				/. {S[_,_]^(-eir) :> 1}
@@ -666,7 +666,7 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 		/. {0^eps -> 0}
 	;
 
-	inclusive = Simplify[ExtractPole[
+	inclusive = Simplify[PolePart[
 		IntegrateFinal[exclusive, 4 + 2 eps]
 		,
 		eps
