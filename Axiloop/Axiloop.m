@@ -584,8 +584,28 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 				"SplittingFunction::T_UV^q"
 				,
 				Collect[t$uv$q, {I0, Log[x]}, Simplify]
-			];	
-	
+			];
+
+			t$ir$k = ExtractPole[Expand[exclusive], eir];
+			DebugInfo[
+				"SplittingFunction::T_IR^k"
+				,
+				Collect[t$ir$k, {I0, Log[x]}, Simplify]
+			];
+			
+			DebugInfo[
+				"SplittingFunction::T_UV^p + T_UV^q - T_IR^k"
+				,
+				Collect[
+					Expand[t$uv$p + t$uv$q - t$ir$k]
+						/. {eir->0}
+						/. {0^-eir :> 1}
+					,
+					{I0, Log[x]}
+					,
+					Simplify
+				]
+			];		
 		]
 	];
 
