@@ -1,0 +1,30 @@
+{{"trace", (2*g^2)/S[k, k] + (2*eps*g^2)/S[k, k] - (2*g^2*x)/S[k, k] - 
+   (2*eps*g^2*x)/S[k, k] + (4*g^2*x)/((1 - x)*S[k, k]) - 
+   (2*g^2*x*S[p, p])/S[k, k]^2 - (2*eps*g^2*x*S[p, p])/S[k, k]^2 - 
+   (4*g^2*x^2*S[p, p])/((1 - x)*S[k, k]^2) + (2*g^2*x*S[q, q])/S[k, k]^2 + 
+   (2*eps*g^2*x*S[q, q])/S[k, k]^2}, 
+ {"integrated", {{"collected", (2*g^2)/S[k, k] + (2*eps*g^2)/S[k, k] - 
+     (2*g^2*x)/S[k, k] - (2*eps*g^2*x)/S[k, k] + 
+     (4*g^2*x)/((1 - x)*S[k, k]) - (2*g^2*x*S[p, p])/S[k, k]^2 - 
+     (2*eps*g^2*x*S[p, p])/S[k, k]^2 - (4*g^2*x^2*S[p, p])/
+      ((1 - x)*S[k, k]^2) + (2*g^2*x*S[q, q])/S[k, k]^2 + 
+     (2*eps*g^2*x*S[q, q])/S[k, k]^2}, {"simplified", 
+    (2*g^2)/S[k, k] + (2*eps*g^2)/S[k, k] - (2*g^2*x)/S[k, k] - 
+     (2*eps*g^2*x)/S[k, k] + (4*g^2*x)/((1 - x)*S[k, k]) - 
+     (2*g^2*x*S[p, p])/S[k, k]^2 - (2*eps*g^2*x*S[p, p])/S[k, k]^2 - 
+     (4*g^2*x^2*S[p, p])/((1 - x)*S[k, k]^2) + (2*g^2*x*S[q, q])/S[k, k]^2 + 
+     (2*eps*g^2*x*S[q, q])/S[k, k]^2}, {"integrated", 
+    {{"short", (2*g^2)/S[k, k] + (2*eps*g^2)/S[k, k] - (2*g^2*x)/S[k, k] - 
+       (2*eps*g^2*x)/S[k, k] + (4*g^2*x)/((1 - x)*S[k, k]) - 
+       (2*g^2*x*S[p, p])/S[k, k]^2 - (2*eps*g^2*x*S[p, p])/S[k, k]^2 - 
+       (4*g^2*x^2*S[p, p])/((1 - x)*S[k, k]^2) + (2*g^2*x*S[q, q])/
+        S[k, k]^2 + (2*eps*g^2*x*S[q, q])/S[k, k]^2}, 
+     {"long", (2*g^2)/S[k, k] + (2*eps*g^2)/S[k, k] - (2*g^2*x)/S[k, k] - 
+       (2*eps*g^2*x)/S[k, k] + (4*g^2*x)/((1 - x)*S[k, k]) - 
+       (2*g^2*x*S[p, p])/S[k, k]^2 - (2*eps*g^2*x*S[p, p])/S[k, k]^2 - 
+       (4*g^2*x^2*S[p, p])/((1 - x)*S[k, k]^2) + (2*g^2*x*S[q, q])/
+        S[k, k]^2 + (2*eps*g^2*x*S[q, q])/S[k, k]^2}}}}}, {"Z", 0}, 
+ {"counterterm", 0}, {"exclusive-bare", Null}, 
+ {"exclusive", (2*g^2)/S[k, k] + (2*eps*g^2)/S[k, k] - (2*g^2*x)/S[k, k] - 
+   (2*eps*g^2*x)/S[k, k] + (4*g^2*x)/((1 - x)*S[k, k])}, 
+ {"inclusive", -(g^2*(1 + x^2))/(8*Pi^2*(-1 + x))}}
