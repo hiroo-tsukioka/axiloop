@@ -331,7 +331,6 @@ CollectLoopIntegrals[expr_, l_] := Module[
 	result = Expand[expr $$[{},{},{}]]
 		//. collectRules
 		/. $$[{a___},{b___},{c___}] :> $$[Sort[{a}], Sort[{b}], Sort[{c}]];
-	
 
 	DebugInfo[
 		"CollectLoopIntegrals"
@@ -344,7 +343,7 @@ CollectLoopIntegrals[expr_, l_] := Module[
 
 
 SimplifyLoopIntegrals[expr_] := Module[
-	{result, signCorrectionRules, simplifyRules},
+	{result, signCorrectionRules, simplifyRules, simplifyRules2},
 		
 	signCorrectionRules = {
 		$$[{a___}, {b___}, {c___}] :>
@@ -371,18 +370,56 @@ SimplifyLoopIntegrals[expr_] := Module[
 		)
 		,
 		
-		$$[{k}, {0,k,p}, {0}] -> 1/2 (
-			$$[{}, {0,p}, {0}] - $$[{}, {k,p}, {0}] - $$[{}, {0,k,p}, {0}] k.k
+		$$[{k}, {0,k,p}, {c__}] :> 1/2 (
+			$$[{}, {0,p}, {c}] - $$[{}, {k,p}, {c}] - k.k $$[{}, {0,k,p}, {c}]
 		)
 		,
-		$$[{p}, {0,k,p}, {0}] -> 1/2 (
-			$$[{}, {0,k}, {0}] - $$[{}, {k,p}, {0}] - $$[{}, {0,k,p}, {0}] p.p
+		$$[{p}, {0,k,p}, {c__}] :> 1/2 (
+			$$[{}, {0,k}, {c}] - $$[{}, {k,p}, {c}] - p.p $$[{}, {0,k,p}, {c}]
 		)
+		,
+		
+		$$[{p,p}, {0,k,p}, {c__}] :> 1/2 (
+			$$[{p}, {0,k}, {c}] - $$[{p}, {k,p}, {c}] - p.p $$[{p}, {0,k,p}, {c}]
+		)
+		,
+		$$[{k,k}, {0,k,p}, {c__}] :> 1/2 (
+			$$[{k}, {0,p}, {c}] - $$[{k}, {k,p}, {c}] - k.k $$[{k}, {0,k,p}, {c}]
+		)
+		,
+		$$[{k,p}, {0,k,p}, {c__}] :> 1/2 (
+			$$[{k}, {0,k}, {c}] - $$[{k}, {k,p}, {c}] - k.k $$[{p}, {0,k,p}, {c}]
+		)
+		,
+		
+		(* l.n terms in the numerator *)
+		$$[{a1___,n,a2___}, {b___}, {x_,c___}] :>
+			$$[{a1,a2}, {b}, {c}] - x.n $$[{a1,a2}, {b}, {x,c}]
+		,
+		
+		(* 1/(l.n-x.n) 1/(l.n-y.n) *)
+		$$[{a___}, {b___}, {x_,y_,c___}] :>
+			($$[{a}, {b}, {y,c}] - $$[{a}, {b}, {x,c}]) / (x.n-y.n)
+		,
+		
+		(* l.l terms in the numerator *)
+		$$[{l}, {k,p}, {c___}] :>
+			$$[{}, {p}, {c}] - 2 $$[{k}, {k,p}, {c}] - k.k $$[{}, {k,p}, {c}]
 	};
-	
+
+	simplifyRules2 = {
+		$$[{}, {p}, {p}] -> $$[{}, {0}, {0}]
+		,
+		$$[{}, {p}, {k}] -> $$[{}, {q}, {0}]
+		,
+		$$[{}, {q}, {0}] ->
+			$$[{}, {0}, {0}] - 2 $$[{q}, {0,q}, {0}] - q.q $$[{}, {0,q}, {0}]
+	};
+		
 	result = expr
 		/. signCorrectionRules
-		//. simplifyRules;
+		//. simplifyRules
+		//. simplifyRules2;
 	
 	DebugInfo[
 		"SimplifyLoopIntegrals"
@@ -398,10 +435,6 @@ $kinematicRules = {
 	k.p -> (p.p + k.k - q.q) / 2,
 	k.q -> (p.p - k.k - q.q) / 2,
 	p.q -> (p.p - k.k + q.q) / 2,
-
-	k.n -> x,
-	n.p -> 1,
-	n.q -> 1-x,
 
 	n.n -> 0
 };
@@ -571,7 +604,8 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 	];
 	
 	exclusive = $PutOnShell[$Get[integrated, {"integrated", "long"}]]
-		/. {eps^2 -> 0};
+		/. {eps^2 -> 0}
+		/. {k.n -> x, n.p -> 1, n.q -> 1-x};
 	
 	If[
 		$debug
