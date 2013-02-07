@@ -174,3 +174,35 @@ Test[
 	,
 	TestID->"SimplifyLoopIntegrals-20130123-G6C2C2"
 ];
+
+
+Test[
+	SimplifyLoopIntegrals[$$[{},{k,p},{0,k}]]
+	,
+	($$[{}, {k,p}, {0}] - $$[{}, {k,p}, {k}]) / k.n
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130206-K0Y4F2"
+];
+
+Test[
+	SimplifyLoopIntegrals[$$[{},{k,p},{k,p}]]
+	,
+	($$[{}, {k,p}, {p}] - $$[{}, {k,p}, {k}]) / (k.n-n.p)
+	,
+	TestID->"SimplifyLoopIntegrals-20130206-R4C0N5"
+];
+
+Test[
+	SimplifyLoopIntegrals[$$[{},{k,p},{0,k,p}]]
+	,
+	(
+		  ($$[{},{k,p},{0}] - $$[{},{k,p},{p}]) / n.p
+		- ($$[{},{k,p},{p}] - $$[{},{k,p},{k}]) / (k.n - n.p)
+	) / k.n
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130206-M2T2O2"
+];

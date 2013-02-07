@@ -448,7 +448,29 @@ IntegrateLoop::unevaluated = "Unknown integral(s): `1`."
 
 IntegrateLoop[expr_, l_] := Module[
 	{collected, expansionRules, integratedLong, integratedShort,
-	 integrationRules, phaseSpaceRule, simplified, unevaluated},
+	 integrationRules, phaseSpaceRule, simplified, translationRules,
+	 unevaluated},
+	
+	translationRules = {
+		$$[{ },{0,k},{k}] -> - $$[{ },{0, k},{0}],
+		$$[{ },{0,k},{p}] -> - $$[{ },{p, q},{0}],
+		$$[{ },{0,p},{k}] -> - $$[{ },{k,-q},{0}],
+		$$[{ },{0,p},{p}] -> - $$[{ },{0, p},{0}],
+		$$[{ },{k,p},{k}] ->   $$[{ },{0, q},{0}],
+		$$[{ },{k,p},{p}] -> - $$[{ },{0, q},{0}],
+		
+		$$[{k},{0,k},{k}] ->   $$[{k},{0, k},{0}] + k.k $$[{},{0,k},{0}],
+		$$[{k},{0,k},{p}] ->   $$[{k},{0, q},{0}] + k.p $$[{},{0,q},{0}],
+		$$[{k},{0,p},{p}] ->   $$[{k},{0, p},{0}] + k.p $$[{},{0,p},{0}],
+		$$[{k},{k,p},{k}] ->   $$[{k},{0, q},{0}] - k.k $$[{},{0,q},{0}],
+		$$[{k},{k,p},{p}] ->   $$[{k},{0, q},{0}] + k.p $$[{},{0,q},{0}],
+		$$[{p},{0,k},{k}] ->   $$[{p},{0, k},{0}] + k.p $$[{},{0,k},{0}],
+		$$[{p},{k,p},{k}] ->   $$[{p},{0, q},{0}] - k.p $$[{},{0,q},{0}],
+		$$[{p},{k,p},{p}] ->   $$[{p},{0, q},{0}] + p.p $$[{},{0,q},{0}],
+		
+		$$[{},{0,k,p},{k}] -> - $$[{},{0,k,-q},{0}],
+		$$[{},{0,k,p},{p}] -> - $$[{},{0,p, q},{0}]
+	};
 	
 	integrationRules = {
 		$$[{},{0,k},{ }] ->   Q (k.k)^(-eir) T0,
@@ -528,6 +550,7 @@ IntegrateLoop[expr_, l_] := Module[
 
 	integratedShort = Expand[
 		simplified
+			/. translationRules
 			/. integrationRules
 			/. phaseSpaceRule
 			/. $kinematicRules
