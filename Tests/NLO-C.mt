@@ -44,6 +44,7 @@ Test[
 	TestID -> "NLO-C-20130121-R0Q3G6"
 ];
 
+(*
 Test[
 	ExpandLoopIntegrals[$Get[$result, {"integrated", "simplified"}], l]
 	,
@@ -53,7 +54,7 @@ Test[
 	,
 	TestID -> "NLO-C-20130123-X1S7H2"
 ];
-
+*)
 
 Test[
 	$Get[$result, "Z"]

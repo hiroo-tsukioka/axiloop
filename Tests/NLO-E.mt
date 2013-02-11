@@ -20,11 +20,58 @@
 (*============================================================================*)
 
 
-TestSuite[
-	{"$Get.mt"
-	,"GammaTrace.mt"
-	,"CollectLoopIntegrals.mt"
-	,"SimplifyLoopIntegrals.mt"
-	,"NLO-C.mt"
-	,"NLO-E.mt"}
+Get["Tests/utils.mt"];
+
+
+ExpandLoopIntegrals = Axiloop`Private`ExpandLoopIntegrals;
+
+$LO = << "LO.result";
+
+$topology = x (G[n]/(4 k.n)) ** FP[k] ** FV[i1] ** FP[k - l] ** GP[i1, i2, l] ** 
+  FV[i2] ** FP[k] ** FV[mu] ** FPx[p] ** GPx[mu, nu, p - k] ** 
+  FV[nu] ** FP[k];
+
+$result = SplittingFunction[$topology, $LO];
+
+
+Test[
+	ExpandLoopIntegrals[$Get[$result, {"integrated", "collected"}], l]
+	,
+	$Get[$result, "trace"]
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID -> "NLO-E-20130211-Y4Q8U2"
+];
+
+(*
+Test[
+	ExpandLoopIntegrals[$Get[$result, {"integrated", "simplified"}], l]
+	,
+	$Get[$result, "trace"]
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID -> "NLO-E-20130211-N4R8P0"
+];
+*)
+
+Test[
+	$Get[$result, "Z"]
+	,
+	g^2 (4 Pi)^-2 (3 - 4 I0 - 4 Log[x])
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID -> "NLO-E-20130211-R1R7V3"
+];
+
+Test[
+	$Get[$result, "inclusive"]
+	,
+	(g/(4 Pi))^4 ( (1+x^2)/(1-x) (7 - 2 Log[x]^2 - 4 Log[x] Log[1-x] + 3 Log[1-x] - 4 Li2[1] + 4 I1 - 4 I0 Log[x] - 4 I0 Log[1-x]) + (1-x) (3 - 4 Log[x] - 4 I0) )
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID -> "NLO-E-20130211-J4U0Y0"
 ]
