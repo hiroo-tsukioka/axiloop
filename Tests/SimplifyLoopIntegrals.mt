@@ -33,7 +33,7 @@ Test[
 	,
 	$$[{},{k,p},{}]
 	,
-	TestID->"SimplifyLoopIntegrals-20130117-B1H3G4"
+	TestID->"SimplifyLoopIntegrals-20130219-Q9S3X3"
 ];
 
 Test[
@@ -41,7 +41,7 @@ Test[
 	,
 	- $$[{},{k,p},{0}]
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-B2U1W3"
+	TestID->"SimplifyLoopIntegrals-20130219-L7J2Y1"
 ];
 
 Test[
@@ -49,7 +49,7 @@ Test[
 	,
 	- $$[{k},{k,p},{}]
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-U2P2R8"
+	TestID->"SimplifyLoopIntegrals-20130219-K2B6L1"
 ];
 
 Test[
@@ -57,7 +57,7 @@ Test[
 	,
 	$$[{k},{k,p},{0}]
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-L1U7I2"
+	TestID->"SimplifyLoopIntegrals-20130219-U9S0E8"
 ];
 
 
@@ -66,7 +66,7 @@ Test[
 	,
 	$$[{},{0,k,p},{}]
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-B2U5Q8"
+	TestID->"SimplifyLoopIntegrals-20130219-F5T7E6"
 ];
 
 
@@ -75,7 +75,7 @@ Test[
 	,
 	- $$[{},{0,k,p},{0}]
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-Q2C4X0"
+	TestID->"SimplifyLoopIntegrals-20130219-O9T5L8"
 ];
 
 Test[
@@ -83,7 +83,7 @@ Test[
 	,
 	- $$[{k},{0,k,p},{}]
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-W0B9Z1"
+	TestID->"SimplifyLoopIntegrals-20130219-B4D4M8"
 ];
 
 Test[
@@ -91,7 +91,7 @@ Test[
 	,
 	1/2 ($$[{}, {0,p}, {0}] - $$[{}, {k,p}, {0}] - k.k $$[{}, {0,k,p}, {0}])
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-V6B3X2"
+	TestID->"SimplifyLoopIntegrals-20130219-H2C8B2"
 ];
 
 Test[
@@ -99,7 +99,7 @@ Test[
 	,
 	- $$[{p},{0,k,p},{}]
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-V5N6K9"
+	TestID->"SimplifyLoopIntegrals-20130219-O6H1K0"
 ];
 
 Test[
@@ -107,7 +107,7 @@ Test[
 	,
 	1/2 ($$[{}, {0,k}, {0}] - $$[{}, {k,p}, {0}] - p.p $$[{}, {0,k,p}, {0}])
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-A0S1X2"
+	TestID->"SimplifyLoopIntegrals-20130219-N1S5N0"
 ];
 
 Test[
@@ -115,7 +115,7 @@ Test[
 	,
 	$$[{k,k},{0,k,p},{}]
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-W6B3O5"
+	TestID->"SimplifyLoopIntegrals-20130219-V4O2D6"
 ];
 
 Test[
@@ -130,7 +130,7 @@ Test[
 		- $$[{k},{k,p},{0}]
 	)
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-P1L9R7"
+	TestID->"SimplifyLoopIntegrals-20130219-J1A9X5"
 ];
 
 
@@ -139,7 +139,7 @@ Test[
 	,
 	$$[{k,p},{0,k,p},{}]
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-C5P5S4"
+	TestID->"SimplifyLoopIntegrals-20130219-U4I6W6"
 ];
 
 Test[
@@ -155,7 +155,7 @@ Test[
 		- $$[{p},{k,p},{0}]
 	)
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-K3D1W7"
+	TestID->"SimplifyLoopIntegrals-20130219-I1D8P3"
 ];
 
 
@@ -172,7 +172,7 @@ Test[
 		- $$[{k},{k,p},{0}]
 	)
 	,
-	TestID->"SimplifyLoopIntegrals-20130123-G6C2C2"
+	TestID->"SimplifyLoopIntegrals-20130219-Y2B2S6"
 ];
 
 
@@ -183,7 +183,7 @@ Test[
 	,
 	EquivalenceFunction -> EquivalentQ
 	,
-	TestID->"SimplifyLoopIntegrals-20130206-K0Y4F2"
+	TestID->"SimplifyLoopIntegrals-20130219-U2S3P5"
 ];
 
 Test[
@@ -191,7 +191,7 @@ Test[
 	,
 	($$[{}, {k,p}, {p}] - $$[{}, {k,p}, {k}]) / (k.n-n.p)
 	,
-	TestID->"SimplifyLoopIntegrals-20130206-R4C0N5"
+	TestID->"SimplifyLoopIntegrals-20130219-X1Q4T2"
 ];
 
 Test[
@@ -204,5 +204,143 @@ Test[
 	,
 	EquivalenceFunction -> EquivalentQ
 	,
+	TestID->"SimplifyLoopIntegrals-20130219-V1Z3G1"
+];
+
+
+Test[
+	SimplifyLoopIntegrals[$$[{},{-k,-p},{}]]
+	,
+	$$[{},{k,p},{}]
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
 	TestID->"SimplifyLoopIntegrals-20130206-M2T2O2"
 ];
+
+Test[
+	SimplifyLoopIntegrals[$$[{},{-k,-p},{-k}]]
+	,
+	- $$[{},{k,p},{k}]
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130219-B3C7L6"
+];
+
+Test[
+	SimplifyLoopIntegrals[$$[{},{-k,-p},{-p}]]
+	,
+	- $$[{},{k,p},{p}]
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130219-A5Z4U9"
+];
+
+Test[
+	SimplifyLoopIntegrals[$$[{},{-k,-p},{-k,-p}]]
+	,
+	($$[{},{k,p},{k}] - $$[{},{k,p},{p}]) / (p.n - k.n)
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130219-I5J7V9"
+];
+
+Test[
+	SimplifyLoopIntegrals[$$[{k},{-k,-p},{-k}]]
+	,
+	$$[{k},{k,p},{k}]
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130219-F8L1R6"
+];
+
+Test[
+	SimplifyLoopIntegrals[$$[{k},{-k,-p},{-p}]]
+	,
+	$$[{k},{k,p},{p}]
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130219-H8Q1Q2"
+];
+
+Test[
+	SimplifyLoopIntegrals[$$[{k}, {-k,-p}, {-k,-p}]]
+	,
+	- ($$[{k},{k,p},{k}] - $$[{k},{k,p},{p}]) / (p.n-k.n)
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130219-O1K2B0"
+];
+
+Test[
+	SimplifyLoopIntegrals[$$[{k}, {0,-k,-p}, {}]]
+	,
+	- $$[{k}, {0,k,p}, {}]
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130219-X8E0W1"
+];
+
+Test[
+	SimplifyLoopIntegrals[$$[{k}, {0,-k,-p}, {-k}]]
+	,
+	1/2 (
+		$$[{}, {0,p}, {k}] - $$[{}, {k,p}, {k}] - k.k $$[{}, {0,k,p}, {k}]
+	)
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130219-Q6L8X5"
+];
+
+Test[
+	SimplifyLoopIntegrals[$$[{k}, {0,-k,-p}, {-p}]]
+	,
+	1/2 (
+		$$[{}, {0,p}, {p}] - $$[{}, {k,p}, {p}] - k.k $$[{}, {0,k,p}, {p}]
+	)
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130219-T0J5R4"
+];
+
+Test[
+	SimplifyLoopIntegrals[$$[{k}, {0,-k,-p}, {-k,-p}]]
+	,
+	- 1/2 (
+		 $$[{}, {0,p}, {k}] - $$[{}, {k,p}, {k}] - k.k $$[{}, {0,k,p}, {k}]
+		- 
+		($$[{}, {0,p}, {p}] - $$[{}, {k,p}, {p}] - k.k $$[{}, {0,k,p}, {p}])
+	) / (p.n-k.n)
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130219-X1K0G7"
+];
+
+Test[
+	SimplifyLoopIntegrals[$$[{l}, {-k, -p}, {-k, -p}]]
+	,
+	(
+		$$[{}, {p}, {k}] - 2 $$[{k}, {k,p}, {k}] - k.k $$[{}, {k,p}, {k}]
+		- ($$[{}, {p}, {p}] - 2 $$[{k}, {k,p}, {p}] - k.k $$[{}, {k,p}, {p}])
+	) / (p.n-k.n)
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID->"SimplifyLoopIntegrals-20130219-G3S5P4"
+];
+
+(*
+
+$$[{n}, {-k, -p}, {-k}],$$[{n}, {-k, -p}, {-p}],$$[{n}, {-k, -p}, {-k, -p}],$$[{n}, {0, -k, -p}, {}],$$[{n}, {0, -k, -p}, {-k}],$$[{n}, {0, -k, -p}, {-p}],$$[{n}, {0, -k, -p}, {-k, -p}],$$[{p}, {-k, -p}, {-k}],$$[{p}, {-k, -p}, {-p}],$$[{p}, {-k, -p}, {-k, -p}],$$[{p}, {0, -k, -p}, {}],$$[{p}, {0, -k, -p}, {-k}],$$[{p}, {0, -k, -p}, {-p}],$$[{p}, {0, -k, -p}, {-k, -p}],$$[{k, k}, {0, -k, -p}, {}],$$[{k, k}, {0, -k, -p}, {-p}],$$[{k, n}, {-k, -p}, {-k, -p}],$$[{k, n}, {0, -k, -p}, {}],$$[{k, n}, {0, -k, -p}, {-k}],$$[{k, n}, {0, -k, -p}, {-p}],$$[{k, n}, {0, -k, -p}, {-k, -p}],$$[{k, p}, {0, -k, -p}, {}],$$[{k, p}, {0, -k, -p}, {-k}],$$[{k, p}, {0, -k, -p}, {-p}],$$[{n, n}, {-k, -p}, {-k, -p}],$$[{n, n}, {0, -k, -p}, {}],$$[{n, n}, {0, -k, -p}, {-k}],$$[{n, n}, {0, -k, -p}, {-p}],$$[{n, n}, {0, -k, -p}, {-k, -p}],$$[{n, p}, {-k, -p}, {-k, -p}],$$[{n, p}, {0, -k, -p}, {}],$$[{n, p}, {0, -k, -p}, {-k}],$$[{n, p}, {0, -k, -p}, {-p}],$$[{n, p}, {0, -k, -p}, {-k, -p}],$$[{p, p}, {0, -k, -p}, {}],$$[{p, p}, {0, -k, -p}, {-k}],$$[{k, n, n}, {0, -k, -p}, {-k, -p}],$$[{n, n, n}, {0, -k, -p}, {-k, -p}],$$[{n, n, p}, {0, -k, -p}, {-k, -p}]
+
+*)
