@@ -204,9 +204,11 @@ Protect[Dot];
 
 CollectExclusiveShort[expr_] := Module[{},
 	Collect[
-		expr
+		expr /. {eps -> 0, (k.k)^(-1-eir) -> (k.k)^-1, (p.p)^(-eir) -> 1, (q.q)^(-eir) -> 1}
+		(*
 			/. {eps->0, (k.k)^(n_Integer-eir):>(k.k)^n, p.p->0, q.q->0}
 			/. {0^(-eir)->1, 0^(1-eir)->0, 0^(2-eir)->0}
+		*)
 		,
 		{B0,B1,B3,C0,C1,D0,K0,P0,P1,P3,R0,R1,R2,R3,R4,R5,R6,S0,S1,S2,T0,T1,V1,V2,U0}
 		,
@@ -337,13 +339,7 @@ CollectLoopIntegrals[expr_, l_] := Module[
 		,
 		StringDrop[ToString[#], 16] &/@ Union[Cases[{result}, $$[__], Infinity]]
 	];
-	(*
-	DebugInfo[
-		"CollectLoopIntegrals::result"
-		,
-		result
-	];
-	*)
+
 	result
 ];
 
@@ -358,31 +354,11 @@ SimplifyLoopIntegrals[expr_] := Module[
 	};
 
 	simplifyRules = {
-		(*
-		$$[{a1___,x_,a2___},{0,b1___,x_,b2___},{c___}] :> 1/2 (
-			$$[{a1,a2}, {0,b1,b2}, {c}] - $$[{a1,a2}, {b1,x,b2}, {c}] - $$[{a1,a2}, {0,b1,x,b2}, {c}] x.x
-		)
-		*)
-		
-		
 		$$[{x_,y_}, {0,q}, {}] :>
 			$$[{x,y}, {k,p}, {}] + k.x k.y $$[{}, {k,p}, {}]
 			+ k.x $$[{y}, {k,p}, {}] + k.y $$[{x}, {k,p}, {}] 
 		,
-		(*
-		$$[{k,k}, {0,k,p}, {0}] -> 1/2 (
-			$$[{k}, {0,p}, {0}] - $$[{k}, {k,p}, {0}] - k.k $$[{k}, {0,k,p}, {0}]
-		)
-		,
-		$$[{k,p}, {0,k,p}, {0}] -> 1/2 (
-			$$[{p}, {0,p}, {0}] - $$[{p}, {k,p}, {0}] - k.k $$[{p}, {0,k,p}, {0}]
-		)
-		,
-		$$[{p,p}, {0,k,p}, {0}] -> 1/2 (
-			$$[{p}, {0,k}, {0}] - $$[{p}, {k,p}, {0}] - p.p $$[{p}, {0,k,p}, {0}]
-		)
-		,
-		*)
+
 		$$[{k}, {0,k,p}, {c_}] :> 1/2 (
 			$$[{}, {0,p}, {c}] - $$[{}, {k,p}, {c}] - k.k $$[{}, {0,k,p}, {c}]
 		)
@@ -406,11 +382,6 @@ SimplifyLoopIntegrals[expr_] := Module[
 		,
 		
 		(* l.n terms in the numerator *)
-		(*
-		$$[{a1___,n,a2___}, {b___}, {x_,c___}] :>
-			$$[{a1,a2}, {b}, {c}] - x.n $$[{a1,a2}, {b}, {x,c}]
-		,
-		*)
 		$$[{n}, b_, {x_}] :>
 			$$[{}, b, {}] - x.n $$[{}, b, {x}]
 		,
@@ -446,6 +417,44 @@ SimplifyLoopIntegrals[expr_] := Module[
 	result
 ];
 
+SimplifyTranslate[expr_] := Module[
+	{simplifyRules},
+	
+	simplifyRules = {
+		(*
+		$$[{}, {q}, {}] -> $$[{}, {0}, {}],
+		*)
+		$$[{}, {p}, {p}] -> $$[{}, {0}, {0}]
+		,
+		$$[{}, {p}, {k}] -> $$[{}, {q}, {0}]
+		,
+		
+		$$[{ },{0,k},{k}] -> - $$[{ },{0, k},{0}]
+		,
+		$$[{ },{0,k},{p}] -> - $$[{ },{p, q},{0}]
+		,
+		$$[{ },{0,p},{k}] -> - $$[{ },{k,-q},{0}]
+		,
+		$$[{ },{0,p},{p}] -> - $$[{ },{0, p},{0}]
+		,
+		$$[{ },{k,p},{k}] ->   $$[{ },{0, q},{0}],
+		$$[{ },{k,p},{p}] -> - $$[{ },{0, q},{0}],
+		
+		$$[{k},{0,k},{k}] ->   $$[{k},{0, k},{0}] + k.k $$[{},{0,k},{0}],
+		$$[{k},{0,k},{p}] ->   $$[{k},{p, q},{0}] + k.p $$[{},{p,q},{0}],
+		$$[{k},{0,p},{p}] ->   $$[{k},{0, p},{0}] + k.p $$[{},{0,p},{0}],
+		$$[{k},{k,p},{k}] ->   $$[{k},{0, q},{0}] - k.k $$[{},{0,q},{0}],
+		$$[{k},{k,p},{p}] ->   $$[{k},{0, q},{0}] + k.p $$[{},{0,q},{0}],
+		$$[{p},{0,k},{k}] ->   $$[{p},{0, k},{0}] + k.p $$[{},{0,k},{0}],
+		$$[{p},{k,p},{k}] ->   $$[{p},{0, q},{0}] - k.p $$[{},{0,q},{0}],
+		$$[{p},{k,p},{p}] ->   $$[{p},{0, q},{0}] + p.p $$[{},{0,q},{0}],
+		
+		$$[{},{0,k,p},{k}] -> - $$[{},{0,k,-q},{0}],
+		$$[{},{0,k,p},{p}] -> - $$[{},{0,p, q},{0}]
+	};
+	
+	expr /. simplifyRules
+];
 
 $kinematicRules = {
 	k.p -> (p.p + k.k - q.q) / 2,
@@ -465,35 +474,7 @@ IntegrateLoop::unevaluated = "Unknown integral(s): `1`."
 IntegrateLoop[expr_, l_] := Module[
 	{collected, expansionRules, integratedLong, integratedShort,
 	 integrationRules, phaseSpaceRule, simplified, simplifyRules,
-	 translationRules, unevaluated},
-	
-	translationRules = {
-		$$[{}, {q}, {}] -> $$[{}, {0}, {}],
-		
-		$$[{}, {p}, {p}] -> $$[{}, {0}, {0}]
-		,
-		$$[{}, {p}, {k}] -> $$[{}, {q}, {0}]
-		,
-		
-		$$[{ },{0,k},{k}] -> - $$[{ },{0, k},{0}],
-		$$[{ },{0,k},{p}] -> - $$[{ },{p, q},{0}],
-		$$[{ },{0,p},{k}] -> - $$[{ },{k,-q},{0}],
-		$$[{ },{0,p},{p}] -> - $$[{ },{0, p},{0}],
-		$$[{ },{k,p},{k}] ->   $$[{ },{0, q},{0}],
-		$$[{ },{k,p},{p}] -> - $$[{ },{0, q},{0}],
-		
-		$$[{k},{0,k},{k}] ->   $$[{k},{0, k},{0}] + k.k $$[{},{0,k},{0}],
-		$$[{k},{0,k},{p}] ->   $$[{k},{0, q},{0}] + k.p $$[{},{0,q},{0}],
-		$$[{k},{0,p},{p}] ->   $$[{k},{0, p},{0}] + k.p $$[{},{0,p},{0}],
-		$$[{k},{k,p},{k}] ->   $$[{k},{0, q},{0}] - k.k $$[{},{0,q},{0}],
-		$$[{k},{k,p},{p}] ->   $$[{k},{0, q},{0}] + k.p $$[{},{0,q},{0}],
-		$$[{p},{0,k},{k}] ->   $$[{p},{0, k},{0}] + k.p $$[{},{0,k},{0}],
-		$$[{p},{k,p},{k}] ->   $$[{p},{0, q},{0}] - k.p $$[{},{0,q},{0}],
-		$$[{p},{k,p},{p}] ->   $$[{p},{0, q},{0}] + p.p $$[{},{0,q},{0}],
-		
-		$$[{},{0,k,p},{k}] -> - $$[{},{0,k,-q},{0}],
-		$$[{},{0,k,p},{p}] -> - $$[{},{0,p, q},{0}]
-	};
+	 unevaluated},
 	
 	integrationRules = {
 		$$[{},{0},{ }] -> 0,
@@ -507,11 +488,7 @@ IntegrateLoop[expr_, l_] := Module[
 		$$[{x_},{0,p},{}] :> - Q (p.p)^(-eir) p.x T1,
 		$$[{x_},{0,q},{}] -> - Q (q.q)^(-eir) q.x T1,
 		$$[{x_},{k,p},{}] :> - Q (q.q)^(-eir) (q.x T1 - k.x T0),
-		(*
-		$$[{x_,y_},{k,p},{}] :> Q (q.q)^(-eir) (
-			x.y W0 + k.x k.y W1 + (k.x p.y + k.y p.x)W2 + p.x p.y W3
-		),
-		*)
+
 		$$[{},{0,k,p},{}] -> Q (k.k)^(-1-eir) R0,
 		$$[{x_},{0,k,p},{}] :> - Q (k.k)^(-1-eir) (p.x R1 + k.x R2),
 		$$[{x_, y_},{0,k,p},{}] :> Q (k.k)^(-1-eir) (
@@ -523,7 +500,7 @@ IntegrateLoop[expr_, l_] := Module[
 		$$[{},{0, p},{0}] -> - Q (p.p)^(-eir) B0 / n.p,
 		$$[{},{0, q},{0}] -> - Q (q.q)^(-eir) C0 / n.q,
 		$$[{},{k, p},{0}] -> - Q (q.q)^(-eir) K0 / n.p,
-		$$[{},{k,-q},{0}] -> - Q (p.p)^(-eir) D0 / n.p,
+		$$[{},{k,-q},{0}] ->   Q (p.p)^(-eir) D0 / n.p,
 		$$[{},{p, q},{0}] -> - Q (k.k)^(-eir) E0 / n.p,
 		
 		$$[{x_},{0,k},{0}] :> Q (k.k)^(-eir)/k.n (
@@ -537,6 +514,9 @@ IntegrateLoop[expr_, l_] := Module[
 		),
 		$$[{x_},{k,p},{0}] :> Q (q.q)^(-eir) (
 			p.x V1 + k.x V2 + n.x q.q V3
+		),
+		$$[{x_},{p,q},{0}] :> Q (k.k)^(-eir) (
+			p.x E1 + k.x E2 + n.x k.k E3
 		),
 		
 		$$[{},{0,k, p},{0}] -> - Q (k.k)^(-1-eir)/n.p S0,
@@ -575,6 +555,8 @@ IntegrateLoop[expr_, l_] := Module[
 		D0 -> (Log[1-x] - Log[x])/euv + (Log[x]^2)/2 - (Log[1-x]^2)/2 + Li2[1]
 				- 2 Li2[1-x] -Log[x]Log[1-x],
 		
+		E0 -> - Log[1-x]/(x euv),
+		
 		K0 -> - Log[x]/((1-x) euv),
 
 		P0 -> (I0 + Log[x])/euv - I1 + I0 Log[x] + (Log[x]^2)/2 + Li2[1],
@@ -600,29 +582,22 @@ IntegrateLoop[expr_, l_] := Module[
 
 		V1 -> (1-x + x Log[x])/(1-x)^2 / euv,
 		V2 -> - (1-x + Log[x])/(1-x)^2 / euv
-		(*
-		W0 -> 0 1/euv,
-		W1 -> 0 1/euv,
-		W2 -> 0 1/euv,
-		W3 -> 0 1/euv
-		*)
 	};
 	
 	collected = CollectLoopIntegrals[expr, l];
 	
-	simplified = SimplifyLoopIntegrals[collected];
+	simplified = collected;
+	simplified = SimplifyLoopIntegrals[simplified];
+	simplified = SimplifyTranslate[simplified];
 
 	integratedShort = Expand[
 		simplified
-			/. translationRules
 			/. simplifyRules
 			/. integrationRules
 			/. phaseSpaceRule
 			/. $kinematicRules
 	];
-	(*
-	DebugInfo["IntegratedShort", integratedShort];
-	*)
+
 	unevaluated = Union[Cases[integratedShort, $$[__], Infinity]];
 	If[
 		unevaluated != {}
@@ -663,7 +638,7 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 	 $PutOnShell},
 	
 	$PutOnShell[expr_] := Replace[
-		expr /. {
+		Expand[expr] /. {
 			S[x_,x_]^(n_Integer-eir) :> 0 /; n > 0 && (x == p || x == q)
 			,
 			S[x_,x_]^n_Integer :> 0 /; n > 1 && (x == p || x == q)
