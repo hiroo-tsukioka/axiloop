@@ -19,13 +19,12 @@
 (*                                                                            *)
 (*============================================================================*)
 
-Needs["Axiloop`"]
+Needs["Axiloop`Integrate`"]
 
-Get["Tests/utils.mt"]
+Get["Tests/core.mt"]
 
 
-SimplifyTranslate = Axiloop`Private`SimplifyTranslate;
-$$ = Axiloop`Private`$$;
+SimplifyTranslate = Axiloop`Integrate`Private`$$SimplifyTranslate;
 
 
 Test[

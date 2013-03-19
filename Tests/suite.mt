@@ -21,11 +21,12 @@
 
 
 TestSuite[{
+	"Integrate/CollectLoopIntegrals.mt",
+	"Integrate/SimplifyAlgebraic.mt",
+	"Integrate/SimplifyTranslate.mt",
 	"$Get.mt",
 	"GammaTrace.mt",
-	"CollectLoopIntegrals.mt",
-	"SimplifyLoopIntegrals.mt",
-	"SimplifyTranslate.mt",
 	"NLO-C.mt",
+	"NLO-D.mt",
 	"NLO-E.mt"
 }]

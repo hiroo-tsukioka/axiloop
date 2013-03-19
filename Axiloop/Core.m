@@ -1,6 +1,6 @@
 (*============================================================================*)
 (*                                                                            *)
-(*  Copyright (C) 2013 Oleksandr Gituliar.                                    *)
+(*  Copyright (C) 2012-2013 Oleksandr Gituliar.                               *)
 (*                                                                            *)
 (*  This file is part of Axiloop.                                             *)
 (*                                                                            *)
@@ -20,36 +20,59 @@
 (*============================================================================*)
 
 
-Get["Tests/utils.mt"];
+BeginPackage["Axiloop`Core`"]
+
+DebugInfo::usage = ""
+
+$kinematicRules::usage = ""
+
+eps::usage =
+	"Dimensional regulator; n = 4 + 2 eps."
+
+g::usage =
+	"Quark-gluon coupling constant."
+
+x::usage =
+	"x = k.n/p.n"
+
+k::usage =
+	"Outgoing particle momentum; k.n = x."
+
+p::usage =
+	"Incoming particle momentum; p.n = 1."
+
+q::usage = "Final state particle momentum; q.q = 0."
+
+n::usage =
+	"Light-cone gauge vector; n.n = 0."
 
 
-ExpandLoopIntegrals = Axiloop`Integrate`Private`$$ExpandLoopIntegrals;
+Begin["`Private`"]
 
-$LO = << "LO.result";
+$debug = True;
 
-$topology = x (G[n]/(4 k.n)) ** FP[k] ** FV[i1] ** FP[l] ** FV[i2] **
-	GP[i1, i3, l-k] ** GP[i2, i4, l-p] ** GV[i3, k-l, i4, l-p, mu, p-k] **
-	FPx[p] ** GPx[mu, nu, p-k] ** FV[nu] ** FP[k];
+$kinematicRules = {
+	k.p -> (p.p + k.k - q.q) / 2,
+	k.q -> (p.p - k.k - q.q) / 2,
+	p.q -> (p.p - k.k + q.q) / 2,
 
-$result = SplittingFunction[$topology, $LO];
+	n.n -> 0
+};
 
-
-Test[
-	ExpandLoopIntegrals[$Get[$result, {"integrated", "collected"}], l]
+DebugInfo[sender_, message_] := If[
+	$debug
 	,
-	$Get[$result, "trace"]
-	,
-	EquivalenceFunction -> EquivalentQ
-	,
-	TestID -> "NLO-D-20130207-H1E3O8"
+	Print[
+		"DebugInfo::"
+		,
+		sender
+		,
+		" : "
+		,
+		message
+	]
 ];
 
-Test[
-	$Get[$result, "Z"]
-	,
-	I g^2 (4 Pi)^-2 (3 - 8 I0 - 4 Log[1-x] - 2 Log[x])
-	,
-	EquivalenceFunction -> EquivalentQ
-	,
-	TestID -> "NLO-D-20130227-M1X6E0"
-];
+End[]
+
+EndPackage[]

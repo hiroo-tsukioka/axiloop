@@ -19,13 +19,12 @@
 (*                                                                            *)
 (*============================================================================*)
 
-Needs["Axiloop`"]
+Needs["Axiloop`Integrate`"]
 
-Get["Tests/utils.mt"]
+Get["Tests/core.mt"]
 
 
-CollectLoopIntegrals = Axiloop`Private`CollectLoopIntegrals;
-$$ = Axiloop`Private`$$;
+CollectLoopIntegrals = Axiloop`Integrate`Private`$$CollectLoopIntegrals;
 
 Test[
 	CollectLoopIntegrals[l.k l.p / l.n + X, l]

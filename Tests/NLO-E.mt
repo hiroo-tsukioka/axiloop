@@ -23,11 +23,11 @@
 Get["Tests/utils.mt"];
 
 
-ExpandLoopIntegrals = Axiloop`Private`ExpandLoopIntegrals;
+ExpandLoopIntegrals = Axiloop`Integrate`Private`$$ExpandLoopIntegrals;
 
 $LO = << "LO.result";
 
-$topology = x (G[n]/(4 k.n)) ** FP[k] ** FV[i1] ** FP[k - l] ** GP[i1, i2, l] ** 
+$topology = x (G[n]/(4 k.n)) ** FP[k] ** FV[i1] ** FP[k - l] ** GP[i1, i2, l] **
   FV[i2] ** FP[k] ** FV[mu] ** FPx[p] ** GPx[mu, nu, p - k] ** 
   FV[nu] ** FP[k];
 
