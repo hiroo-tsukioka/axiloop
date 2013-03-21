@@ -45,6 +45,7 @@ I1::usage =
 Li2::usage =
 	"Dilogarythm function; Li2[x] = - Integrate[Log[1-t]/t, {t, 0, x}]."
 
+B0;B1;B3;C0;C1;D0;E1;E2;E3;K0;P0;P1;P3;R0;R1;R2;R3;R4;R5;R6;S0;S1;S2;T0;T1;V1;V2;U0;
 
 Begin["`Private`"] 
 
@@ -252,6 +253,9 @@ $$ExpandPV[expr_] := Module[
 				- 2 Li2[1-x] -Log[x]Log[1-x],
 
 		E0 -> - Log[1-x]/(x euv),
+		E1 -> - Log[1-x] / euv,
+		E2 -> (1 + Log[1-x]/x) / euv,
+		E3 -> ((x-2)/x Log[1-x] - 2) / euv,
 
 		K0 -> - Log[x]/((1-x) euv),
 
@@ -277,7 +281,9 @@ $$ExpandPV[expr_] := Module[
 		T1 -> 1/(2 euv) + 1,
 
 		V1 -> (1-x + x Log[x])/(1-x)^2 / euv,
-		V2 -> - (1-x + Log[x])/(1-x)^2 / euv
+		V2 -> - (1-x + Log[x])/(1-x)^2 / euv,
+		
+		U0 -> 1/eir^2 + (-I0 + Log[x] - 2 Log[1-x])/eir + I1 -I0 Log[x] + 2 Li2[1-x] - (Log[x]^2)/2 + Log[1-x]^2 - 6 Li2[1]
 	};
 	
 	Expand[expr /. expandRules]
@@ -326,8 +332,8 @@ IntegrateLoopGeneral[expr_, l_] := Module[
 		$$[{x_},{k,p},{0}] :> Q (q.q)^(-eir) (
 			p.x V1 + k.x V2 + n.x q.q V3
 		),
-		$$[{x_},{p,q},{0}] :> Q (k.k)^(-eir) (
-			p.x E1 + k.x E2 + n.x k.k E3
+		$$[{x_},{p,q},{0}] :> Q (k.k)^(-eir)/k.n (
+			p.x E1 + k.x E2 + n.x k.k/(2 k.n) E3
 		),
 		
 		$$[{},{0,k, p},{0}] -> - Q (k.k)^(-1-eir)/n.p S0,
