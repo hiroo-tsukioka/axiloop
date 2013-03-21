@@ -70,9 +70,6 @@ GV::usage = "GV[i1,p1, i2,p2, i3,p3] -- a gluon vertex in the light-cone gauge."
 (*---------------------------------------------------------------------------*)
 
 
-PolePart::usage =
-	"PolePart[expr, x] extract coefficient in front of 1/x in expr."
-
 GammaTrace::usage =
 "GammaTrace[expr, NumberOfDimensions -> 4 + 2 eps] calculates trace
 of the gamma matrices product in arbitrary number of dimensions. Be
@@ -103,14 +100,6 @@ Begin["`Private`"]
 
 
 (*------------------- MISCELLANEOUS ROUTINES and HELPERS --------------------*)
-
-
-DebugInfo[
-	"Axiloop"
-	,
-	"Entering AXILOOP"
-];
-
 
 $Get[hash_, keys_, default_:Null] := Module[
 	{item, key, value},
@@ -236,12 +225,6 @@ $onShellRules = {
 	p.p -> 0,
 	q.q -> 0
 }
-
-
-
-PolePart[kernel_, eta_] := Expand[
-	Coefficient[Series[kernel, {eta, 0, 1}], eta, -1]
-];
 
 
 (*---------------------------------------------------------------------------*)
@@ -396,13 +379,6 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 		{"exclusive", exclusive},
 		{"inclusive", inclusive}
 	}
-];
-
-
-DebugInfo[
-	"Axiloop"
-	,
-	"Exiting AXILOOP"
 ];
 
 End[]

@@ -24,6 +24,9 @@ BeginPackage["Axiloop`Core`"]
 
 DebugInfo::usage = ""
 
+PolePart::usage =
+	"PolePart[expr, x] extract coefficient in front of 1/x in expr."
+
 $kinematicRules::usage = ""
 
 eps::usage =
@@ -73,6 +76,11 @@ DebugInfo[sender_, message_] := If[
 	]
 ];
 
+PolePart[kernel_, eta_] := Expand[
+	Coefficient[Series[kernel, {eta, 0, 1}], eta, -1]
+];
+
 End[]
+
 
 EndPackage[]
