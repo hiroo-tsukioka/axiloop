@@ -1,6 +1,6 @@
 (*============================================================================*)
 (*                                                                            *)
-(*  Copyright (C) 2012-2013 Oleksandr Gituliar.                               *)
+(*  Copyright (C) 2013 Oleksandr Gituliar.                                    *)
 (*                                                                            *)
 (*  This file is part of Axiloop.                                             *)
 (*                                                                            *)
@@ -19,10 +19,17 @@
 (*                                                                            *)
 (*============================================================================*)
 
+Needs["Axiloop`Integrate`"]
 
-TestSuite[{
-	"CollectLoopIntegrals.mt",
-	"IntegrateLoop.mt",
-	"SimplifyAlgebraic.mt",
-	"SimplifyTranslate.mt"
-}]
+Get["Tests/core.mt"]
+
+
+Test[
+	Catch[IntegrateLoop[1/(l.l (l+k).(l+k) (l+p).(l+p) (l+q).(l+q)), l]]
+	,
+	$UnevaluatedError
+	,
+	Axiloop`Integrate`Private`IntegrateLoopGeneral::unevaluated
+	,
+	TestID->"IntegrateLoop-20130328-O3Q7T9"
+];

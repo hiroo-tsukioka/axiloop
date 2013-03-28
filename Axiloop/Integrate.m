@@ -49,6 +49,8 @@ B0;B1;B3;C0;C1;D0;E1;E2;E3;K0;P0;P1;P3;R0;R1;R2;R3;R4;R5;R6;S0;S1;S2;T0;T1;V1;V2
 
 Begin["`Private`"] 
 
+$$CollectLoopIntegrals::unevaluated = "`1`";
+
 $$CollectLoopIntegrals[expr_, l_] := Module[
 	{collectRules, result},
 	
@@ -83,6 +85,15 @@ $$CollectLoopIntegrals[expr_, l_] := Module[
 	result = Expand[expr $$[{},{},{}]]
 		//. collectRules
 		/. $$[{a___},{b___},{c___}] :> $$[Sort[{a}], Sort[{b}], Sort[{c}]
+	];
+	If[
+		!FreeQ[result, l]
+		,
+		Message[
+			$$CollectLoopIntegrals::unevaluated,
+			result
+		];
+		Throw[$UnevaluatedError]
 	];
 
 	DebugInfo[
@@ -290,8 +301,10 @@ $$ExpandPV[expr_] := Module[
 ]
 
 
+IntegrateLoopGeneral::unevaluated = "`1`"
+
 IntegrateLoopGeneral[expr_, l_] := Module[
-	{integrateRules, psRule},
+	{integrateRules, psRule, result, unevaluated},
 	
 	integrateRules = {
 		$$[{},{0},{ }] -> 0,
@@ -351,17 +364,29 @@ IntegrateLoopGeneral[expr_, l_] := Module[
 		Q -> I (4 Pi)^(-2+eir) Gamma[1+eir]
 	};
 
-	Expand[expr	/. integrateRules /. psRule]
-]
+	result = Expand[expr /. integrateRules /. psRule];
+	
+	unevaluated = Union[Cases[result, $$[__], {0, Infinity}]];
+	If[
+		unevaluated != {}
+		,
+		Message[
+			IntegrateLoopGeneral::unevaluated,
+			ToString[#] &/@ unevaluated
+		];
+		Throw[$UnevaluatedError]
+	];
+	
+	result
+];
 
-
-IntegrateLoop::unevaluated = "Unknown integral(s): `1`."
 
 IntegrateLoop[expr_, l_] := Module[
-	{collected, integrated, integratedPV, simplified, unevaluated},
+	{collected, integrated, integratedPV, simplified},
 	
 	
 	collected = $$CollectLoopIntegrals[expr, l];
+	If[ErrorQ[collected], Return[collected]];
 	
 	simplified = collected;
 	simplified = $$SimplifyAlgebraic[simplified];
@@ -372,18 +397,8 @@ IntegrateLoop[expr_, l_] := Module[
 		IntegrateLoopGeneral[simplified, l]
 			/. $kinematicRules
 	];
+	If[ErrorQ[integrated], Return[integrated]];
 
-	unevaluated = Union[Cases[integrated, $$[__], Infinity]];
-	If[
-		unevaluated != {}
-		,
-		Message[
-			IntegrateLoop::unevaluated,
-			ToString[#] &/@ unevaluated
-		];
-		Return[Null]
-	];
-	
 	integratedPV = $$ExpandPV[integrated];
 
 	{

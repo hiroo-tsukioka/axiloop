@@ -24,6 +24,9 @@ BeginPackage["Axiloop`Core`"]
 
 DebugInfo::usage = ""
 
+$UnevaluatedError;
+ErrorQ;
+
 PolePart::usage =
 	"PolePart[expr, x] extract coefficient in front of 1/x in expr."
 
@@ -75,6 +78,8 @@ DebugInfo[sender_, message_] := If[
 		message
 	]
 ];
+
+ErrorQ[symbol_] := StringMatchQ[ToString[symbol], "$*Error"];
 
 PolePart[kernel_, eta_] := Expand[
 	Coefficient[Series[kernel, {eta, 0, 1}], eta, -1]

@@ -1,6 +1,6 @@
 (*============================================================================*)
 (*                                                                            *)
-(*  Copyright (C) 2012 Oleksandr Gituliar.                                    *)
+(*  Copyright (C) 2013 Oleksandr Gituliar.                                    *)
 (*                                                                            *)
 (*  This file is part of Axiloop.                                             *)
 (*                                                                            *)
@@ -169,4 +169,17 @@ Test[
 	$$[{x},{-y},{p,-z}]
 	,
 	TestID->"CollectLoopIntegrals-20130123-T8U4X7"
+];
+
+
+Test[
+	Catch[
+		CollectLoopIntegrals[1 / (l.l (l+x).(l+x) (l+y).(l+y) (l+p).(l+n)), l]
+	]
+	,
+	$UnevaluatedError
+	,
+	{Axiloop`Integrate`Private`$$CollectLoopIntegrals::unevaluated}
+	,
+	TestID->"CollectLoopIntegrals-20130328-N4T8G4"
 ];

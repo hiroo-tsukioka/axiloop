@@ -22,6 +22,7 @@
 
 TestSuite[{
 	"Integrate/CollectLoopIntegrals.mt",
+	"Integrate/IntegrateLoop.mt",
 	"Integrate/SimplifyAlgebraic.mt",
 	"Integrate/SimplifyTranslate.mt",
 	"$Get.mt",

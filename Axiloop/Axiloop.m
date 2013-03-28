@@ -39,6 +39,8 @@ BeginPackage["Axiloop`", {
 
 Clear[ "Axiloop`*" , "Axiloop`Private`*"];
 
+Axiloop`$Author = "Oleksandr Gituliar <oleksandr@gituliar.org>";
+Axiloop`$Version = "1.3d (March 2013)";
 
 (*---------------------------------------------------------------------------*)
 (*---------------------- FEYNMAN RULES and GAMMA TRACE ----------------------*)
