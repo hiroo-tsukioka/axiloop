@@ -55,7 +55,7 @@ Begin["`Private`"]
 
 $$CollectLoopIntegrals::unevaluated = "`1`";
 
-$$CollectLoopIntegrals[expr_, l_] := Module[
+def @ $$CollectLoopIntegrals[expr_, l_] := Module[
 	{collectRules, result},
 	
 	collectRules = {
@@ -100,9 +100,7 @@ $$CollectLoopIntegrals[expr_, l_] := Module[
 		Raise[$UnevaluatedError];
 	];
 
-	DebugInfo[
-		"$$CollectLoopIntegrals"
-		,
+	DEBUG[
 		ToString[#] &/@ Union[Cases[{result}, $$[__], Infinity]]
 	];
 
@@ -124,7 +122,7 @@ $$ExpandLoopIntegrals[expr_, l_] := Module[
 ];
 
 
-$$SimplifyAlgebraic[expr_] := Module[
+def @ $$SimplifyAlgebraic[expr_] := Module[
 	{result, signRules, simplifyRules},
 		
 	signRules = {
@@ -186,9 +184,7 @@ $$SimplifyAlgebraic[expr_] := Module[
 		
 	result = Expand[expr /. signRules //. simplifyRules];
 	
-	DebugInfo[
-		"$$SimplifyAlgebraic"
-		,
+	DEBUG[
 		ToString[#] &/@ Union[Cases[{result}, $$[__], Infinity]]
 	];
 	

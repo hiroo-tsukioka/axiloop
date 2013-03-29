@@ -294,30 +294,30 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 				euv
 			] / k.k;
 			
-			DebugInfo[
+			DEBUG[
 				"SplittingFunction::T_UV^k"
 				,
 				Collect[t$uv$k, {I0, Log[x]}, Simplify]
 			];
-			DebugInfo[
+			DEBUG[
 				"SplittingFunction::T_UV^p"
 				,
 				Collect[t$uv$p, {I0, Log[x]}, Simplify]
 			];
-			DebugInfo[
+			DEBUG[
 				"SplittingFunction::T_UV^q"
 				,
 				Collect[t$uv$q, {I0, Log[x]}, Simplify]
 			];
 
 			t$ir$k = PolePart[Expand[exclusive], eir];
-			DebugInfo[
+			DEBUG[
 				"SplittingFunction::T_IR^k"
 				,
 				Collect[t$ir$k, {I0, Log[x]}, Simplify]
 			];
 			
-			DebugInfo[
+			DEBUG[
 				"SplittingFunction::T_UV^p + T_UV^q - T_IR^k"
 				,
 				Collect[
