@@ -19,17 +19,35 @@
 (*                                                                            *)
 (*============================================================================*)
 
-Needs["Axiloop`Integrate`"]
 
-Get["Tests/core.mt"]
+BeginPackage["Axiloop`Exception`"]
+
+Raise::usage = "";
+
+Try::usage = "";
 
 
-Test[
-	Try[IntegrateLoop[1/(l.l (l+k).(l+k) (l+p).(l+p) (l+q).(l+q)), l]]
-	,
-	$UnevaluatedError
-	,
-	Axiloop`Integrate`Private`IntegrateLoopGeneral::unevaluated
-	,
-	TestID->"IntegrateLoop-20130328-O3Q7T9"
+Begin["`Private`"]
+
+Raise[exception_] := Module[{},
+	Throw[exception, $DefaultExceptionTag];
 ];
+
+SetAttributes[Try, HoldAll];
+Try[expr_, handler_: Null] := Module[{result},
+	result = Catch[
+		expr
+		,
+		$DefaultExceptionTag
+		,
+		Function[{$value, $tag},
+			If[handler === Null, $value, handler]
+		]
+	];
+	result
+];
+ 
+
+End[]
+
+EndPackage[]

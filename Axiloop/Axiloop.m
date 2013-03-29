@@ -255,11 +255,6 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 	];
 
 	integrated = IntegrateLoop[trace, l]; 
-	If[
-		integrated == Null
-		,
-		Return[Null]
-	];
 	
 	exclusiveBare = If[
 		SameQ[$LO, Null]

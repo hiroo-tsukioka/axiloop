@@ -20,7 +20,11 @@
 (*============================================================================*)
 
 
-BeginPackage["Axiloop`Integrate`", {"Axiloop`Core`", "Axiloop`Tracer`"}]
+BeginPackage["Axiloop`Integrate`", {
+	"Axiloop`Core`",
+	"Axiloop`Exception`",
+	"Axiloop`Tracer`"}
+]
 
 $$::usage = ""
 
@@ -87,13 +91,13 @@ $$CollectLoopIntegrals[expr_, l_] := Module[
 		/. $$[{a___},{b___},{c___}] :> $$[Sort[{a}], Sort[{b}], Sort[{c}]
 	];
 	If[
-		!FreeQ[result, l]
+		!(FreeQ[result, Dot[l,_]] && FreeQ[result, Dot[_,l]])
 		,
 		Message[
 			$$CollectLoopIntegrals::unevaluated,
 			result
 		];
-		Throw[$UnevaluatedError]
+		Raise[$UnevaluatedError];
 	];
 
 	DebugInfo[
@@ -374,7 +378,7 @@ IntegrateLoopGeneral[expr_, l_] := Module[
 			IntegrateLoopGeneral::unevaluated,
 			ToString[#] &/@ unevaluated
 		];
-		Throw[$UnevaluatedError]
+		Raise[$UnevaluatedError];
 	];
 	
 	result
@@ -384,9 +388,7 @@ IntegrateLoopGeneral[expr_, l_] := Module[
 IntegrateLoop[expr_, l_] := Module[
 	{collected, integrated, integratedPV, simplified},
 	
-	
 	collected = $$CollectLoopIntegrals[expr, l];
-	If[ErrorQ[collected], Return[collected]];
 	
 	simplified = collected;
 	simplified = $$SimplifyAlgebraic[simplified];
@@ -397,7 +399,6 @@ IntegrateLoop[expr_, l_] := Module[
 		IntegrateLoopGeneral[simplified, l]
 			/. $kinematicRules
 	];
-	If[ErrorQ[integrated], Return[integrated]];
 
 	integratedPV = $$ExpandPV[integrated];
 

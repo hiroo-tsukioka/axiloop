@@ -173,9 +173,7 @@ Test[
 
 
 Test[
-	Catch[
-		CollectLoopIntegrals[1 / (l.l (l+x).(l+x) (l+y).(l+y) (l+p).(l+n)), l]
-	]
+	Try[CollectLoopIntegrals[1 / (l.l (l+x).(l+x) (l+y).(l+y) (l+p).(l+n)), l]]
 	,
 	$UnevaluatedError
 	,
