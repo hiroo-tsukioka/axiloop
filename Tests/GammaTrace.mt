@@ -21,7 +21,7 @@
 
 Needs["Axiloop`"]
 
-Get["Tests/utils.mt"];
+Get["Tests/core.mt"];
 
 
 Test[

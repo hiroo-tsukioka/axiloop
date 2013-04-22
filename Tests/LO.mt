@@ -21,7 +21,7 @@
 
 (*  Unit tests for Axiloop package.                                           *)
 
-Get["Tests/main.mt"];
+Get["Tests/core.mt"];
 
 
 LO = PartonDensity[
@@ -35,20 +35,27 @@ Test[
 	    (-1 + eps (-1 + x)^2 - x^2) k.k + 
         x (1 + eps (-1 + x) + x) p.p + 
         x (-1 + eps + x - eps x) q.q
-    ) / ((-1 + x) (k.k)^2),
-	TestID->"Kernel LO exclusive",
-	EquivalenceFunction->EqualSimplify
+    ) / ((-1 + x) (k.k)^2)
+    ,
+	TestID->"Kernel LO exclusive"
+	,
+	EquivalenceFunction -> EquivalentQ
 ]
 
 Test[
-	GetValue[LO, "inclusive"],
-	- g^2 (1 + x^2) / (8 Pi^2 (1 - x) ),
-	TestID->"Kernel LO inclusive",
-	EquivalenceFunction->EqualSimplify
+	GetValue[LO, "inclusive"]
+	,
+	- g^2 (1 + x^2) / (8 Pi^2 (1 - x) )
+	,
+	TestID->"Kernel LO inclusive"
+	,
+	EquivalenceFunction -> EquivalentQ
 ]
 
 Test[
-	GetValue[LO, "Z"],
-	0,
+	GetValue[LO, "Z"]
+	,
+	0
+	,
 	TestID->"Kernel LO Z"
 ]

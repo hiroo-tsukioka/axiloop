@@ -20,20 +20,26 @@
 (*============================================================================*)
 
 
-Get["Tests/main.mt"];
+Get["Tests/core.mt"];
 
 
 Test[
-	GammaTrace[FP[p]**FP[k], NumberOfDimensions -> 4 + eps],
-	- 4 k.p / (k.k p.p),
-	TestID->"Test 01",
-	EquivalenceFunction -> EqualSimplify
+	GammaTrace[FP[p]**FP[k], NumberOfDimensions -> 4 + eps]
+	,
+	- 4 k.p / (k.k p.p)
+	,
+	TestID->"Test 01"
+	,
+	EquivalenceFunction -> EquivalentQ
 ]
 
 
 Test[
-	GammaTrace[FP[p]**FV[{mu}]**FPx[k]**FV[{mu}], NumberOfDimensions -> 4 + eps],
-	- 4  (2 + eps) g^2 k.p / p.p,
-	TestID->"Test 02",
-	EquivalenceFunction -> EqualSimplify
+	GammaTrace[FP[p]**FV[{mu}]**FPx[k]**FV[{mu}], NumberOfDimensions -> 4 + eps]
+	,
+	- 4  (2 + eps) g^2 k.p / p.p
+	,
+	TestID->"Test 02"
+	,
+	EquivalenceFunction -> EquivalentQ
 ]

@@ -20,28 +20,36 @@
 (*============================================================================*)
 
 
-Get["Tests/main.mt"];
+Get["Tests/core.mt"];
 
 Test[
-	Counterterm[a/eta + b, 0, eta],
-	0,
+	Counterterm[a/eta + b, 0, eta]
+	,
+	0
+	,
 	TestID->"Test 01"
 ]
 
 Test[
-	Counterterm[a/eta + b, 1, eta],
-	a,
+	Counterterm[a/eta + b, 1, eta]
+	,
+	a
+	,
 	TestID->"Test 02"
 ]
 
 Test[
-	Counterterm[(1+x)(1+y)/eta, 1+x, eta],
-	1+y,
+	Counterterm[(1+x)(1+y)/eta, 1+x, eta]
+	,
+	1+y
+	,
 	TestID->"Test 03"
 ]
 
 Test[
-	Counterterm[a/eta^2 + b/eta + c, 1, eta],
-	b,
+	Counterterm[a/eta^2 + b/eta + c, 1, eta]
+	,
+	b
+	,
 	TestID->"Test 04"
 ]

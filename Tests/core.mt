@@ -23,10 +23,17 @@
 
 (* This function is supposed to be passed as `EquivalenceFunction` to `Test`. *)
 EquivalentQ[x_, y_] := Module[{},
-	If[ListQ[x] && ListQ[y],
-		EquivalentQ[First[x], First[y]] && EquivalentQ[Rest[x], Rest[y]],
-	If[StringQ[x] && StringQ[y],
-		TrueQ[x == y],
-		TrueQ[Simplify[x-y == 0]]
-	]]
+	If[
+		ListQ[x] && ListQ[y]
+		,
+		EquivalentQ[First[x], First[y]] && EquivalentQ[Rest[x], Rest[y]]
+		,
+		If[
+			StringQ[x] && StringQ[y]
+			,
+			TrueQ[x == y]
+			,
+			TrueQ[Simplify[x-y == 0]]
+		]
+	]
 ];

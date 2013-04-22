@@ -20,7 +20,7 @@
 (*============================================================================*)
 
 
-Get["Tests/utils.mt"];
+Get["Tests/core.mt"];
 
 
 ExpandLoopIntegrals = Axiloop`Integrate`Private`$$ExpandLoopIntegrals;
