@@ -23,6 +23,8 @@
 BeginPackage["Axiloop`Core`"]
 
 DEBUG::usage = "";
+INFO::usage = "";
+WARN::usage = "";
 
 $UnevaluatedError;
 
@@ -51,11 +53,31 @@ q::usage = "Final state particle momentum; q.q = 0."
 n::usage =
 	"Light-cone gauge vector; n.n = 0."
 
-def;
+$$debug = True;
+
 
 Begin["`Private`"]
 
-$debug = True;
+$$Message[label_, message_] := Module[{},
+	Print[label, message];
+];
+
+DEBUG[message_] := Module[{},
+	If[
+		$$debug
+		,
+		$$Message["DEBUG: ", message]
+	]
+];
+
+INFO[label_, message_] := Module[{},
+	$$Message["INFO: ", message]
+];
+
+WARN[label_, message_] := Module[{},
+	$$Message["WARNING: ", message]
+];
+
 
 $kinematicRules = {
 	k.p -> (p.p + k.k - q.q) / 2,
@@ -64,24 +86,6 @@ $kinematicRules = {
 
 	n.n -> 0
 };
-
-(* Code below is taken from:                                                 *)
-(*  http://mathematica.stackexchange.com/questions/20618/                    *)
-(*      how-to-find-the-name-of-the-current-function                         *)
-ClearAll[def];
-SetAttributes[def, HoldAll];
-def /: SetDelayed[def[f_[args___]], rhs_] :=
-   f[args] := Block[{$CurrentFunctionName = f}, rhs];
-Protect[def];
-
-
-DEBUG[message_] := Module[{},
-	If[
-		$debug
-		,
-		Print[$CurrentFunctionName, "::debug : " , message]
-	]
-];
 
 PolePart[kernel_, eta_] := Expand[
 	Coefficient[Series[kernel, {eta, 0, 1}], eta, -1]
