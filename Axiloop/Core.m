@@ -58,24 +58,24 @@ $$debug = True;
 
 Begin["`Private`"]
 
-$$Message[label_, message_] := Module[{},
-	Print[label, message];
+$$Message[level_, label_, message_] := Module[{},
+	Print[level, "::", label, " : ", message];
 ];
 
-DEBUG[message_] := Module[{},
+DEBUG[label_, message_] := Module[{},
 	If[
 		$$debug
 		,
-		$$Message["DEBUG: ", message]
+		$$Message["DEBUG", label, message]
 	]
 ];
 
 INFO[label_, message_] := Module[{},
-	$$Message["INFO: ", message]
+	$$Message["INFO", label, message]
 ];
 
 WARN[label_, message_] := Module[{},
-	$$Message["WARNING: ", message]
+	$$Message["WARNING ", label, message]
 ];
 
 
@@ -87,8 +87,8 @@ $kinematicRules = {
 	n.n -> 0
 };
 
-PolePart[kernel_, eta_] := Expand[
-	Coefficient[Series[kernel, {eta, 0, 1}], eta, -1]
+PolePart[kernel_, eta_, n_:-1] := Expand[
+	Coefficient[Series[kernel, {eta, 0, n+1}], eta, n]
 ];
 
 End[]

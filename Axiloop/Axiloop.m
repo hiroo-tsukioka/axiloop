@@ -89,11 +89,10 @@ Example:
 $Get::usage =
 	"$Get[hash_, key_] get value by key from a hash table."
 
+ExtractFormFactors::usage = ""
+
 IntegrateFinal::usage =
 	"Integrate over final-state momenta."
-
-PartonDensity::usage =
-	"Kernel constructor; define and integrate a kernel."
 
 SplittingFunction::usage = ""
 
@@ -268,71 +267,6 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 		/. {eps^2 -> 0}
 		/. {k.n -> x, n.p -> 1, n.q -> 1-x};
 	
-	If[
-		$debug
-		,
-		Module[{t$ir$k, t$uv$k, t$uv$p, t$uv$q},
-			t$uv$k = PolePart[
-				Expand[exclusive]
-					/. {p.p->0, q.q->0}
-					/. {0^(-eir)->0, 0^(_-eir):>0}
-				,
-				euv
-			];
-			t$uv$p = PolePart[
-				Expand[exclusive k.k]
-					/. {k.k->0, q.q->0}
-					/. {0^(-eir)->0, 0^(_-eir):>0}
-				,
-				euv
-			] / k.k;
-			t$uv$q = PolePart[
-				Expand[exclusive k.k]
-					/. {k.k->0, p.p->0}
-					/. {0^(-eir)->0, 0^(_-eir):>0}
-				,
-				euv
-			] / k.k;
-			
-			DEBUG[
-				"SplittingFunction::T_UV^k"
-				,
-				Collect[t$uv$k, {I0, Log[x]}, Simplify]
-			];
-			DEBUG[
-				"SplittingFunction::T_UV^p"
-				,
-				Collect[t$uv$p, {I0, Log[x]}, Simplify]
-			];
-			DEBUG[
-				"SplittingFunction::T_UV^q"
-				,
-				Collect[t$uv$q, {I0, Log[x]}, Simplify]
-			];
-
-			t$ir$k = PolePart[Expand[exclusive], eir];
-			DEBUG[
-				"SplittingFunction::T_IR^k"
-				,
-				Collect[t$ir$k, {I0, Log[x]}, Simplify]
-			];
-			
-			DEBUG[
-				"SplittingFunction::T_UV^p + T_UV^q - T_IR^k"
-				,
-				Collect[
-					Expand[t$uv$p + t$uv$q - t$ir$k]
-						/. {eir->0}
-						/. {0^-eir :> 1}
-					,
-					{I0, Log[x]}
-					,
-					Simplify
-				]
-			];		
-		]
-	];
-	
 	Z = Simplify[If[
 		SameQ[$LO, Null]
 		,
@@ -372,10 +306,162 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 		{"integrated", integrated},
 		{"Z", Z},
 		{"counterterm", counterterm},
-		{"exclusive-bare", exclusiveBare},
+		{"exclusive-bare", $Get[integrated, {"integrated", "long"}]},
 		{"exclusive", exclusive},
 		{"inclusive", inclusive}
 	}
+];
+
+
+ExtractFormFactors[bare_] := Module[
+	{$$k$uv, $$p$uv, $$q$uv, $$k$ir, $$k$ir2, $$k$0, $$bare},
+	
+	$$bare = Expand[
+		bare / (I g^4 (4 Pi)^(-2+eir) Gamma[1+eir] / k.k)
+	];
+	
+	$$k$ir2 = PolePart[
+		$$bare
+			/. {eps -> -eir}
+			/. {k.n -> x, p.n -> 1, q.n -> 1-x}
+		,
+		eir
+		,
+		-2
+	] /. {p.p -> 0, q.q -> 0};
+	DEBUG[
+		"ExtractFormFactors::$$k$ir2"
+		,
+		Simplify[$$k$ir2]
+	];
+	
+	$$k$ir = PolePart[
+		$$bare
+			/. {(k.k)^(-eir) -> 1, (k.k)^(n_Integer-eir) :> (k.k)^n}
+			/. {(p.p)^(-eir) -> 0, (p.p)^(n_Integer-eir) :> (p.p)^n}
+			/. {(q.q)^(-eir) -> 0, (q.q)^(n_Integer-eir) :> (q.q)^n}
+			/. {q.q -> 0, p.p -> 0}
+			/. {eps -> -eir}
+			/. {k.n -> x, p.n -> 1, q.n -> 1-x}
+		,
+		eir
+	];
+	DEBUG[
+		"ExtractFormFactors::$$k$ir"
+		,
+		$$k$ir
+	];
+	
+	$$k$uv = PolePart[
+		$$bare
+			/. {(k.k)^(-eir) -> 1, (k.k)^(n_Integer-eir) :> (k.k)^n}
+			/. {(p.p)^(-eir) -> 0, (p.p)^(n_Integer-eir) :> (p.p)^n}
+			/. {(q.q)^(-eir) -> 0, (q.q)^(n_Integer-eir) :> (q.q)^n}
+			/. {q.q -> 0, p.p -> 0}
+			/. {eps -> -euv}
+			/. {k.n -> x, p.n -> 1, q.n -> 1-x}
+		,
+		euv
+	];
+	DEBUG[
+		"SplittingFunction::$$k$uv"
+		,
+		$$k$uv
+	];
+
+	$$p$uv = PolePart[
+		$$bare
+			/. {(k.k)^(-eir) -> 0, (k.k)^(n_Integer-eir) :> (k.k)^n}
+			/. {(p.p)^(-eir) -> 1, (p.p)^(n_Integer-eir) :> (p.p)^n}
+			/. {(q.q)^(-eir) -> 0, (q.q)^(n_Integer-eir) :> (q.q)^n}
+			/. {q.q -> 0, p.p -> 0}
+			/. {eps -> -euv}
+			/. {k.n -> x, p.n -> 1, q.n -> 1-x}
+		,
+		euv
+	];
+	DEBUG[
+		"SplittingFunction::$$p$uv"
+		,
+		$$p$uv
+	];
+
+
+	$$q$uv = PolePart[
+		$$bare
+			/. {(k.k)^(-eir) -> 0, (k.k)^(n_Integer-eir) :> (k.k)^n}
+			/. {(p.p)^(-eir) -> 0, (p.p)^(n_Integer-eir) :> (p.p)^n}
+			/. {(q.q)^(-eir) -> 1, (q.q)^(n_Integer-eir) :> (q.q)^n}
+			/. {q.q -> 0, p.p -> 0}
+			/. {eps -> -euv}
+			/. {k.n -> x, p.n -> 1, q.n -> 1-x}
+		,
+		euv
+	];
+	DEBUG[
+		"SplittingFunction::$$q$uv"
+		,
+		$$q$uv
+	];
+	
+	$$k$0 = PolePart[
+		$$bare
+			/. {(k.k)^(-eir) -> 1, (k.k)^(n_Integer-eir) :> (k.k)^n}
+			/. {(p.p)^(-eir) -> 0, (p.p)^(n_Integer-eir) :> (p.p)^n}
+			/. {(q.q)^(-eir) -> 0, (q.q)^(n_Integer-eir) :> (q.q)^n}
+			/. {q.q -> 0, p.p -> 0}
+			/. {eir -> -eps, euv -> -eps}
+			/. {k.n -> x, p.n -> 1, q.n -> 1-x}
+		,
+		eps
+		,
+		0
+	];
+	DEBUG[
+		"SplittingFunction::$$k$0"
+		,
+		Collect[
+			$$k$0
+			,
+			{I0, Log[x], Log[1-x], I1, Li2[1], Li2[1-x]}
+			,
+			Simplify
+		]
+	];
+	
+	
+	DEBUG[
+		"SplittingFunction:: $$k$uv + $$p$uv + $$q$uv"
+		,
+		Collect[
+			Expand[($$k$uv + $$p$uv + $$q$uv) / ((1-x)/(1+x^2))]
+			,
+			{I0, Log[x], Log[1-x]}
+			,
+			Simplify
+		]
+	];
+	
+	DEBUG[
+		"SplittingFunction:: $$p$uv - $$q$uv - $$k$ir"
+		,
+		Collect[
+			Expand[$$p$uv + $$q$uv - $$k$ir]
+			,
+			{I0, Log[x], Log[1-x]}
+			,
+			Simplify
+		]
+	];
+
+    {
+        {"$$k$0", $$k$0},
+        {"$$k$ir", $$k$ir},
+        {"$$k$ir2", $$k$ir2},
+        {"$$k$uv", $$k$uv},
+        {"$$p$uv", $$p$uv},
+        {"$$q$uv", $$q$uv}
+    }
 ];
 
 End[]

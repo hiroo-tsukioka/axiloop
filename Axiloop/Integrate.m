@@ -101,6 +101,8 @@ $$CollectLoopIntegrals[expr_, l_] := Module[
 	];
 
 	DEBUG[
+		"$$CollectLoopIntegrals"
+		,
 		ToString[#] &/@ Union[Cases[{result}, $$[__], Infinity]]
 	];
 
@@ -185,6 +187,8 @@ $$SimplifyAlgebraic[expr_] := Module[
 	result = Expand[expr /. signRules //. simplifyRules];
 	
 	DEBUG[
+		"$$SimplifyAlgebraic"
+		,
 		ToString[#] &/@ Union[Cases[{result}, $$[__], Infinity]]
 	];
 	
