@@ -76,6 +76,24 @@ Test[
 	TestID -> "NLO-C-20130129-V7Y1C7"
 ]
 
+
+$$factors = ExtractFormFactors[$Get[$result, "exclusive-bare"]];
+
+$$k$0  = $Get[$$factors, "$$k$0"];
+$$k$ir = $Get[$$factors, "$$k$ir"];
+$$k$uv = $Get[$$factors, "$$k$uv"];
+$$p$uv = $Get[$$factors, "$$p$uv"];
+$$q$uv = $Get[$$factors, "$$q$uv"];
+
+Test[
+	Expand[$Get[$result, "inclusive"]]
+	,
+	Expand[I (g/(4 Pi))^4 (($$k$uv + $$p$uv + $$q$uv) (Log[1-x]/2 + (1-x)^2/(1+x^2)) + $$k$0/2)]
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID -> "NLO-C-20130424-K4J3R3"
+]
 	
 (*
 NLOc = PartonDensity[

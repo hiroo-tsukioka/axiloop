@@ -49,7 +49,8 @@ I1::usage =
 Li2::usage =
 	"Dilogarythm function; Li2[x] = - Integrate[Log[1-t]/t, {t, 0, x}]."
 
-B0;B1;B3;C0;C1;D0;E1;E2;E3;K0;P0;P1;P3;R0;R1;R2;R3;R4;R5;R6;S0;S1;S2;T0;T1;V1;V2;U0;
+B0;B1;B3;C0;C1;C3;D0;E0;E1;E2;E3;K0;P0;P1;P3;R0;R1;R2;R3;R4;R5;R6;S0;S1;S2;T0;T1;V0;V1;V2;U0;
+
 
 Begin["`Private`"] 
 
@@ -176,7 +177,7 @@ $$SimplifyAlgebraic[expr_] := Module[
 		$$[{a___}, {b___}, {x_,y_,c___}] :>
 			($$[{a}, {b}, {y,c}] - $$[{a}, {b}, {x,c}]) / (x.n-y.n)
 		,
-		$$[x__, {k,p}] :> ($$[x, {p}] - $$[x, {k}]) / (k.n-p.n)
+		$$[x__, {k,p}] :> ($$[x, {k}] - $$[x, {p}]) / (p.n-k.n)
 		,
 		
 		(* l.l terms in the numerator *)
@@ -212,12 +213,11 @@ $$SimplifyOnePoint[expr_] := Module[
 
 
 $$SimplifyTranslate[expr_] := Module[
-	{simplifyRules},
+	{result, simplifyRules},
 	
 	simplifyRules = {
-		(*
 		$$[{}, {q}, {}] -> $$[{}, {0}, {}],
-		*)
+		
 		$$[{}, {p}, {p}] -> $$[{}, {0}, {0}]
 		,
 		$$[{}, {p}, {k}] -> $$[{}, {q}, {0}]
@@ -236,6 +236,7 @@ $$SimplifyTranslate[expr_] := Module[
 		
 		$$[{k},{0,k},{k}] ->   $$[{k},{0, k},{0}] + k.k $$[{},{0,k},{0}],
 		$$[{k},{0,k},{p}] ->   $$[{k},{p, q},{0}] + k.p $$[{},{p,q},{0}],
+		$$[{p},{0,k},{p}] ->   $$[{p},{p, q},{0}] + p.p $$[{},{p,q},{0}],
 		$$[{k},{0,p},{p}] ->   $$[{k},{0, p},{0}] + k.p $$[{},{0,p},{0}],
 		$$[{k},{k,p},{k}] ->   $$[{k},{0, q},{0}] - k.k $$[{},{0,q},{0}],
 		$$[{k},{k,p},{p}] ->   $$[{k},{0, q},{0}] + k.p $$[{},{0,q},{0}],
@@ -247,7 +248,15 @@ $$SimplifyTranslate[expr_] := Module[
 		$$[{},{0,k,p},{p}] -> - $$[{},{0,p, q},{0}]
 	};
 	
-	Expand[expr /. simplifyRules]
+	result = Simplify[expr /. simplifyRules];
+	
+	DEBUG[
+		"$$SimplifyTranslate"
+		,
+		ToString[#] &/@ Union[Cases[{result}, $$[__], Infinity]]
+	];
+	
+	result
 ];
 
 
@@ -265,12 +274,12 @@ $$ExpandPV[expr_] := Module[
 				+ Li2[1],
 
 		D0 -> (Log[1-x] - Log[x])/euv + (Log[x]^2)/2 - (Log[1-x]^2)/2 + Li2[1]
-				- 2 Li2[1-x] -Log[x]Log[1-x],
+				- 2 Li2[1-x] - Log[x]Log[1-x],
 
 		E0 -> - Log[1-x]/(x euv),
-		E1 -> - Log[1-x] / euv,
-		E2 -> (1 + Log[1-x]/x) / euv,
-		E3 -> ((x-2)/x Log[1-x] - 2) / euv,
+		E1 -> - 1/euv Log[1-x]/x - (2 Li2[x] + (Log[1-x]^2)/2)/x,
+		E2 ->   1/euv (x + Log[1-x])/x^2 + (2 Li2[x] + (Log[1-x]^2)/2 - 2x)/x^2,
+		E3 ->   1/euv ((x-2)Log[1-x] - 2x)/x^3 + (4x + (x-2)(2 Li2[x] + (Log[1-x]^2)/2))/x^3,
 
 		K0 -> - Log[x]/((1-x) euv),
 
@@ -295,6 +304,7 @@ $$ExpandPV[expr_] := Module[
 		T0 -> 1/euv + 2,
 		T1 -> 1/(2 euv) + 1,
 
+		V0 -> Ln[x],
 		V1 -> (1-x + x Log[x])/(1-x)^2 / euv,
 		V2 -> - (1-x + Log[x])/(1-x)^2 / euv,
 		
@@ -311,7 +321,9 @@ IntegrateLoopGeneral[expr_, l_] := Module[
 	{integrateRules, psRule, result, unevaluated},
 	
 	integrateRules = {
+		(*
 		$$[{},{0},{ }] -> 0,
+		*)
 		$$[{},{0},{0}] -> 0,
 		
 		$$[{},{0,k},{ }] ->   Q (k.k)^(-eir) T0,
@@ -349,17 +361,17 @@ IntegrateLoopGeneral[expr_, l_] := Module[
 		$$[{x_},{k,p},{0}] :> Q (q.q)^(-eir) (
 			p.x V1 + k.x V2 + n.x q.q V3
 		),
-		$$[{x_},{p,q},{0}] :> Q (k.k)^(-eir)/k.n (
-			p.x E1 + k.x E2 + n.x k.k/(2 k.n) E3
+		$$[{x_},{p,q},{0}] :> Q (k.k)^(-eir)/p.n (
+			p.x E1 + k.x E2 + n.x k.k/2 E3
 		),
 		
 		$$[{},{0,k, p},{0}] -> - Q (k.k)^(-1-eir)/n.p S0,
-		$$[{},{0,k,-q},{0}] -> - Q (k.k)^(-1-eir)/q.n U0,
+		$$[{},{0,k,-q},{0}] -> Q (k.k)^(-1-eir)/q.n U0,
 		
 		$$[{},{0,p, q},{0}] -> - Q (k.k)^(-1-eir)/k.n V0,
 		
 	
-		$$[{x_},{0,k,p},{0}] :> - Q (k.k)^(-1-eir)/p.n (
+		$$[{x_},{0,k,p},{0}] :> Q (k.k)^(-1-eir)/p.n (
 			p.x S1 + k.x S2 + n.x k.k/(2 k.n) S3
 		)
 	};
@@ -394,7 +406,7 @@ IntegrateLoop[expr_, l_] := Module[
 	simplified = $$SimplifyAlgebraic[simplified];
 	simplified = $$SimplifyTranslate[simplified];
 	simplified = $$SimplifyOnePoint[simplified];
-
+	
 	integrated = Expand[
 		IntegrateLoopGeneral[simplified, l]
 			/. $kinematicRules

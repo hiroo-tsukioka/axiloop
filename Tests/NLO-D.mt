@@ -28,7 +28,7 @@ ExpandLoopIntegrals = Axiloop`Integrate`Private`$$ExpandLoopIntegrals;
 $LO = << "LO.result";
 
 $topology = x (G[n]/(4 k.n)) ** FP[k] ** FV[i1] ** FP[l] ** FV[i2] **
-	GP[i1, i3, l-k] ** GP[i2, i4, l-p] ** GV[i3, k-l, i4, l-p, mu, p-k] **
+	GP[i1, i3, l+k] ** GP[i2, i4, l+p] ** GV[i3, k+l, i4, -l-p, mu, p-k] **
 	FPx[p] ** GPx[mu, nu, p-k] ** FV[nu] ** FP[k];
 
 $result = SplittingFunction[$topology, $LO];
@@ -47,9 +47,40 @@ Test[
 Test[
 	$Get[$result, "Z"]
 	,
-	I g^2 (4 Pi)^-2 (3 - 8 I0 - 4 Log[1-x] - 2 Log[x])
+	- I g^2 (4 Pi)^-2 (3 - 8 I0 - 4 Log[1-x] - 2 Log[x])
 	,
 	EquivalenceFunction -> EquivalentQ
 	,
 	TestID -> "NLO-D-20130227-M1X6E0"
+];
+
+
+Test[
+	$Get[$result, "exclusive-bare-short"]
+	,
+	Expand[
+	- I Gamma[1+eir] g^4 2^(-3+2 eir) Pi^(-2+eir) / (k.k (-1+x)) (
+	  (k.k)^(-eir) (
+	      R0 (-1 + eps (-1 + x))
+	    - (P1 (-1 + eps (-1 + x)) (-2 + x))
+	    - (2 (1 + eps) R4 (-3 + x) x)
+	    - (2 (1 + eps) R5 (-3 + x) x)
+	    - (R1 x (eps (-1 + x) + x))
+	    + (E1 x^2 (eps (-1 + x) + x))
+	    + (2 E2 x^2 (eps (-1 + x) + x))
+	    + (E3 x^3 (eps (-1 + x) + x))
+	    + (R2 x (-1 + eps (-5 + x) + 2 x))
+	    + (3 P0 (1 + eps (-1 + x)^2 + x^2))
+	    - (U0 (1 + eps (-1 + x)^2 + x^2))
+	    - (4 (1 + eps) R6 (1 - 4 x + x^2)))
+	 + (q.q)^-eir (
+	   3 C0 (1 + eps (-1 + x)^2 + x^2) + x (T0 (-3 + x) - 2 C1 (1 + x)))
+	 + (p.p)^-eir (
+	   -B1 x (eps (-1 + x) + x) + 2 B0 (1 + eps (-1 + x)^2 + x^2) + D0 (1 + eps (-1 + x)^2 + x^2))
+	)
+	]
+	,
+	EquivalenceFunction -> EquivalentQ
+	,
+	TestID -> "NLO-D-20130603-F7S6X9"
 ];

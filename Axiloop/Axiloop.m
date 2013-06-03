@@ -148,7 +148,7 @@ CollectExclusiveShort[expr_] := Module[{},
 			/. {0^(-eir)->1, 0^(1-eir)->0, 0^(2-eir)->0}
 		*)
 		,
-		{B0,B1,B3,C0,C1,D0,K0,P0,P1,P3,R0,R1,R2,R3,R4,R5,R6,S0,S1,S2,T0,T1,V1,V2,U0}
+		{B0,B1,B3,C0,C1,D0,K0,P0,P1,P3,R0,R1,R2,R3,R4,R5,R6,S0,S1,S2,T0,T1,V0,V1,V2,U0}
 		,
 		Simplify
 	]
@@ -214,7 +214,7 @@ IntegrateFinal[kernel_, ndim_] := Module[
 	{eps},
 
 	eps = Simplify[ndim/2 - 2];
-	(4 Pi)^(-2+eps)/Gamma[1-eps] (1 + eps Log[1-x]) Integrate[(k.k)^(eps) kernel, k.k]
+	(4 Pi)^(-2+eps)/Gamma[1-eps] (1 + eps Log[1-x])	Integrate[Expand[(k.k)^(eps) kernel], k.k]
 ];
 
 
@@ -233,8 +233,8 @@ $onShellRules = {
 (*---------------------------------------------------------------------------*)
 
 SplittingFunction[$topology_, $LO_:Null] := Module[
-	{counterterm, exclusive, exclusiveBare, inclusive, integrated, trace, Z,
-	 $PutOnShell},
+	{counterterm, exclusive, exclusiveBare, exclusiveBareShort, inclusive,
+	 integrated, trace, Z, $PutOnShell},
 	
 	$PutOnShell[expr_] := Replace[
 		Expand[expr] /. {
@@ -253,17 +253,17 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 			/. $kinematicRules
 	];
 
-	integrated = IntegrateLoop[trace, l]; 
+	integrated = IntegrateLoop[trace, l];
 	
-	exclusiveBare = If[
+	exclusiveBareShort = If[
 		SameQ[$LO, Null]
 		,
 		Null
 		,
 		$PutOnShell[$Get[integrated, {"integrated", "short"}]]
-	];
+	] /. {k.n -> x, n.p -> 1, n.q -> 1-x};
 	
-	exclusive = $PutOnShell[$Get[integrated, {"integrated", "long"}]]
+	exclusiveBare = $PutOnShell[$Get[integrated, {"integrated", "long"}]]
 		/. {eps^2 -> 0}
 		/. {k.n -> x, n.p -> 1, n.q -> 1-x};
 	
@@ -273,7 +273,7 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 		0
 		,
 		PolePart[
-			exclusive
+			exclusiveBare
 				(* /. {(k.k)^(n_Integer-eir) :> (k.k)^n} *)
 				/. {S[_,_]^(-eir) :> 1}
 			,
@@ -289,24 +289,27 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 		2^(2 eir) Pi^(eir) Gamma[1+eir] Z $Get[$LO, "exclusive"]
 	];
 	
-	exclusive = exclusive - counterterm / euv
+	exclusive = exclusiveBare - counterterm / euv
 		/. {eir -> - eps, euv -> -eps}
 		/. {p.p -> 0, q.q -> 0}
-		/. {0^eps -> 0}
+		/. {0^eps -> 0, 0^(1+eps) -> 0}
 	;
 
-	inclusive = Simplify[PolePart[
-		IntegrateFinal[exclusive, 4 + 2 eps]
-		,
-		eps
-	]];
-
+	inclusive = Expand[
+		PolePart[
+			IntegrateFinal[Expand[exclusive], 4 + 2 eps]
+			,
+			eps
+		]
+	];
+	
 	{
 		{"trace", trace},
 		{"integrated", integrated},
 		{"Z", Z},
 		{"counterterm", counterterm},
-		{"exclusive-bare", $Get[integrated, {"integrated", "long"}]},
+		{"exclusive-bare", exclusiveBare},
+		{"exclusive-bare-short", exclusiveBareShort},
 		{"exclusive", exclusive},
 		{"inclusive", inclusive}
 	}
@@ -443,7 +446,7 @@ ExtractFormFactors[bare_] := Module[
 	];
 	
 	DEBUG[
-		"SplittingFunction:: $$p$uv - $$q$uv - $$k$ir"
+		"SplittingFunction:: $$p$uv + $$q$uv - $$k$ir"
 		,
 		Collect[
 			Expand[$$p$uv + $$q$uv - $$k$ir]
