@@ -324,7 +324,7 @@ $$ExpandPV[expr_] := Module[
 		V2 -> - (1-x + Log[x])/(1-x)^2 / euv
 	};
 	
-	Expand[expr /. expandRules]
+	Expand[expr //. expandRules]
 ]
 
 
