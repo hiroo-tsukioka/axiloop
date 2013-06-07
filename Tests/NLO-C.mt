@@ -67,9 +67,13 @@ Test[
 ];
 
 Test[
-	$Get[$result, "inclusive"]
+	Simplify[
+		$Get[$result, "inclusive"]
+		-
+		(g/(4 Pi))^4 ((1+x^2)/(1-x) (-7 + 2 Log[x]^2 + 2 Log[x] Log[1-x] - 3 Log[1-x] + 2 Li2[1-x] + 4 Li2[1] - 4 I1 + 4 I0 Log[x] + 4 I0 Log[1-x]) - (1-x) (3 - 2 Log[x] - 4 I0) + x)
+	]
 	,
-	(g/(4 Pi))^4 ( (1+x^2)/(1-x) (-7 + 2 Log[x]^2 + 2 Log[x] Log[1-x] - 3 Log[1-x] + 2 Li2[1-x] + 4 Li2[1] - 4 I1 + 4 I0 Log[x] + 4 I0 Log[1-x]) - (1-x) (3 - 2 Log[x] - 4 I0) + x )
+	0
 	,
 	EquivalenceFunction -> EquivalentQ
 	,

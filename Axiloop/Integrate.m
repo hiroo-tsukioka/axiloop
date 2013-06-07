@@ -287,7 +287,19 @@ $$ExpandPV[expr_] := Module[
 		P1 -> 1/euv + 2,
 		P3 -> (I0 + Log[x] - 2)/euv - I1 + I0 Log[x] + (Log[x]^2)/2 - 4
 				+ Li2[1],
+		
+		U0 -> - ((3 I0 + 3 Log[1-x] - Log[x])/eir - 5 I1 + 2 I0 Log[1-x] - (Log[1-x]^2)/2 + I0 Log[x] + (Log[x]^2)/2 - 2 Li2[1-x] + 5 Li2[1]),
 
+		R0 -> - ((2 I0 + Log[1-x])/eir - 4 I1 + 2 I0 Log[1-x] + (Log[1-x]^2)/2),
+		R1 ->   R0 + 2/eir + 4,
+		R2 -> - 1/eir - 2,
+		R3 ->   R0 + 3/eir + 7,
+		R4 -> - 1/(2 eir) - 1,
+		R5 -> - 1/(2 eir) - 3/2,
+		R6 ->   1/(4 euv) + 3/4,
+		
+		S0 -> - ((3 I0 + Log[1-x] - Log[x]) / eir - 5 I1 + 2 I0 Log[1-x] + I0 Log[x] + (Log[x]^2)/2  + (Log[1-x]^2)/2 + 2 Li2[1-x] + Li2[1]),
+		(*
 		R0 ->  1/eir^2 - Li2[1],
 		R1 ->  1/eir^2 + 2/eir + 4 - Li2[1],
 		R2 -> -1/eir - 2,
@@ -295,9 +307,12 @@ $$ExpandPV[expr_] := Module[
 		R4 -> -1/(2 eir) - 1,
 		R5 -> -1/(2 eir) - 3/2,
 		R6 ->  1/(4 euv) + 3/4,
+		
+		U0 -> 1/eir^2 + (-I0 + Log[x] - 2 Log[1-x])/eir + I1 -I0 Log[x] + 2 Li2[1-x] - (Log[x]^2)/2 + Log[1-x]^2 - 6 Li2[1]
 
 		S0 -> 1/eir^2 - (I0 - Log[x])/eir + I1 - I0 Log[x] - 2 Li2[1]
 				- 2 Li2[1-x] - (Log[x]^2)/2,
+		*)
 		S1 -> 1/eir^2 - x Log[x]/((1-x) eir)  + x/(1-x) Li2[1-x] - Li2[1],
 		S2 -> Log[x]/((1-x) eir) - Li2[1-x]/(1-x),
 
@@ -306,9 +321,7 @@ $$ExpandPV[expr_] := Module[
 
 		V0 -> Ln[x],
 		V1 -> (1-x + x Log[x])/(1-x)^2 / euv,
-		V2 -> - (1-x + Log[x])/(1-x)^2 / euv,
-		
-		U0 -> 1/eir^2 + (-I0 + Log[x] - 2 Log[1-x])/eir + I1 -I0 Log[x] + 2 Li2[1-x] - (Log[x]^2)/2 + Log[1-x]^2 - 6 Li2[1]
+		V2 -> - (1-x + Log[x])/(1-x)^2 / euv
 	};
 	
 	Expand[expr /. expandRules]

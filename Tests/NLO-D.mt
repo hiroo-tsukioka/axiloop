@@ -55,32 +55,40 @@ Test[
 ];
 
 
+$real = (I g^4)/Pi^4 (
+			(1+x^2)/(1-x) (
+				(8 - 4 (Log[1-x] - Log[x])) (I0 + Log[1-x])
+				+
+				4 (I1 + (Log[1-x])^2/2) + 2 Li2[1-x] - 2 Li2[1] - (Log[x])^2
+			)
+			+ 
+   			1/(1-x) (
+   				-Log[x] - 2 x^2 Log[x] - 3 x (1+x) - 2
+   			)
+   		);
+
+$virt = Expand[Simplify[256 $Get[$result, "inclusive"]]];
+
+$full = (I g^4)/Pi^4 (
+			(1+x^2)/(1-x) (
+				-11 + 6 Li2[1] + (Log[x])^2 + 2 (Log[1-x])^2 +
+				6 Log[x] Log[1-x] - (3 Log[x])/2 + 5 Log[1-x] - 8 I1 + 8 I0 +
+				8 I0 (Log[x] + Log[1-x])
+			)
+			+
+			((1+x) Log[x])/2
+			+
+			(1-x) (
+				-1 + 8 I0 + 2 (Log[x] + 2 Log[1 - x])
+			)
+		);
+
 Test[
-	$Get[$result, "exclusive-bare-short"]
+	$real + $virt - $full
 	,
-	Expand[
-	- I Gamma[1+eir] g^4 2^(-3+2 eir) Pi^(-2+eir) / (k.k (-1+x)) (
-	  (k.k)^(-eir) (
-	      R0 (-1 + eps (-1 + x))
-	    - (P1 (-1 + eps (-1 + x)) (-2 + x))
-	    - (2 (1 + eps) R4 (-3 + x) x)
-	    - (2 (1 + eps) R5 (-3 + x) x)
-	    - (R1 x (eps (-1 + x) + x))
-	    + (E1 x^2 (eps (-1 + x) + x))
-	    + (2 E2 x^2 (eps (-1 + x) + x))
-	    + (E3 x^3 (eps (-1 + x) + x))
-	    + (R2 x (-1 + eps (-5 + x) + 2 x))
-	    + (3 P0 (1 + eps (-1 + x)^2 + x^2))
-	    - (U0 (1 + eps (-1 + x)^2 + x^2))
-	    - (4 (1 + eps) R6 (1 - 4 x + x^2)))
-	 + (q.q)^-eir (
-	   3 C0 (1 + eps (-1 + x)^2 + x^2) + x (T0 (-3 + x) - 2 C1 (1 + x)))
-	 + (p.p)^-eir (
-	   -B1 x (eps (-1 + x) + x) + 2 B0 (1 + eps (-1 + x)^2 + x^2) + D0 (1 + eps (-1 + x)^2 + x^2))
-	)
-	]
+	0
 	,
 	EquivalenceFunction -> EquivalentQ
 	,
-	TestID -> "NLO-D-20130603-F7S6X9"
+	TestID -> "NLO-D-20130607-N3M2Z0"
 ];
