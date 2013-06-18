@@ -260,74 +260,6 @@ $$SimplifyTranslate[expr_] := Module[
 ];
 
 
-$$ExpandPV[expr_] := Module[
-	{expandRules},
-	
-	expandRules = {
-		B0 -> I0/euv - I1 + Li2[1],
-		B1 -> 1/euv + 2,
-		B3 -> (I0 - 2)/euv - I1 - 4 + Li2[1],
-
-		C0 -> (I0 + Log[1-x])/euv - I1 + I0 Log[1-x] + (Log[1-x]^2)/2 + Li2[1],
-		C1 -> 1/euv + 2,
-		C3 -> (I0 + Log[1-x] - 2)/euv - I1 + I0 Log[1-x] + (Log[1-x]^2)/2 - 4
-				+ Li2[1],
-
-		D0 -> (Log[1-x] - Log[x])/euv + (Log[x]^2)/2 - (Log[1-x]^2)/2 + Li2[1]
-				- 2 Li2[1-x] - Log[x]Log[1-x],
-
-		E0 -> - Log[1-x]/(x euv),
-		E1 -> - 1/euv Log[1-x]/x - (2 Li2[x] + (Log[1-x]^2)/2)/x,
-		E2 ->   1/euv (x + Log[1-x])/x^2 + (2 Li2[x] + (Log[1-x]^2)/2 - 2x)/x^2,
-		E3 ->   1/euv ((x-2)Log[1-x] - 2x)/x^3 + (4x + (x-2)(2 Li2[x] + (Log[1-x]^2)/2))/x^3,
-
-		K0 -> - Log[x]/((1-x) euv),
-
-		P0 -> (I0 + Log[x])/euv - I1 + I0 Log[x] + (Log[x]^2)/2 + Li2[1],
-		P1 -> 1/euv + 2,
-		P3 -> (I0 + Log[x] - 2)/euv - I1 + I0 Log[x] + (Log[x]^2)/2 - 4
-				+ Li2[1],
-		
-		U0 -> - ((3 I0 + 3 Log[1-x] - Log[x])/eir - 5 I1 + 2 I0 Log[1-x] - (Log[1-x]^2)/2 + I0 Log[x] + (Log[x]^2)/2 - 2 Li2[1-x] + 5 Li2[1]),
-
-		R0 -> - ((2 I0 + Log[1-x])/eir - 4 I1 + 2 I0 Log[1-x] + (Log[1-x]^2)/2),
-		R1 ->   R0 + 2/eir + 4,
-		R2 -> - 1/eir - 2,
-		R3 ->   R0 + 3/eir + 7,
-		R4 -> - 1/(2 eir) - 1,
-		R5 -> - 1/(2 eir) - 3/2,
-		R6 ->   1/(4 euv) + 3/4,
-		
-		S0 -> - ((3 I0 + Log[1-x] - Log[x]) / eir - 5 I1 + 2 I0 Log[1-x] + I0 Log[x] + (Log[x]^2)/2  + (Log[1-x]^2)/2 + 2 Li2[1-x] + Li2[1]),
-		(*
-		R0 ->  1/eir^2 - Li2[1],
-		R1 ->  1/eir^2 + 2/eir + 4 - Li2[1],
-		R2 -> -1/eir - 2,
-		R3 ->  1/eir^2 + 3/eir + 7 - Li2[1],
-		R4 -> -1/(2 eir) - 1,
-		R5 -> -1/(2 eir) - 3/2,
-		R6 ->  1/(4 euv) + 3/4,
-		
-		U0 -> 1/eir^2 + (-I0 + Log[x] - 2 Log[1-x])/eir + I1 -I0 Log[x] + 2 Li2[1-x] - (Log[x]^2)/2 + Log[1-x]^2 - 6 Li2[1]
-
-		S0 -> 1/eir^2 - (I0 - Log[x])/eir + I1 - I0 Log[x] - 2 Li2[1]
-				- 2 Li2[1-x] - (Log[x]^2)/2,
-		*)
-		S1 -> 1/eir^2 - x Log[x]/((1-x) eir)  + x/(1-x) Li2[1-x] - Li2[1],
-		S2 -> Log[x]/((1-x) eir) - Li2[1-x]/(1-x),
-
-		T0 -> 1/euv + 2,
-		T1 -> 1/(2 euv) + 1,
-
-		V0 -> Ln[x],
-		V1 -> (1-x + x Log[x])/(1-x)^2 / euv,
-		V2 -> - (1-x + Log[x])/(1-x)^2 / euv
-	};
-	
-	Expand[expr //. expandRules]
-]
-
-
 IntegrateLoopGeneral::unevaluated = "`1`"
 
 IntegrateLoopGeneral[expr_, l_] := Module[
@@ -410,7 +342,93 @@ IntegrateLoopGeneral[expr_, l_] := Module[
 ];
 
 
-IntegrateLoop[expr_, l_] := Module[
+$$ExpandCommon[expr_] := Module[
+	{},
+	
+	Expand[expr //. {
+		B0 -> I0/euv - I1 + Li2[1],
+		B1 -> 1/euv + 2,
+		B3 -> (I0 - 2)/euv - I1 - 4 + Li2[1],
+
+		C0 -> (I0 + Log[1-x])/euv - I1 + I0 Log[1-x] + (Log[1-x]^2)/2 + Li2[1],
+		C1 -> 1/euv + 2,
+		C3 -> (I0 + Log[1-x] - 2)/euv - I1 + I0 Log[1-x] + (Log[1-x]^2)/2 - 4
+				+ Li2[1],
+
+		D0 -> (Log[1-x] - Log[x])/euv + (Log[x]^2)/2 - (Log[1-x]^2)/2 + Li2[1]
+				- 2 Li2[1-x] - Log[x]Log[1-x],
+
+		E0 -> - Log[1-x]/(x euv),
+		E1 -> - 1/euv Log[1-x]/x - (2 Li2[x] + (Log[1-x]^2)/2)/x,
+		E2 ->   1/euv (x + Log[1-x])/x^2 + (2 Li2[x] + (Log[1-x]^2)/2 - 2x)/x^2,
+		E3 ->   1/euv ((x-2)Log[1-x] - 2x)/x^3 + (4x + (x-2)(2 Li2[x] + (Log[1-x]^2)/2))/x^3,
+
+		K0 -> - Log[x]/((1-x) euv),
+
+		P0 -> (I0 + Log[x])/euv - I1 + I0 Log[x] + (Log[x]^2)/2 + Li2[1],
+		P1 -> 1/euv + 2,
+		P3 -> (I0 + Log[x] - 2)/euv - I1 + I0 Log[x] + (Log[x]^2)/2 - 4
+				+ Li2[1],
+
+		S1 -> 1/eir^2 - x Log[x]/((1-x) eir)  + x/(1-x) Li2[1-x] - Li2[1],
+		S2 -> Log[x]/((1-x) eir) - Li2[1-x]/(1-x),
+
+		T0 -> 1/euv + 2,
+		T1 -> 1/(2 euv) + 1,
+		T2 -> 1/(3 euv) + 13/18,
+		T3 -> -1/(12 euv) - 2/9,
+
+		V0 -> Ln[x],
+		V1 -> (1-x + x Log[x])/(1-x)^2 / euv,
+		V2 -> - (1-x + Log[x])/(1-x)^2 / euv
+	}]
+];
+
+
+$$ExpandMPV[expr_] := Module[
+	{},
+	
+	Expand[$$ExpandCommon[expr] //. {
+		R0 -> - ((2 I0 + Log[1-x])/eir - 4 I1 + 2 I0 Log[1-x] + (Log[1-x]^2)/2),
+		R1 ->   R0 + 2/eir + 4,
+		R2 -> - 1/eir - 2,
+		R3 ->   R0 + 3/eir + 7,
+		R4 -> - 1/(2 eir) - 1,
+		R5 -> - 1/(2 eir) - 3/2,
+		R6 ->   1/(4 euv) + 3/4,
+		
+		R7 ->   (2 I0 + Log[1-x]) / eir - x (6 + 3 x + 2 x^2) / (6 eir)
+					+ 2 (-3 (1-x) + 3/2 (1-x)^2 - 1/3 (1-x)^3) / eir,
+		
+		S0 -> - ((3 I0 + Log[1-x] - Log[x]) / eir - 5 I1 + 2 I0 Log[1-x] + I0 Log[x] + (Log[x]^2)/2 + (Log[1-x]^2)/2 + 2 Li2[1-x] + Li2[1]),
+		
+		U0 -> - ((3 I0 + 3 Log[1-x] - Log[x])/eir - 5 I1 + 2 I0 Log[1-x] + I0 Log[x] + (Log[x]^2)/2 - (Log[1-x]^2)/2 - 2 Li2[1-x] + 5 Li2[1])
+	}]
+]
+
+
+$$ExpandPV[expr_] := Module[
+	{},
+	
+	Expand[$$ExpandCommon[expr] //. {
+		R0 ->  1/eir^2 - Li2[1],
+		R1 ->  1/eir^2 + 2/eir + 4 - Li2[1],
+		R2 -> -1/eir - 2,
+		R3 ->  1/eir^2 + 3/eir + 7 - Li2[1],
+		R4 -> -1/(2 eir) - 1,
+		R5 -> -1/(2 eir) - 3/2,
+		R6 ->  1/(4 euv) + 3/4,
+		
+		U0 -> 1/eir^2 + (-I0 + Log[x] - 2 Log[1-x])/eir + I1 -I0 Log[x] + 2 Li2[1-x] - (Log[x]^2)/2 + Log[1-x]^2 - 6 Li2[1],
+
+		S0 -> 1/eir^2 - (I0 - Log[x])/eir + I1 - I0 Log[x] - 2 Li2[1]
+				- 2 Li2[1-x] - (Log[x]^2)/2
+	}]
+]
+
+
+Options[IntegrateLoop] = {Prescription -> "MPV"};
+IntegrateLoop[expr_, l_, OptionsPattern[]] := Module[
 	{collected, integrated, integratedPV, simplified},
 	
 	collected = $$CollectLoopIntegrals[expr, l];
@@ -425,7 +443,15 @@ IntegrateLoop[expr_, l_] := Module[
 			/. $kinematicRules
 	];
 
-	integratedPV = $$ExpandPV[integrated];
+	integratedPV =  If[
+		OptionValue[Prescription] == "MPV"
+		,
+		$$ExpandMPV[integrated]
+		,
+		If[OptionValue[Prescription] == "PV"
+		,
+		$$ExpandPV[integrated]
+	]];
 
 	{
 		{"collected", collected},

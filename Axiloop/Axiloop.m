@@ -232,7 +232,8 @@ $onShellRules = {
 (*--------------------------- SPLITTING FUNCTION ----------------------------*)
 (*---------------------------------------------------------------------------*)
 
-SplittingFunction[$topology_, $LO_:Null] := Module[
+Options[SplittingFunction] = {IntegrateLoopPrescription -> "MPV"};
+SplittingFunction[$topology_, $LO_:Null, OptionsPattern[]] := Module[
 	{counterterm, exclusive, exclusiveBare, exclusiveBareShort, inclusive,
 	 integrated, trace, Z, $PutOnShell},
 	
@@ -253,7 +254,11 @@ SplittingFunction[$topology_, $LO_:Null] := Module[
 			/. $kinematicRules
 	];
 
-	integrated = IntegrateLoop[trace, l];
+	integrated = IntegrateLoop[
+		trace,
+		l,
+		Prescription -> OptionValue[IntegrateLoopPrescription]
+	];
 	
 	exclusiveBareShort = If[
 		SameQ[$LO, Null]
