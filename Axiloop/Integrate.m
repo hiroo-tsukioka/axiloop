@@ -300,7 +300,12 @@ IntegrateLoopGeneral[expr_, l_] := Module[
 		$$[{x_, y_},{0,k,p},{}] :> Q (k.k)^(-1-eir) (
     		p.x p.y R3 + k.x k.y R4 + (k.x p.y + p.x k.y) R5 + k.k x.y R6
    		),
-   		$$[{n,n,n},{0,k,p},{}] :> Q (k.k)^(-1-eir) R7,
+   		$$[{x_,y_,z_},{0,k,p},{}] :> Q (k.k)^(-1-eir) (
+   			p.x p.y p.z H1 + (p.x p.y k.z + p.x k.y p.z + k.x p.y p.z) H2
+   			+ (p.x k.y k.z + k.x p.y k.z + k.x k.y p.z) H3 + k.x k.y k.z H4
+   			+ k.k (p.x y.z + p.y x.z + p.z x.y) H5
+   			+ k.k (k.x y.z + k.y x.z + k.z x.y) H6
+   		),
 
 		$$[{},{0, k},{0}] -> - Q (k.k)^(-eir) P0 / k.n,
 		$$[{},{0, p},{0}] -> - Q (p.p)^(-eir) B0 / n.p,
@@ -337,6 +342,16 @@ IntegrateLoopGeneral[expr_, l_] := Module[
 	
 		$$[{x_},{0,k,p},{0}] :> Q (k.k)^(-1-eir)/p.n (
 			p.x S1 + k.x S2 + n.x k.k/(2 k.n) S3
+		),
+		
+		$$[{x_, y_},{0,k,p},{0}] :> Q (k.k)^(-1-eir)/p.n (
+			  S4 p.x p.y
+			+ S5 (p.x k.y + k.x p.y)
+			+ S6 k.x k.y
+			+ S7 (p.x n.y + n.x p.y) k.k/(2 p.n)
+			+ S8 (k.x n.y + n.x k.y) k.k/(2 k.n)
+			+ S9 n.x n.y (k.k/(2 k.n))^2
+			+ S10 x.y k.k
 		)
 	};
 	
@@ -397,8 +412,7 @@ $$ExpandCommon[expr_] := Module[
 		T2 -> 1/(3 euv) + 13/18,
 		T3 -> -1/(12 euv) - 2/9,
 
-		V0 -> Ln[x],
-		V1 -> (1-x + x Log[x])/(1-x)^2 / euv,
+		V1 ->   (1-x + x Log[x])/(1-x)^2 / euv,
 		V2 -> - (1-x + Log[x])/(1-x)^2 / euv
 	}]
 ];
@@ -408,6 +422,16 @@ $$ExpandMPV[expr_] := Module[
 	{},
 	
 	Expand[$$ExpandCommon[expr] //. {
+		T2 -> 1/(3 euv) + 13/18,
+		T3 -> -1/(12 euv) - 2/9,
+		
+		H1 -> (-11/3 + 2 I0 + Log[1-x])/eir - 85/9,
+		H2 -> 1/(3 eir) + 11/9, 
+		H3 -> 1/(6 eir) + 4/9,
+		H4 -> 1/(3 eir) + 13/18,
+		H5 -> - 1/(12 euv) - 11/36,
+		H6 -> - 1/(12 euv) - 2/9,
+		
 		R0 -> - ((2 I0 + Log[1-x])/eir - 4 I1 + 2 I0 Log[1-x] + (Log[1-x]^2)/2),
 		R1 ->   R0 + 2/eir + 4,
 		R2 -> - 1/eir - 2,
@@ -416,10 +440,15 @@ $$ExpandMPV[expr_] := Module[
 		R5 -> - 1/(2 eir) - 3/2,
 		R6 ->   1/(4 euv) + 3/4,
 		
-		R7 ->   (2 I0 + Log[1-x]) / eir - x (6 + 3 x + 2 x^2) / (6 eir)
-					+ 2 (-3 (1-x) + 3/2 (1-x)^2 - 1/3 (1-x)^3) / eir,
-		
 		S0 -> - ((3 I0 + Log[1-x] - Log[x]) / eir - 5 I1 + 2 I0 Log[1-x] + I0 Log[x] + (Log[x]^2)/2 + (Log[1-x]^2)/2 + 2 Li2[1-x] + Li2[1]),
+		
+		S4 -> ((2 + 2 I0 (-1+x) - x) (-1+x) + (-1+x)^2 Log[1-x] - x^2 Log[x])/(eir (-1 + x)^2) + (1/2 (-1 + x)^2)(2 x^2 Li2[1 - x] + 4 I0 (-1 + x)^2 Log[1 - x] + (-1 + x)^2 Log[1 - x]^2 - 2 (2 (-1 + x) (-2 + 2 I1 (-1 + x) + x) + x^2 Log[x])),
+		S5 -> (1 - x + x Log[x])/(eir (-1 + x)^2) + (2 - 2 x - x Li2[1 - x] + x Log[x])/(-1 + x)^2,
+		S6 -> (-1 + x - Log[x])/(eir (-1 + x)^2) + (-2 + 2 x + Li2[1 - x] - Log[x])/(-1 + x)^2,
+		S7 -> (-1 + x - Log[x])/(euv (-1 + x)^2) + (2 (-1 + x) + Li2[1 - x] + (-2 + x) Log[x])/(-1 + x)^2,
+		S8 -> (1 - x + x Log[x])/(euv (-1 + x)^2) + (2 - 2 x - x Li2[1 - x] + x Log[x])/(-1 + x)^2,
+		S9 -> ((2 + I0 (-1 + x) - x) (-1 + x) + (1 - 2 x) Log[x])/(euv (-1 + x)^2) + (1/(2 (-1 + x)^2))(-2 (-1 + x) (-4 + I1 (-1 + x) + 2 x + Li2[1] - x Li2[1]) + 2 x^2 Li2[1 - x] + 2 (I0 (-1 + x)^2 - x^2) Log[x] + (-1 + x)^2 Log[x]^2),
+		S10 -> (Li2[1 - x] - 2 Log[x])/(2 (-1 + x)) + Log[x]/(euv (2 - 2 x)),
 		
 		U0 -> - ((3 I0 + 3 Log[1-x] - Log[x])/eir - 5 I1 + 2 I0 Log[1-x] + I0 Log[x] + (Log[x]^2)/2 - (Log[1-x]^2)/2 - 2 Li2[1-x] + 5 Li2[1])
 	}]
