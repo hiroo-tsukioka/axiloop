@@ -28,6 +28,10 @@ WARN::usage = "";
 
 $UnevaluatedError;
 
+
+$Get::usage =
+	"$Get[hash_, key_] get value by key from a hash table."
+
 PolePart::usage =
 	"PolePart[expr, x] extract coefficient in front of 1/x in expr."
 
@@ -89,6 +93,37 @@ $kinematicRules = {
 
 PolePart[kernel_, eta_, n_:-1] := Expand[
 	Coefficient[Series[kernel, {eta, 0, n+1}], eta, n]
+];
+
+
+$Get[hash_, keys_, default_:Null] := Module[
+	{item, key, value},
+	
+	key = If[
+		ListQ[keys]
+		,
+		First[keys]
+		,
+		keys
+	];
+
+	item = Select[hash, First[#] == key &, 1];
+
+	value = If[
+		item == {}
+		,
+		default
+		,
+		Last[First[item]]
+	];
+	
+	If[
+		!ListQ[keys] || Length[keys] == 1
+		,
+		value
+		,
+		$Get[value, Rest[keys]]
+	]
 ];
 
 End[]

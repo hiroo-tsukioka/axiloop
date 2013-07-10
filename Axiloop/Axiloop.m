@@ -86,9 +86,6 @@ Example:
    	In[2] := GammaTrace[G[{mu}]**G[{mu}], NumberOfDimensions -> ndim]
    	Out[2] = 4 ndim"
 
-$Get::usage =
-	"$Get[hash_, key_] get value by key from a hash table."
-
 ExtractFormFactors::usage = ""
 
 IntegrateFinal::usage =
@@ -102,36 +99,6 @@ Begin["`Private`"]
 
 (*------------------- MISCELLANEOUS ROUTINES and HELPERS --------------------*)
 
-$Get[hash_, keys_, default_:Null] := Module[
-	{item, key, value},
-	
-	key = If[
-		ListQ[keys]
-		,
-		First[keys]
-		,
-		keys
-	];
-
-	item = Select[hash, First[#] == key &, 1];
-
-	value = If[
-		item == {}
-		,
-		default
-		,
-		Last[First[item]]
-	];
-	
-	If[
-		!ListQ[keys] || Length[keys] == 1
-		,
-		value
-		,
-		$Get[value, Rest[keys]]
-	]
-];
-
 
 (* Useful modifications to standard functions *)
 
@@ -139,6 +106,11 @@ Unprotect[Dot];
     (-x_).y_ := -x.y;
 Protect[Dot];
 
+(*
+Unprotect[S];
+    S[n,n] = 0;
+Protect[S];
+*)
 
 CollectExclusiveShort[expr_] := Module[{},
 	Collect[
@@ -250,7 +222,7 @@ SplittingFunction[$topology_, $LO_:Null, OptionsPattern[]] := Module[
 	];
 	
 	trace = Expand[
-		GammaTrace[$topology, NumberOfDimensions -> 4 + 2 eps]
+		GammaTrace[Expand[$topology], NumberOfDimensions -> 4 + 2 eps]
 			/. $kinematicRules
 	];
 
@@ -442,7 +414,7 @@ ExtractFormFactors[bare_] := Module[
 		"SplittingFunction:: $$k$uv + $$p$uv + $$q$uv"
 		,
 		Collect[
-			Expand[($$k$uv + $$p$uv + $$q$uv) / ((1-x)/(1+x^2))]
+			Expand[($$k$uv + $$p$uv + $$q$uv)]
 			,
 			{I0, Log[x], Log[1-x]}
 			,
