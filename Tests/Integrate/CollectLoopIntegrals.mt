@@ -181,3 +181,16 @@ Test[
 	,
 	TestID->"CollectLoopIntegrals-20130328-N4T8G4"
 ];
+
+
+Test[
+	CollectLoopIntegrals[
+		l1.n / (l1.l1 l2.l2 (l1+p).(l1+p) (l1+l2).(l1+l2) PV[l1.n] PV[(l2+k).n])
+		,
+		{l1, l2}
+	]
+	,
+	$$[{{n}, {0,l2,p}, {0}}, {{}, {0}, {k}}]
+	,
+	TestID->"IntegrateLoop-20130718-O3Q7T9"
+];

@@ -48,6 +48,8 @@ I1::usage =
 
 Li2::usage =
 	"Dilogarythm function; Li2[x] = - Integrate[Log[1-t]/t, {t, 0, x}]."
+	
+PV::usage = ""
 
 Q;X0;Y0;B0;B1;B3;C0;C1;C3;D0;E0;E1;E2;E3;H1;H2;H3;H4;K0;P0;P1;P3;
 R0;R1;R2;R3;R4;R5;R6;
@@ -121,6 +123,83 @@ $$CollectLoopIntegrals[expr_, l_] := Module[
 
 	result
 ];
+
+
+$$CollectLoopIntegrals[expr_, {l1_, l2_}] := Module[
+	{collectRules, result, seed},
+	
+	collectRules = {
+		$$[{{a___}, bc__}, def__] S[l1, x_] :>
+			$$[{{a,x}, bc}, def]
+		,
+		$$[{{a___}, bc__}, def__] S[l1, x_]^n_ :>
+			$$[{Flatten[{a,x&/@Range[n]}], bc}, def] /; n>0
+		,
+		
+		$$[{{a___},{b___},{c___}}, def__] / S[l1, l1] :>
+			$$[{{a},{b,0},{c}}, def]
+		,
+
+		$$[{{a___},{b___},{c___}}, def__] / S[l1+x_Symbol, l1+x_Symbol] :>
+			$$[{{a},{b,x},{c}}, def]
+		,
+		$$[{{a___},{b___},{c___}}, def__] / S[l1-x_Symbol, l1-x_Symbol] :>
+			$$[{{a},{b,-x},{c}}, def]
+		,
+
+		$$[{{a___},{b___},{c___}}, def__] PV[S[l1, n]]^-1 :>
+			$$[{{a},{b},{c,0}}, def]
+		,
+		$$[{{a___},{b___},{c___}}, def__] PV[S[l1+d_, n]]^-1 :>
+			$$[{{a},{b},{c,d}}, def]
+		,
+		$$[{{a___},{b___},{c___}}, def__] PV[S[l1-d_, n]]^-1 :>
+			$$[{{a},{b},{c,-d}}, def]
+		,
+		$$[{{a___},{b___},{c___}}, def__] PV[S[-l1+d_, n]]^-1 :>
+			- $$[{{a},{b},{c,-d}}, def],
+			
+			
+		$$[abc__, {{d___}, ef__}] S[l2, x_] :>
+			$$[abc, {{d,x}, ef}]
+		,
+		$$[abc__, {{d___}, {e___}, {f___}}] / S[l2, l2] :>
+			$$[abc, {{d}, {e,0}, {f}}]
+		,
+		$$[abc__, {{d___}, {e___}, {f___}}] / PV[S[l2, n]] :>
+			$$[abc, {{d}, {e}, {f,0}}]
+		,
+		$$[abc__, {{d___}, {e___}, {f___}}] / PV[S[l2+x_, n]] :>
+			$$[abc, {{d}, {e}, {f,x}}]
+	};
+	
+	seed = $$[{{},{},{}}, {{},{},{}}];
+	
+	result = Expand[expr seed] //. collectRules;
+	result = result	/. $$[{{a___},{b___},{c___}}, {{d___},{e___},{f___}}] :>
+			$$[{Sort[{a}], Sort[{b}], Sort[{c}]}, {Sort[{d}], Sort[{e}], Sort[{f}]}];
+	result = result /. {p.p -> 0, q.q -> 0};
+	
+	If[
+		!(FreeQ[result, Dot[l1,_]] && FreeQ[result, Dot[_,l1]] &&
+		  FreeQ[result, Dot[l2,_]] && FreeQ[result, Dot[_,l2]])
+		,
+		Message[
+			$$CollectLoopIntegrals::unevaluated,
+			result
+		];
+		Raise[$UnevaluatedError];
+	];
+
+	DEBUG[
+		"$$CollectLoopIntegrals"
+		,
+		ToString[#] &/@ Union[Cases[{result}, $$[__], Infinity]]
+	];
+
+	result
+];
+
 
 
 $$ExpandLoopIntegrals[expr_, l_] := Module[
