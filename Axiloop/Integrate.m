@@ -139,6 +139,9 @@ $$CollectLoopIntegrals[expr_, {l1_, l2_}] := Module[
 		$$[{{a___},{b___},{c___}}, def__] / S[l1, l1] :>
 			$$[{{a},{b,0},{c}}, def]
 		,
+		$$[{{a___},{b___},{c___}}, def__] / S[l1, l1]^2 :>
+			$$[{{a},{b,0,0},{c}}, def]
+		,
 
 		$$[{{a___},{b___},{c___}}, def__] / S[l1+x_Symbol, l1+x_Symbol] :>
 			$$[{{a},{b,x},{c}}, def]
@@ -149,6 +152,9 @@ $$CollectLoopIntegrals[expr_, {l1_, l2_}] := Module[
 
 		$$[{{a___},{b___},{c___}}, def__] PV[S[l1, n]]^-1 :>
 			$$[{{a},{b},{c,0}}, def]
+		,
+		$$[{{a___},{b___},{c___}}, def__] PV[S[l1, n]]^-2 :>
+			$$[{{a},{b},{c,0,0}}, def]
 		,
 		$$[{{a___},{b___},{c___}}, def__] PV[S[l1+d_, n]]^-1 :>
 			$$[{{a},{b},{c,d}}, def]
