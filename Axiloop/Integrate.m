@@ -142,8 +142,6 @@ $$SimplifyAlgebraic[expr_] := Module[
 		$$[x__, {k,p}] :> ($$[x, {k}] - $$[x, {p}]) / (p.n-k.n)
 		,
 		
-		)
-		,
 		
 		$$[{a1___,q,a2___}, {b__}, {c___}] :> $$[Sort[{a1,p,a2}], {b}, {c}]
 			- $$[Sort[{a1,k,a2}], {b}, {c}]
