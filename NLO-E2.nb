@@ -1,0 +1,225 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      7580,        216]
+NotebookOptionsPosition[      6974,        190]
+NotebookOutlinePosition[      7309,        205]
+CellTagsIndexPosition[      7266,        202]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Quark", " ", "self", " ", "energy"}], " ", "-", " ", 
+  RowBox[{
+   SubscriptBox["C", "F"], 
+   SubscriptBox["T", "f"], " ", "diagram"}]}]], "Title",
+ CellChangeTimes->{{3.583224891808343*^9, 3.5832249185284452`*^9}, {
+  3.583224966119659*^9, 3.583224974972012*^9}, {3.583225032515596*^9, 
+  3.583225049967235*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Splitting function", "Section",
+ CellChangeTimes->{{3.583225060610298*^9, 3.583225076341066*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Get", "[", "\"\<Axiloop`\>\"", "]"}], ";", 
+   RowBox[{"Get", "[", "\"\<Axiloop`Integrate`\>\"", "]"}], ";"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"$LO", " ", "=", " ", 
+     RowBox[{"<<", "\"\<LO.result\>\""}]}], ";"}], " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "loads", " ", "results", " ", "from", " ", "leading", " ", "order", " ", 
+     "contributions"}], " ", "*)"}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"$topology", "=", "   ", 
+     RowBox[{
+      RowBox[{"FPx", "[", "p", "]"}], "**", 
+      RowBox[{"FV", "[", "i1", "]"}], "**", 
+      RowBox[{"FP", "[", "k", "]"}], "**", 
+      RowBox[{"FV", "[", "i2", "]"}], "**", 
+      RowBox[{"GPx", "[", 
+       RowBox[{"i1", ",", "i2", ",", 
+        RowBox[{"p", "-", "k"}]}], "]"}]}]}], ";"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$topology", "=", 
+   RowBox[{"x", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"G", "[", "n", "]"}], "/", 
+       RowBox[{"(", 
+        RowBox[{"4", 
+         RowBox[{"k", ".", "n"}]}], ")"}]}], ")"}], "**", 
+     RowBox[{"FPx", "[", "p", "]"}], "**", 
+     RowBox[{"FV", "[", "i2", "]"}], "**", 
+     RowBox[{"FP", "[", 
+      RowBox[{"p", "-", "l1"}], "]"}], "**", 
+     RowBox[{"FV", "[", "i1", "]"}], "**", 
+     RowBox[{"FPx", "[", "p", "]"}], "**", 
+     RowBox[{"GP", "[", 
+      RowBox[{"i2", ",", "i4", ",", "l1"}], "]"}], "**", 
+     RowBox[{"FV", "[", "i4", "]"}], "**", 
+     RowBox[{"FP", "[", 
+      RowBox[{"l2", ",", 
+       RowBox[{"Line", "\[Rule]", "f2"}]}], "]"}], "**", 
+     RowBox[{"FV", "[", "i3", "]"}], "**", 
+     RowBox[{"FP", "[", 
+      RowBox[{
+       RowBox[{"l2", "-", "l1"}], ",", 
+       RowBox[{"Line", "\[Rule]", "f2"}]}], "]"}], "**", 
+     RowBox[{"GP", "[", 
+      RowBox[{"i3", ",", "i1", ",", "l1"}], "]"}]}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"$result", "=", 
+     RowBox[{"SplittingFunction", "[", 
+      RowBox[{"$topology", ",", " ", "$LO"}], "]"}]}], ";"}], 
+   "*)"}]}]}], "Input",
+ CellChangeTimes->{{3.583225106636909*^9, 3.583225133582727*^9}, {
+   3.5832251952596617`*^9, 3.583225200102948*^9}, {3.5832252348020906`*^9, 
+   3.583225374890583*^9}, {3.5832254661226463`*^9, 3.5832255615681353`*^9}, 
+   3.5834722026835012`*^9, {3.5834722494074593`*^9, 3.58347229713354*^9}, {
+   3.58347235690477*^9, 3.58347242454392*^9}, {3.583472649963622*^9, 
+   3.583472688785122*^9}, {3.583472719838521*^9, 3.583472730808669*^9}, {
+   3.58347301320024*^9, 3.583473016363606*^9}, {3.583473462501812*^9, 
+   3.583473519599262*^9}, {3.58347357720504*^9, 3.58347362547891*^9}, {
+   3.5834739146041594`*^9, 3.5834739349402103`*^9}, {3.583474304106802*^9, 
+   3.5834744132894297`*^9}, {3.5834750650596113`*^9, 
+   3.5834750861117907`*^9}, {3.583475117311221*^9, 3.583475141918737*^9}, {
+   3.5834754403288107`*^9, 3.583475512936344*^9}, {3.583475576409795*^9, 
+   3.583475640101643*^9}, {3.5834758015861673`*^9, 3.583475810999268*^9}, 
+   3.583476083700736*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"gtrace", "=", 
+   RowBox[{"GammaTrace", "[", 
+    RowBox[{
+     RowBox[{"Expand", "[", "$topology", "]"}], ",", 
+     RowBox[{"NumberOfDimensions", "\[Rule]", 
+      RowBox[{"4", "+", 
+       RowBox[{"2", "eps"}]}]}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.5834758450518923`*^9, 3.5834758852051153`*^9}, {
+  3.583475968199781*^9, 3.583475980567979*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Axiloop`Integrate`Private`$$CollectLoopIntegrals", "[", 
+  RowBox[{"gtrace", ",", 
+   RowBox[{"{", 
+    RowBox[{"l1", ",", "l2"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.5834751813385077`*^9, 3.583475224097456*^9}, {
+  3.58347592586801*^9, 3.5834759426989307`*^9}, {3.583475985826027*^9, 
+  3.5834760291675177`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{
+   "Axiloop`Integrate`Private`$$CollectLoopIntegrals", "::", "unevaluated"}], 
+   "MessageName"], 
+  RowBox[{":", " "}], 
+  "\"\<\[NoBreak]\!\(\*FractionBox[\(16\\\\\\\ \[ImaginaryI]\\\\\\\ \
+\*SuperscriptBox[\(g\), \(4\)]\\\\\\\ x\\\\\\\ \*SuperscriptBox[\(\\\"\<n.p\>\
+\\\"\), \(2\)]\\\\\\\ $$[{{}, {0, \(-l2\), \(-p\)}, {}}, {{}, {}, {}}]\), \
+\(\\\"\<k.n\>\\\"\\\\\\\ \\\"\<l1.n\>\\\"\)] + \[LeftSkeleton]28\
+\[RightSkeleton] + \*FractionBox[\(16\\\\\\\ \[ImaginaryI]\\\\\\\ \
+\*SuperscriptBox[\(g\), \(4\)]\\\\\\\ x\\\\\\\ \\\"\<n.n\>\\\"\\\\\\\ \
+\\\"\<n.p\>\\\"\\\\\\\ $$[{{l2, p, p}, {\(-l2\), \(-p\)}, {}}, {{}, {0}, {}}]\
+\), \(\\\"\<k.n\>\\\"\\\\\\\ \*SuperscriptBox[\(\\\"\<l1.l1\>\\\"\), \(2\)]\\\
+\\\\\ \*SuperscriptBox[\(\\\"\<l1.n\>\\\"\), \(2\)]\)]\)\[NoBreak]\>\""}]], \
+"Message", "MSG",
+ GeneratedCell->False,
+ CellAutoOverwrite->False,
+ CellChangeTimes->{3.583476031805522*^9, 3.583476100365181*^9, 
+  3.583476185473226*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Throw", "::", "nocatch"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Uncaught \[NoBreak]\\!\\(Throw[\\(\\($UnevaluatedError, \
+Axiloop`Exception`Private`$DefaultExceptionTag\\)\\)]\\)\[NoBreak] returned \
+to top level. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/Throw/nocatch\\\", ButtonNote -> \
+\\\"Throw::nocatch\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.583476031805522*^9, 3.583476100445272*^9}],
+
+Cell[BoxData[
+ RowBox[{"Hold", "[", 
+  RowBox[{"Throw", "[", 
+   RowBox[{
+   "$UnevaluatedError", ",", 
+    "Axiloop`Exception`Private`$DefaultExceptionTag"}], "]"}], 
+  "]"}]], "Output",
+ CellChangeTimes->{3.5834752252324343`*^9, 3.583475826890231*^9, 
+  3.583475943983058*^9, 3.583476031991791*^9, 3.583476100449922*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1274, 748},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"8.0 for Linux x86 (64-bit) (October 10, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 350, 8, 82, "Title"],
+Cell[CellGroupData[{
+Cell[954, 34, 103, 1, 74, "Section"],
+Cell[1060, 37, 3220, 80, 145, "Input"],
+Cell[4283, 119, 399, 10, 30, "Input"],
+Cell[CellGroupData[{
+Cell[4707, 133, 349, 7, 30, "Input"],
+Cell[5059, 142, 993, 20, 76, "Message"],
+Cell[6055, 164, 554, 11, 26, "Message"],
+Cell[6612, 177, 322, 8, 30, "Output"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
