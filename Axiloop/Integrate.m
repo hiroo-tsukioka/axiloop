@@ -222,6 +222,7 @@ $$ExpandLoopIntegrals[expr_, l_] := Module[
 ];
 
 
+
 $$SimplifyAlgebraic[expr_] := Module[
 	{result, signRules, simplifyRules},
 		
@@ -307,6 +308,13 @@ $$SimplifyAlgebraic[expr_] := Module[
 	];
 	
 	Expand[result]
+];
+
+
+$$SimplifyAlgebraic[expr_, {l1_,l2_}] := Module[
+	{},
+
+	expr
 ];
 
 
