@@ -68,6 +68,7 @@ propagator in the light-cone gauge."
 
 GV::usage = "GV[i1,p1, i2,p2, i3,p3] -- a gluon vertex in the light-cone gauge."
 
+PV::usage = "Principal Value regulated expression"
 
 (*---------------------------------------------------------------------------*)
 
@@ -152,7 +153,7 @@ FV[mu_, OptionsPattern[]] := - I g G[{mu}, Line -> OptionValue[Line]];
 
 GP[mu_, nu_, p_] := 1/p.p GPx[mu, nu, p];
 
-GPx[mu_, nu_, p_] := - I ({mu}.{nu} - (p.{mu} n.{nu} + n.{mu} p.{nu}) / p.n)
+GPx[mu_, nu_, p_] := - I ({mu}.{nu} - (p.{mu} n.{nu} + n.{mu} p.{nu}) / PV[p.n])
 
 GV[i1_,p1_, i2_,p2_, i3_,p3_] :=
 	g ( {i1}.{i2} (p1.{i3}-p2.{i3})
